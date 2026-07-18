@@ -1,0 +1,183 @@
+{% extends 'dashboard_base.html' %}
+{% load custom_tags %}
+{% block content %}
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <div class="grid grid-cols-12 gap-4 sm:gap-5 lg:gap-6">
+
+        <!-- ================= LEFT ================= -->
+        <div class="col-span-12 sm:col-span-8">
+            <div class="card p-4 sm:p-5">
+                <p class="text-base font-medium text-slate-700 dark:text-navy-100">
+                    Create Assignment
+                </p>
+        
+                <div class="mt-4 space-y-4">
+
+                    <!-- TITLE -->
+                    <label class="block">
+                        <span>Judul Assignment</span>
+                        <span class="relative mt-1.5 flex">
+                            {{ form.title }}
+                            <span class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400">
+                            <i class="fa fa-tasks text-base"></i>
+                            </span>
+                        </span>
+                    </label>
+
+                    <!-- DESCRIPTION -->
+                    <label class="block">
+                        <span>Deskripsi</span>
+                        <textarea
+                            name="description"
+                            rows="4"
+                            placeholder="Deskripsi assignment"
+                            class="form-textarea mt-1.5 w-full rounded-lg border border-slate-300 bg-transparent p-2.5"
+                        >{{ form.description.value|default:"" }}</textarea>
+                    </label>
+
+                    <!-- ATTACHMENT -->
+                    <label class="block">
+                        <span>File / Lampiran</span>
+                        <input
+                            type="file"
+                            name="attachment"
+                            class="form-input mt-1.5 w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 file:mr-4 file:rounded file:border-0 file:bg-primary file:px-3 file:py-1 file:text-white"
+                        >
+                    </label>
+
+                    <!-- DURATION -->
+                    <label class="block">
+                        <span>Durasi (menit)</span>
+                        <input
+                            type="number"
+                            name="duration"
+                            value="{{ form.duration.value|default:'' }}"
+                            placeholder="Contoh: 60"
+                            class="form-input mt-1.5 w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2"
+                        >
+                    </label>
+
+                    <!-- DATE -->
+                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+
+                        <!-- RELEASE -->
+                        <label class="block">
+                            <span>Release</span>
+                            <span class="relative mt-1.5 flex">
+                            <input
+                                id="release"
+                                type="datetime-local"
+                                name="release"
+                                value="{{ form.release.value|default:'' }}"
+                                class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 pl-9"
+                            >
+                            <span class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                            </span>
+                        </label>
+
+                        <!-- EXPIRED -->
+                        <label class="block">
+                            <span>Expired</span>
+                            <span class="relative mt-1.5 flex">
+                            <input
+                                id="expired"
+                                type="datetime-local"
+                                name="expired"
+                                value="{{ form.expired.value|default:'' }}"
+                                class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 pl-9"
+                            >
+                            <span class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400">
+                                <i class="fa fa-calendar-times"></i>
+                            </span>
+                            </span>
+                        </label> 
+                    </div>
+
+                    <!-- ACTIVE -->
+                    <div class="flex items-center space-x-2">
+                        <input
+                            type="checkbox"
+                            name="is_active"
+                            {% if form.is_active.value %}checked{% endif %}
+                            class="form-checkbox is-basic size-5 rounded-sm border-slate-400/70 checked:border-primary checked:bg-primary"
+                        >
+                        <span>Aktif</span>
+                    </div>
+
+                    <!-- BUTTON -->
+                    <div class="flex justify-end space-x-2 pt-2">
+
+                        <!-- BACK -->
+                        <a
+                            href="{% assignment_list_url user roadmap.id node.id %}"
+                            class="btn space-x-2 bg-slate-150 font-medium text-slate-800 hover:bg-slate-200"
+                        >
+                            <span>Batal</span>
+                        </a>
+
+                        <!-- SUBMIT -->
+                        <button
+                            type="submit"
+                            class="btn space-x-2 bg-primary font-medium text-white hover:bg-primary-focus"
+                        >
+                            <span>Simpan</span>
+                        </button>
+
+                    </div> 
+        
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= RIGHT ================= -->
+        <div class="hidden sm:col-span-4 sm:block">
+            <div class="sticky top-24 mt-3">
+            <ol class="steps is-vertical line-space">
+
+                <li class="step pb-8 before:bg-primary dark:before:bg-accent">
+                <div class="step-header rounded-full bg-primary text-white dark:bg-accent">
+                    1
+                </div>
+                <h3 class="ml-4 text-slate-700 dark:text-navy-100">
+                    Input Data
+                </h3>
+                </li>
+
+                <li class="step pb-8 before:bg-slate-200 dark:before:bg-navy-500">
+                <div class="step-header rounded-full bg-slate-200 text-slate-800 dark:bg-navy-500 dark:text-white">
+                    2
+                </div>
+                <h3 class="ml-4 text-slate-700 dark:text-navy-100">
+                    Save Assignment
+                </h3>
+                </li>
+
+            </ol>
+            </div>
+        </div>  
+
+    </div>
+</form>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const release = document.getElementById("release");
+    const expired = document.getElementById("expired");
+
+    release.addEventListener("change", function () {
+        if (!this.value) return;
+
+        // Ambil tanggal saja (YYYY-MM-DD)
+        const date = this.value.split("T")[0];
+
+        // Set expired menjadi tanggal yang sama pukul 23:59
+        expired.value = `${date}T23:59`;
+    });
+});
+</script>
+{% endblock content %}

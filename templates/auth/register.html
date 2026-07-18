@@ -1,0 +1,176 @@
+{% extends "auth/base.html" %}
+{% block content %}
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <div class="card mt-5 rounded-lg p-5 lg:p-7">
+
+        <!-- ROLE -->
+        <label class="block">
+            <span>Daftar sebagai:</span> 
+            {% if auto_role %}
+                <input type="hidden" name="role" id="role" value="student">
+                <div class="p-2 bg-slate-100 rounded">
+                    Daftar sebagai: <b>Student</b>
+                </div>
+            {% else %}
+                <select id="role" name="role" 
+                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70"
+                    onchange="toggleRoleForm()" required>
+                    
+                    <option value="">-- Pilih Role --</option>
+                    <option value="teacher">Teacher</option>
+                    <option value="student">Student</option>
+                    <option value="parent">Parent</option>
+                </select>
+            {% endif %}
+        </label>
+
+        <div class="mt-4 grid grid-cols-2 gap-4">
+            <label class="block">
+                <span>First Name:</span>
+                {{ form.first_name }}
+            </label>
+
+            <label class="block">
+                <span>Last Name:</span>
+                {{ form.last_name }}
+            </label>
+        </div>
+
+        <!-- EMAIL -->
+        <label class="mt-4 block">
+            <span>Email:</span>
+            {{ form.email }}
+        </label>
+
+        <!-- GENDER -->
+        <label class="mt-4 block">
+            <span>Gender:</span>
+            {{ form.gender }}
+        </label>
+
+        <!-- PHOTO -->
+        <label class="mt-4 block">
+            <span>Photo:</span>
+            {{ form.photo }}
+        </label>
+
+        <!-- PASSWORD -->
+        <label class="mt-4 block">
+            <span>Password:</span>
+            {{ form.password1 }}
+        </label>
+
+        <label class="mt-4 block">
+            <span>Confirm Password:</span>
+            {{ form.password2 }}
+        </label>
+
+        <!-- ================= ROLE FORM ================= -->
+
+        <!-- TEACHER -->
+        <div id="teacherForm" class="hidden mt-4">
+            <label>Major:</label>
+            <input type="text" name="major" class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70">
+        </div>
+
+        <!-- STUDENT -->
+        <div id="studentForm" class="hidden mt-4">
+            <label>Grade:</label>
+            <input type="text" name="grade" class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70">
+
+            <label class="mt-2">Level:</label> 
+            <select name="level_display" id="levelSelect"
+                class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2">
+
+                {% for lvl in levels %}
+                    <option value="{{ lvl.id }}">{{ lvl.name }} - {{ lvl.description }}</option>
+                {% endfor %}
+            </select>
+
+            <input type="hidden" name="level" id="levelHidden">
+            
+            <label class="mt-2">Address:</label>
+            <textarea name="address" class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70"></textarea>
+
+            <label class="mt-2">Birth:</label>
+            <input type="date" name="birth" class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70">
+        </div>
+
+        <!-- PARENT -->
+        <div id="parentForm" class="hidden mt-4">
+            <label>Position:</label>
+            <input type="text" name="position" class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70">
+        </div>
+
+        <!-- BUTTON -->
+        <button class="btn mt-5 w-full bg-primary font-medium text-white">
+            Register
+        </button>
+
+        <!-- ERROR -->
+        {% if form.errors %}
+            <div class="text-red-500 mt-3 text-sm">
+                {{ form.errors }}
+            </div>
+        {% endif %}
+
+        <!-- LOGIN LINK -->
+        <div class="mt-4 text-center text-xs-plus">
+            <span>Sudah punya akun?</span>
+            <a href="{% url 'login' %}" class="text-primary">
+                Login
+            </a>
+        </div>
+
+    </div>
+</form>
+
+<!-- ================= JS ================= -->
+<script>
+    toggleRoleForm();
+function toggleRoleForm() {
+    const role = document.getElementById('role').value; 
+
+    document.getElementById('teacherForm').classList.add('hidden');
+    document.getElementById('studentForm').classList.add('hidden');
+    document.getElementById('parentForm').classList.add('hidden');
+
+    if (role === 'teacher') {
+        document.getElementById('teacherForm').classList.remove('hidden');
+    } else if (role === 'student') {
+        document.getElementById('studentForm').classList.remove('hidden');
+    } else if (role === 'parent') {
+        document.getElementById('parentForm').classList.remove('hidden');
+    }
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+
+    const autoLevel = "{{ auto_level.id|default:'' }}";
+
+    const select = document.getElementById("levelSelect");
+    const hidden = document.getElementById("levelHidden");
+
+    if (autoLevel) {
+
+        select.value = autoLevel;
+        select.disabled = true;
+
+        hidden.value = autoLevel;
+
+    } else {
+
+        // kalau manual, sync ke hidden juga
+        select.addEventListener("change", function() {
+            hidden.value = this.value;
+        });
+
+    }
+
+});
+</script>
+
+{% endblock content %}

@@ -1,0 +1,123 @@
+{% extends 'dashboard_base.html' %}
+{% load humanize %}
+{% load custom_tags %}
+
+{% block content_title %}
+<div class=" items-center space-x-4 py-5 lg:py-6">
+        <h2 class="text-xl font-medium text-slate-800 dark:text-navy-50 lg:text-2xl" >
+            Log Aktivitas
+        </h2>
+        <div class="hidden h-full py-1 sm:flex"><div class="h-full w-px bg-slate-300 dark:bg-navy-600"></div></div>
+        <div class="pb-4 flex-wrap border-b border-slate-200 dark:border-navy-500">
+            <ul class="hidden flex-wrap items-center space-x-2 sm:flex">
+                <li class="flex items-center space-x-2">
+                    <a class="text-grey transition-colors hover:text-primary-focus dark:text-accent-light dark:hover:text-accent"
+                    href="{% dashboard_url user %}" ><svg xmlns="http://www.w3.org/2000/svg" class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" > <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10.5L12 3l9 7.5V21a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1v-10.5z" /> </svg></a>
+                    <svg x-ignore xmlns="http://www.w3.org/2000/svg" class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </li> 
+                <li class="text-primary"><strong>Log Aktivitas</strong></li>
+            </ul>
+        </div>
+    </div> 
+{% endblock %}
+
+{% block content %}
+
+<div class="transition-content px-(--margin-x) pb-8"> 
+
+    <div class="card p-6">
+
+        {% if activities %}
+
+        <ol class="timeline">
+
+            {% for activity in activities %}
+
+            <li class="timeline-item">
+
+                <div
+                    class="timeline-item-point rounded-full
+
+                    {% if activity.activity_type == 'reaction' %}
+                        bg-warning
+                    {% elif activity.activity_type == 'ask' %}
+                        bg-info
+                    {% else %}
+                        bg-primary
+                    {% endif %}
+                ">
+                </div>
+
+                <div class="timeline-item-content flex-1 pl-4 sm:pl-8">
+
+                    <div class="flex flex-col justify-between pb-2 sm:flex-row sm:pb-0">
+
+                        <p class="pb-2 font-medium leading-none text-slate-700 dark:text-navy-100">
+
+                            {{ activity.title }}
+
+                        </p>
+
+                        <span class="text-xs text-slate-400">
+
+                            {{ activity.created_at|naturaltime }}
+
+                        </span>
+
+                    </div>
+
+                    {% if activity.description %}
+
+                    <p class="py-1 text-slate-500">
+
+                        {{ activity.description }}
+
+                    </p>
+
+                    {% endif %}
+
+                </div>
+
+            </li>
+
+            {% endfor %}
+
+        </ol>
+
+        {% else %}
+
+        <div class="py-16 text-center">
+
+            <svg xmlns="http://www.w3.org/2000/svg"
+                class="mx-auto h-14 w-14 text-slate-300"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor">
+
+                <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+
+            </svg>
+
+            <h3 class="mt-4 text-base font-semibold text-slate-700">
+                Belum ada aktivitas
+            </h3>
+
+            <p class="mt-1 text-sm text-slate-400">
+                Aktivitas Anda akan muncul di halaman ini.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}

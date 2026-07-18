@@ -1,0 +1,187 @@
+{% extends 'dashboard_base.html' %}
+{% load custom_tags %}
+{% block content %}
+
+<form method="POST" enctype="multipart/form-data">
+{% csrf_token %}
+
+<div class="grid grid-cols-12 gap-4 sm:gap-5 lg:gap-6">
+
+  <!-- ================= LEFT ================= -->
+  <div class="col-span-12 sm:col-span-8">
+    <div class="card p-4 sm:p-5">
+
+      <p class="text-base font-medium text-slate-700 dark:text-navy-100">
+        Update Roadmap
+      </p>
+
+      <div class="mt-4 space-y-4">
+
+        <!-- NAME -->
+        <label class="block">
+          <span>Roadmap Name</span>
+          <span class="relative mt-1.5 flex">
+            {{ form.name }}
+            <span
+              class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400 peer-focus:text-primary dark:text-navy-300 dark:peer-focus:text-accent"
+            >
+              <i class="fa fa-road text-base"></i>
+            </span>
+          </span>
+        </label>
+
+        <!-- DESCRIPTION -->
+        <label class="block">
+          <span>Description</span>
+          <textarea
+            name="description"
+            rows="4"
+            placeholder="Roadmap description"
+            class="form-textarea mt-1.5 w-full rounded-lg border border-slate-300 bg-transparent p-2.5 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+          >{{ form.description.value|default:"" }}</textarea>
+        </label>
+
+        <!-- COVER -->
+        <label class="block">
+          <span>Cover</span>
+          <input
+            type="file"
+            name="cover"
+            class="form-input mt-1.5 w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 file:mr-4 file:rounded file:border-0 file:bg-primary file:px-3 file:py-1 file:text-white hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+          >
+        </label>
+
+        <!-- DATE -->
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+
+          <!-- RELEASE -->
+          <label class="block">
+            <span>Release</span>
+            <span class="relative mt-1.5 flex">
+              <input
+                id="release"
+                type="datetime-local"
+                name="release"
+                value="{% if roadmap.release %}{{ roadmap.release|date:'Y-m-d\TH:i' }}{% endif %}"
+                class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 pl-9 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+              >
+              <span
+                class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400 peer-focus:text-primary dark:text-navy-300 dark:peer-focus:text-accent"
+              >
+                <i class="fa fa-calendar"></i>
+              </span>
+            </span>
+          </label>
+
+          <!-- EXPIRED -->
+          <label class="block">
+            <span>Expired</span>
+            <span class="relative mt-1.5 flex">
+              <input
+                id="expired"
+                type="datetime-local"
+                name="expired"
+                value="{% if roadmap.expired %}{{ roadmap.expired|date:'Y-m-d\TH:i' }}{% endif %}"
+                class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 pl-9 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+              >
+              <span
+                class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400 peer-focus:text-primary dark:text-navy-300 dark:peer-focus:text-accent"
+              >
+                <i class="fa fa-calendar-times"></i>
+              </span>
+            </span>
+          </label>
+
+        </div>
+
+        <!-- ACTIVE -->
+        <div class="flex items-center space-x-2">
+          <input
+            type="checkbox"
+            name="is_active"
+            {% if form.is_active.value %}checked{% endif %}
+            class="form-checkbox is-basic size-5 rounded-sm border-slate-400/70 checked:border-primary checked:bg-primary hover:border-primary focus:border-primary dark:border-navy-400 dark:checked:border-accent dark:checked:bg-accent dark:hover:border-accent dark:focus:border-accent"
+          >
+          <span>Active</span>
+        </div>
+
+        <!-- BUTTON -->
+        <div class="flex justify-end space-x-2">
+
+          <!-- BACK -->
+          <a href="{% roadmap_list_url user %}"
+            class="btn space-x-2 bg-slate-150 font-medium text-slate-800 hover:bg-slate-200 focus:bg-slate-200 active:bg-slate-200/80 dark:bg-navy-500 dark:text-navy-50 dark:hover:bg-navy-450 dark:focus:bg-navy-450 dark:active:bg-navy-450/90">
+            <span>Cancel</span>
+          </a>
+
+          <!-- SUBMIT -->
+          <button
+            class="btn space-x-2 bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90">
+            <span>Save</span>
+          </button>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= RIGHT ================= -->
+  <div class="hidden sm:col-span-4 sm:block">
+    <div class="sticky top-24 mt-3">
+      <ol class="steps is-vertical line-space">
+
+        <li class="step pb-8 before:bg-primary dark:before:bg-accent">
+          <div class="step-header rounded-full bg-primary text-white dark:bg-accent">
+            1
+          </div>
+          <h3 class="ml-4 text-slate-700 dark:text-navy-100">
+            Input Data
+          </h3>
+        </li>
+
+        <li class="step pb-8 before:bg-slate-200 dark:before:bg-navy-500">
+          <div class="step-header rounded-full bg-slate-200 text-slate-800 dark:bg-navy-500 dark:text-white">
+            2
+          </div>
+          <h3 class="ml-4 text-slate-700 dark:text-navy-100">
+            Save Roadmap
+          </h3>
+        </li>
+
+      </ol>
+    </div>
+  </div>
+
+</div>
+</form>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const release = document.getElementById("release");
+    const expired = document.getElementById("expired");
+
+    release.addEventListener("change", function () {
+        if (!this.value) return;
+
+        // Buat objek Date dari release
+        const date = new Date(this.value);
+
+        // Tambah 10 minggu (70 hari)
+        date.setDate(date.getDate() + 70);
+
+        // Set jam menjadi 23:59
+        date.setHours(23, 59, 0, 0);
+
+        // Format ke YYYY-MM-DDTHH:MM
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+        const hour = String(date.getHours()).padStart(2, "0");
+        const minute = String(date.getMinutes()).padStart(2, "0");
+
+        expired.value = `${year}-${month}-${day}T${hour}:${minute}`;
+    });
+});
+</script>
+{% endblock content %}

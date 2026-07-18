@@ -1,0 +1,432 @@
+{% extends "visitor/base.html" %}
+{% load screening_custom_tags %}
+{% block content %}
+
+<style>
+    .step-circle{
+        position: relative;
+        z-index: 10;
+        width: 36px;
+        height: 36px;
+        border-radius: 9999px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: white;
+        border: 2px solid #bbdaff;
+        color: #64748b;
+        font-size: 14px;
+        font-weight: 600;
+        transition: all .25s ease;
+        flex: 0 0 36px;
+        top: -15px;
+    }
+
+    .step-circle.active{
+        background: #2980b9;
+        border-color: #2980b9;
+        color: white;
+    }
+
+    .step-circle.done{
+        background: #2980b9;
+        border-color: #2980b9;
+        color: white;
+    }
+
+    .quiz-option input[type="radio"]{
+        display: none;
+    }
+
+    .quiz-option{
+        transition: all .2s ease;
+    }
+
+    .quiz-option:hover{
+        border-color: rgb(var(--color-primary));
+    }
+
+    /* ketika radio terpilih */  
+    .quiz-option:has(input:checked){
+        border: 2px solid white;
+        background: rgba(255,255,255,0.2);
+        color: white;
+
+        font-weight: 700; /* bold */
+
+
+        box-shadow:
+            0 0 0 2px rgba(255,255,255,0.25),
+            0 4px 20px rgba(255,255,255,0.25);
+
+        transform: translateY(-1px);
+    }
+
+    /* optional: biar lebih “button feel” */
+    .quiz-option:active{
+        transform: scale(0.99);
+    }
+
+    .quiz-option.selected{
+        border-color: rgb(var(--color-primary));
+        background: rgba(var(--color-primary), 0.08);
+    } 
+
+    #quizCard{
+        transition: opacity .25s ease, transform .25s ease;
+    }
+
+    #quizCard.is-hidden{
+        opacity: 0;
+        transform: translateY(10px);
+    }
+</style>
+
+
+<div
+    id="placementLoading"
+    class="fixed inset-0 z-[9999] hidden items-center justify-center bg-white/90 dark:bg-navy-900/90">
+
+    <div class="text-center">
+
+        <div
+            class="mx-auto h-12 w-12 animate-spin rounded-full border-4 border-primary border-t-transparent">
+        </div>
+
+        <h3 class="mt-4 text-lg font-semibold text-slate-700 dark:text-navy-100">
+            Placement Selesai
+        </h3>
+
+        <p class="mt-1 text-slate-500">
+            Menentukan level dan mengalihkan ke registrasi...
+        </p>
+
+    </div>
+
+</div>
+
+<div class="max-w-2xl mx-auto" style="width: 700px;">
+    <div id="quizCard" class="rounded-lg bg-info px-4 py-4 text-white shadow-lg shadow-info/50 sm:px-5">
+
+        <!-- Progress -->
+        <div class="mb-8 pt-5">
+
+            <div class="relative">
+
+                <div class="absolute left-0 right-0 top-[18px] h-1 bg-slate-200 rounded-full"></div>
+
+                <div
+                    id="progressLine"
+                    class="absolute left-0 top-[18px] h-1 rounded-full transition-all duration-300"
+                    style="width:0%; background-color: #2980b9;">
+                </div>
+
+                <div class="relative flex justify-between">
+
+                    <div class="step-circle">1</div>
+                    <div class="step-circle">2</div>
+                    <div class="step-circle">3</div>
+                    <div class="step-circle">4</div>
+                    <div class="step-circle">5</div>
+
+                </div>
+
+            </div>
+
+            <div
+                id="progress-text"
+                class="mt-4 text-sm font-medium text-primary">
+            </div>
+
+        </div>
+
+        <!-- Soal -->
+        <div class="space-y-6">
+         
+
+            <h2 class="text-2xl font-semibold text-white-800 dark:text-white-100">
+                <span id="question-number"></span>.
+                <span id="question-title"></span>
+            </h2>
+
+            <div class="rounded-xl border border-slate-200 bg-slate-50 p-8">
+
+                <div
+                    id="question"
+                    dir="rtl" 
+                    lang="id"
+                    class="px-8 py-6 text-2xl text-slate-800">
+                </div>
+
+            </div>
+
+            <p class="text-white-500">
+                Pilih jawaban yang paling tepat.
+            </p>
+
+            <div id="options" class="space-y-3"></div>
+
+        </div>
+
+        <!-- Tombol -->
+        <div class="relative flex justify-between w-full max-w-full"
+            style="padding: 25px 0px 20px 0px">
+
+            <button
+                id="prevBtn"
+                type="button"
+                class="btn border border-slate-300 bg-white text-slate-600">
+
+                <svg xmlns="http://www.w3.org/2000/svg"
+                    class="mr-2 h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor">
+
+                    <path stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M15 19l-7-7 7-7"/>
+
+                </svg>
+
+                Sebelumnya
+
+            </button>
+
+            <button
+                id="nextBtn"
+                type="button"
+                class="btn bg-primary text-white">
+
+                Selanjutnya
+
+                <svg xmlns="http://www.w3.org/2000/svg"
+                    class="ml-2 h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor">
+
+                    <path stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M9 5l7 7-7 7"/>
+
+                </svg>
+
+            </button>
+
+        </div>
+
+    </div>
+</div>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function(){
+
+    const questions = JSON.parse('{{ questions_json|escapejs }}');
+    
+    let currentQuestion = 0;
+    let answers = {};
+
+    // ▀▄▀▄ csrf untuk submit
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    const csrftoken = getCookie('csrftoken');
+
+    // ▀▄▀▄ load/render question ke card progress
+    function renderQuestion(){
+
+        const q = questions[currentQuestion];
+
+        document.getElementById("question-number").textContent =
+            currentQuestion + 1;
+
+        document.getElementById("question-title").textContent =
+            q.question;
+
+        document.getElementById("question").textContent =
+            q.word;
+
+        document.getElementById("progress-text").textContent =
+            `${currentQuestion + 1} / ${questions.length}`;
+
+        let html = "";
+
+        q.options.forEach((option, index) => {
+
+            const checked =
+                answers[currentQuestion] == option.id
+                ? "checked"
+                : "";
+
+            html += `
+            <label class="quiz-option flex cursor-pointer items-center gap-4 rounded-xl border border-slate-200 p-4">
+
+                <input
+                    type="radio"
+                    name="answer"
+                    value="${option.id}"
+                    ${checked}
+                    class="hidden">
+
+                <span>
+                    ${String.fromCharCode(65 + index)}. ${option.text}
+                </span>
+
+            </label>
+            `;
+        });
+
+        document.getElementById("options").innerHTML = html;
+
+        document.querySelectorAll('input[name="answer"]')
+            .forEach(radio => {
+                radio.addEventListener("change", function(){
+                    answers[currentQuestion] = parseInt(this.value);
+                });
+            });
+
+        updateSteps();
+    }
+
+    function animateCard(callback){
+
+        const card = document.getElementById("quizCard");
+
+        // 1. HIDE dulu
+        card.classList.add("is-hidden");
+
+        // 2. tunggu frame
+        setTimeout(() => {
+
+            // 3. jalankan update isi
+            callback();
+
+            // 4. force repaint
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    card.classList.remove("is-hidden");
+                });
+            });
+
+        }, 120);
+    } 
+
+    // ▀▄▀▄ update steps/progress
+    function updateSteps(){
+
+        const circles =
+            document.querySelectorAll(".step-circle");
+
+        circles.forEach((circle,index)=>{
+
+            circle.classList.remove(
+                "active",
+                "done"
+            );
+
+            if(index < currentQuestion){
+                circle.classList.add("done");
+            }
+            else if(index === currentQuestion){
+                circle.classList.add("active");
+            }
+
+        });
+
+        const progress =
+            (currentQuestion / (questions.length - 1)) * 100;
+
+        document.getElementById("progressLine")
+            .style.width = progress + "%";
+    } 
+
+    // ▀▄▀▄ fungsi CLICK next button
+    document.getElementById("nextBtn").addEventListener("click", function(){
+
+        if(currentQuestion < questions.length - 1){
+
+            animateCard(() => {
+                currentQuestion++;
+                renderQuestion();
+            });
+
+        } else {
+
+            fetch("{% submit_level_session %}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": csrftoken
+                },
+                body: JSON.stringify({
+                    answers: answers,
+                    questions: questions
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+
+                console.log(data);
+
+                showPlacementLoading();
+
+                setTimeout(() => {
+
+                    window.location.href = "/auth/register/";
+
+                }, 1500);
+
+            })
+            .catch(err => {
+                console.error(err);
+            });
+        }
+    });
+    
+    // ▀▄▀▄ fungsi CLICK prev button
+    document
+        .getElementById("prevBtn")
+        .addEventListener("click", function(){
+
+        if(currentQuestion > 0){
+
+            animateCard(() => {
+                currentQuestion--;
+                renderQuestion();
+            });
+
+        }
+
+    });
+
+    renderQuestion(); 
+
+});
+
+function showPlacementLoading() {
+
+    const loading = document.getElementById('placementLoading');
+
+    loading.classList.remove('hidden');
+    loading.classList.add('flex');
+
+}
+</script>
+
+{% endblock content %}

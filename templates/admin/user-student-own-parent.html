@@ -1,0 +1,161 @@
+{% extends 'dashboard_base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="grid grid-cols-12 gap-4 sm:gap-5 lg:gap-6">
+    <div class="col-span-12 sm:col-span-8">
+
+        <div class="flex justify-between items-center mb-5"> 
+            <p class="text-base font-medium">
+                Hubungkan Orang Tua
+            </p> 
+            <a href="{% url 'admin_user_list' %}"
+                class="btn size-8 rounded-full p-0"> 
+                <svg xmlns="http://www.w3.org/2000/svg"
+                    class="size-4.5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor">
+
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="1.5"
+                        d="M15 19l-7-7 7-7"/>
+                </svg> 
+            </a> 
+        </div>
+
+
+        <div class="card p-4 sm:p-5 mt-4">
+            <div class="flex items-center space-x-4"> 
+                {% if student.user.photo %}
+                    <img src="{{ student.user.photo.url }}"
+                        class="w-16 h-16 rounded-full object-cover">
+                {% endif %} 
+                <div> 
+                    <p class="font-semibold"> 
+                        {{ student.user.get_full_name|default:student.user.email }} 
+                    </p> 
+                    <p class="text-xs text-slate-400"> 
+                        {{ student.user.email }} 
+                    </p> 
+                </div> 
+            </div> 
+
+            <form method="post" class="mt-8 space-y-6"> 
+                {% csrf_token %} 
+                {{ form.mode }} 
+
+                <!-- SWITCH --> 
+                <div> 
+                    <label class="block text-sm font-medium text-slate-700 dark:text-navy-100 mb-3">
+                        Tentukan Orang Tua
+                    </label>
+                    <label class="inline-flex items-center space-x-2"> 
+                        <input
+                            id="newParentSwitch"
+                            type="checkbox"
+                            class="form-switch h-5 w-10 rounded-full bg-slate-300 before:rounded-full before:bg-slate-50 checked:bg-primary checked:before:bg-white dark:bg-navy-900 dark:before:bg-navy-300 dark:checked:bg-accent dark:checked:before:bg-white"
+                        /> 
+                        <span id="switchLabel">
+                            Pilih Orang Tua Terdaftar
+                        </span> 
+                    </label> 
+                </div>
+
+                <!-- EXISTING PARENT --> 
+                <div id="existing-parent"> 
+                    <label class="block text-sm font-medium mb-2">
+                        {{ form.parent.label }}
+                    </label> 
+                    {{ form.parent }} 
+                    {% if form.parent.errors %}
+                        <p class="mt-1 text-xs text-error">
+                            {{ form.parent.errors.0 }}
+                        </p>
+                    {% endif %} 
+                </div>
+    
+                <!-- NEW PARENT --> 
+                <div id="new-parent" class="hidden"> 
+                    <label class="block text-sm font-medium mb-2">
+                        {{ form.email.label }}
+                    </label>
+
+                    {{ form.email }}
+
+                    {% if form.email.errors %}
+                        <p class="mt-1 text-xs text-error">
+                            {{ form.email.errors.0 }}
+                        </p>
+                    {% endif %} 
+                </div> 
+
+                <!-- BUTTON -->
+                <div class="flex justify-end space-x-2 pt-2">
+
+                    <!-- BACK -->
+                    <a
+                        href="{% url 'admin_user_list' %}"
+                        class="btn space-x-2 bg-slate-150 font-medium text-slate-800 hover:bg-slate-200"
+                    >
+                        <span>Batal</span>
+                    </a>
+
+                    <!-- SUBMIT -->
+                    <button
+                        type="submit"
+                        class="btn space-x-2 bg-primary font-medium text-white hover:bg-primary-focus"
+                    >
+                        <span>Simpan</span>
+                    </button>
+
+                </div> 
+
+            </form> 
+        </div> 
+    </div>
+</div>
+
+<script>
+
+    const switchInput = document.getElementById("newParentSwitch"); 
+    const modeInput = document.getElementById("id_mode"); 
+    const existingDiv = document.getElementById("existing-parent"); 
+    const newDiv = document.getElementById("new-parent"); 
+    const label = document.getElementById("switchLabel");
+
+    function refreshMode(){
+
+        if(switchInput.checked){
+
+            modeInput.value = "create";
+
+            label.innerHTML = "Tambah Orang Tua Baru";
+
+            existingDiv.classList.add("hidden");
+
+            newDiv.classList.remove("hidden");
+
+        }else{
+
+            modeInput.value = "existing";
+
+            label.innerHTML = "Pilih Orang Tua Terdaftar";
+
+            existingDiv.classList.remove("hidden");
+
+            newDiv.classList.add("hidden");
+
+        }
+
+    }
+
+    switchInput.addEventListener("change", refreshMode);
+
+    refreshMode();
+
+</script>
+
+{% endblock %}

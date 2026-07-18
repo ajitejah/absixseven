@@ -1,0 +1,411 @@
+{% extends 'dashboard_base.html' %}
+{% load static %}
+{% load custom_tags %}
+
+{% block content_title %}
+<div class="items-center space-x-4 py-5 lg:py-6">
+
+    <h2 class="text-xl font-medium text-slate-800 dark:text-navy-50 lg:text-2xl">
+        Pengaturan Web
+    </h2>
+
+    <div class="hidden h-full py-1 sm:flex">
+        <div class="h-full w-px bg-slate-300 dark:bg-navy-600"></div>
+    </div>
+
+    <div class="pb-4 flex-wrap border-b border-slate-200 dark:border-navy-500">
+        <ul class="hidden flex-wrap items-center space-x-2 sm:flex">
+
+            <li class="flex items-center space-x-2">
+
+                <a class="text-grey transition-colors hover:text-primary-focus"
+                   href="{% dashboard_url user %}">
+
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         class="size-4"
+                         fill="none"
+                         viewBox="0 0 24 24"
+                         stroke="currentColor">
+
+                        <path stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M3 10.5L12 3l9 7.5V21a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1v-10.5z"/>
+
+                    </svg>
+
+                </a>
+
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     class="size-4"
+                     fill="none"
+                     viewBox="0 0 24 24"
+                     stroke="currentColor">
+
+                    <path stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M9 5l7 7-7 7"/>
+
+                </svg>
+
+            </li>
+
+            <li class="flex items-center space-x-2">
+                <span>Pengaturan</span>
+
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     class="size-4"
+                     fill="none"
+                     viewBox="0 0 24 24"
+                     stroke="currentColor">
+
+                    <path stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M9 5l7 7-7 7"/>
+
+                </svg>
+
+            </li>
+
+            <li class="text-primary">
+                <strong>Website</strong>
+            </li>
+
+        </ul>
+
+    </div>
+
+</div>
+{% endblock %}
+
+{% block content %}
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <div class="grid grid-cols-12 gap-5">
+
+        <!-- ===================================================== -->
+        <!-- SEO -->
+        <!-- ===================================================== -->
+
+        <div class="col-span-12 lg:col-span-6">
+
+            <div class="card p-5">
+
+                <h3 class="text-lg font-semibold text-slate-800 dark:text-white">
+                    SEO & Meta
+                </h3>
+
+                <p class="mt-1 text-xs text-slate-500">
+                    Pengaturan SEO website.
+                </p>
+
+                <div class="mt-6 space-y-5">
+
+                    {% for item in seo_settings %}
+
+                        <div>
+
+                            <label class="block">
+
+                                <span class="font-medium">
+                                    {{ item.label }}
+                                </span> 
+
+                                {% if item.type == "text" %}
+
+                                    <input
+                                        type="text"
+                                        name="{{ item.id }}"
+                                        value="{{ item.value }}"
+                                        class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"/>
+
+                                {% elif item.type == "textarea" %}
+
+                                    <textarea
+                                        rows="4"
+                                        name="{{ item.id }}"
+                                        class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent">{{ item.value }}</textarea>
+
+                                {% elif item.type == "image" %}
+
+                                    {% if item.image %}
+                                    <img
+                                        src="{{ item.image.url }}"
+                                        class="mb-3 h-24 rounded-lg border object-contain">
+                                    {% endif %}
+
+                                    
+                                    <input
+                                        type="file"
+                                        name="{{ item.id }}"
+                                        class="form-input mt-2 w-full"/>
+
+                                {% endif %}
+
+                            </label>
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ===================================================== -->
+        <!-- BRANDING -->
+        <!-- ===================================================== -->
+
+        <div class="col-span-12 lg:col-span-6">
+
+            <div class="card p-5">
+
+                <h3 class="text-lg font-semibold text-slate-800 dark:text-white">
+                    Branding
+                </h3>
+
+                <p class="mt-1 text-xs text-slate-500">
+                    Logo, favicon, dan identitas website.
+                </p>
+
+                <div class="mt-6 space-y-5">
+
+                    {% for item in branding_settings %}
+
+                        <div>
+
+                            <label class="block">
+
+                                <span class="font-medium">
+                                    {{ item.label }}
+                                </span>
+
+                                {% if item.image %}
+
+                                    <img
+                                        src="{{ item.image.url }}"
+                                        class="mt-2 mb-3 h-28 rounded-lg border bg-white object-contain">
+
+                                {% endif %}
+                                <br>
+                                <label
+                                    class="btn mt-2 relative bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90"
+                                    >
+                                    <input
+                                        tabindex="-1"
+                                        type="file"
+                                        name="{{ item.id }}"
+                                        class="pointer-events-none absolute inset-0 h-full w-full opacity-0"
+                                    />
+                                    <span class="flex items-center space-x-2">
+                                        <i class="fa-solid fa-cloud-arrow-up text-base"></i>
+                                        <span>Choose File</span>
+                                    </span>
+                                </label>
+
+                            </label>
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ===================================================== -->
+        <!-- CONTACT -->
+        <!-- ===================================================== -->
+
+        <div class="col-span-12 lg:col-span-6">
+
+            <div class="card p-5">
+
+                <h3 class="text-lg font-semibold text-slate-800 dark:text-white">
+                    Informasi Website
+                </h3>
+
+                <p class="mt-1 text-xs text-slate-500">
+                    Informasi kontak yang akan ditampilkan pada website.
+                </p>
+
+                <div class="mt-6 space-y-5">
+
+                    {% for item in contact_settings %}
+
+                    <div>
+
+                        <label class="block">
+
+                            <span class="font-medium">
+                                {{ item.label }}
+                            </span>
+
+                            {% if item.type == "textarea" %}
+
+                            <textarea
+                                rows="4"
+                                name="{{ item.id }}"
+                                class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent">{{ item.value }}</textarea>
+
+                            {% else %}
+
+                            <input
+                                type="text"
+                                name="{{ item.id }}"
+                                value="{{ item.value }}"
+                                class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent">
+
+                            {% endif %}
+
+                        </label>
+
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ===================================================== -->
+        <!-- SOCIAL -->
+        <!-- ===================================================== -->
+
+        <div class="col-span-12 lg:col-span-6">
+
+            <div class="card p-5">
+
+                <h3 class="text-lg font-semibold text-slate-800 dark:text-white">
+                    Media Sosial
+                </h3>
+
+                <p class="mt-1 text-xs text-slate-500">
+                    Link media sosial resmi IBSIXSEVEN.
+                </p>
+
+                <div class="mt-6 space-y-5">
+
+                    {% for item in social_settings %}
+
+                    <div>
+
+                        <label class="block">
+
+                            <span class="font-medium">
+                                {{ item.label }}
+                            </span>
+
+                            <input
+                                type="text"
+                                name="{{ item.id }}"
+                                value="{{ item.value }}"
+                                class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent">
+
+                        </label>
+
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ===================================================== -->
+        <!-- ANALYTICS -->
+        <!-- ===================================================== -->
+
+        <div class="col-span-12">
+
+            <div class="card p-5">
+
+                <h3 class="text-lg font-semibold text-slate-800 dark:text-white">
+                    Analytics & Tracking
+                </h3>
+
+                <p class="mt-1 text-xs text-slate-500">
+                    Konfigurasi Google Analytics, Google Tag Manager, dan informasi copyright.
+                </p>
+
+                <div class="mt-6 grid grid-cols-1 gap-5 lg:grid-cols-2">
+
+                    {% for item in analytics_settings %}
+
+                    <div>
+
+                        <label class="block">
+
+                            <span class="font-medium">
+                                {{ item.label }}
+                            </span>
+
+                            {% if item.type == "textarea" %}
+
+                            <textarea
+                                rows="4"
+                                name="{{ item.id }}"
+                                class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent">{{ item.value }}</textarea>
+
+                            {% else %}
+
+                            <input
+                                type="text"
+                                name="{{ item.id }}"
+                                value="{{ item.value }}"
+                                class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent">
+
+                            {% endif %}
+
+                        </label>
+
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        </div>
+    
+    </div>
+
+    <!-- ===================================================== -->
+    <!-- ACTION -->
+    <!-- ===================================================== -->
+
+    <div class="mt-6 flex items-center justify-end gap-3">
+
+        <a href="{% dashboard_url user %}"
+           class="btn border border-slate-300 font-medium text-slate-700 hover:bg-slate-150 focus:bg-slate-150 active:bg-slate-200 dark:border-navy-450 dark:text-navy-100 dark:hover:bg-navy-500 dark:focus:bg-navy-500 dark:active:bg-navy-600">
+
+            Batal
+
+        </a>
+
+        <button
+            type="submit"
+            class="btn bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90">
+
+            <i class="fa-solid fa-floppy-disk mr-2"></i>
+
+            Simpan Perubahan
+
+        </button> 
+    </div> 
+</form>
+
+{% endblock content %}

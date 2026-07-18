@@ -1,0 +1,40 @@
+{% load setting_tags %}
+
+<title>{% web_setting "SEO" "meta_title" %}</title>
+
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="description" content="{% web_setting 'SEO' 'meta_description' %}">
+<meta name="keywords" content="{% web_setting  'SEO' 'meta_keywords' %}">
+<meta name="author" content="{% web_setting  'SEO' 'meta_author' %}">
+<meta name="robots" content="{% web_setting  'SEO' 'meta_robots' %}">
+
+<link rel="canonical" href="{% web_setting  'SEO' 'canonical_url' %}">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="{% web_setting  'SEO' 'site_name' %}">
+<meta property="og:title" content="{% web_setting  'BRANDING' 'og_title' %}">
+<meta property="og:description" content="{% web_setting  'BRANDING' 'og_description' %}">
+
+{% web_setting 'BRANDING' "og_image" as og_image %}
+{% if og_image %}
+<meta property="og:image" content="{{ og_image.url }}">
+{% endif %}
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{% web_setting  'BRANDING' 'twitter_title' %}">
+<meta name="twitter:description" content="{% web_setting 'BRANDING' 'twitter_description' %}">
+
+{% web_setting 'BRANDING' "twitter_image" as twitter_image %}
+{% if twitter_image %}
+<meta name="twitter:image" content="{{ twitter_image.url }}">
+{% endif %}
+
+{% web_setting 'BRANDING' "favicon" as favicon %}
+{% if favicon %}
+<link rel="icon" type="image/png" href="{{ favicon.url }}">
+<link rel="shortcut icon" href="{{ favicon.url }}">
+<link rel="apple-touch-icon" href="{{ favicon.url }}">
+{% endif %}

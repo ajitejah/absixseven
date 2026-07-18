@@ -1,0 +1,202 @@
+{% extends "dashboard_base.html" %}
+{% load custom_tags %}
+
+<!-- % content title % -->
+{% block content_title %} 
+    <div class=" items-center space-x-4 py-5 lg:py-6">
+        <h2 class="text-xl font-medium text-slate-800 dark:text-navy-50 lg:text-2xl" >
+            Daftar Roadmap
+        </h2>
+        <div class="hidden h-full py-1 sm:flex"><div class="h-full w-px bg-slate-300 dark:bg-navy-600"></div></div>
+        <div class="pb-4 flex-wrap border-b border-slate-200 dark:border-navy-500">
+            <ul class="hidden flex-wrap items-center space-x-2 sm:flex">
+                <li class="flex items-center space-x-2">
+                    <a class="text-grey transition-colors hover:text-primary-focus dark:text-accent-light dark:hover:text-accent"
+                    href="{% dashboard_url user %}" ><svg xmlns="http://www.w3.org/2000/svg" class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" > <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10.5L12 3l9 7.5V21a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1v-10.5z" /> </svg></a>
+                    <svg x-ignore xmlns="http://www.w3.org/2000/svg" class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </li> 
+                <li class="text-primary"><strong>Daftar Roadmap</strong></li>
+            </ul>
+        </div>
+    </div> 
+{% endblock content_title %}
+
+
+{% block content %}
+  
+<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3 lg:gap-6">  
+    
+    {% for roadmap in roadmaps %} 
+    <div class="card">
+            <div class="p-2.5">
+              <img src="{{ roadmap.cover.url }}" class="h-48 w-full rounded-lg object-cover object-center" alt="image"/>
+            </div>
+            
+            <div class="flex grow flex-col px-4 pb-5 pt-1 text-center sm:px-5">
+              <div><a class="text-xs-plus text-info" href="#">{{ roadmap.level.name }}</a></div>
+              <div class="mt-1">
+                <a href="#"
+                  class="text-lg font-medium text-slate-700 hover:text-primary focus:text-primary dark:text-navy-100 dark:hover:text-accent-light dark:focus:text-accent-light"
+                  >{{roadmap.name}}</a> 
+              </div>
+              <div class="my-2 flex items-center space-x-3 text-xs">
+                <div class="h-px flex-1 bg-slate-200 dark:bg-navy-500"></div>
+                
+                <div class="flex flex-col gap-1">
+                    <span class="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-medium">
+                        <span><strong>Release</strong></span>
+
+                        <!-- Calendar Icon -->
+                        <svg class="size-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M8 7V3m8 4V3m-9 8h10m-13 9h16a2 2 0 002-2V7a2 2 0 00-2-2H4a2 2 0 00-2 2v11a2 2 0 002 2z" />
+                        </svg>
+
+                        <span>{{ roadmap.release|date:"d M Y" }}</span>
+
+                        <!-- Separator -->
+                        <span class="opacity-50">•</span>
+
+                        <!-- Clock Icon -->
+                        <svg class="size-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+
+                        <span>{{ roadmap.release|date:"H:i" }}</span>
+                    </span>
+                    <span class="ml-6 text-xs text-gray-500">
+                        <small>(Dibuat {{ roadmap.created_at|timesince }} yang lalu)</small>
+                    </span>
+                </div>
+
+                <div class="h-px flex-1 bg-slate-200 dark:bg-navy-500"></div>
+              </div>
+              <p class="my-2 grow text-left line-clamp-3">
+                {{ roadmap.description }}
+              </p>
+              <div>  
+
+                {% if roadmap.evaluation %}
+
+                    {# ⏳ BELUM DIKONFIRMASI #}
+                    {% if not roadmap.evaluation.confirmed %}
+
+                        <button
+                            disabled
+                            class="btn mt-4 rounded-full bg-warning font-medium text-white cursor-not-allowed"
+                        >
+                            Menunggu Konfirmasi
+                        </button>
+
+                    {# ✅ SUDAH DIKONFIRMASI #}
+                    {% else %}
+
+                        {# 🚀 MASIH BERJALAN #}
+                        {% if roadmap.evaluation.progress < 100 %}
+
+                            <a href="{% roadmap_explore_url user roadmap.id %}"
+                                class="btn mt-4 rounded-full bg-info font-medium text-white hover:bg-info-focus">
+                                Lanjutkan
+                            </a>
+
+                        {# 🎓 SUDAH SELESAI #}
+                        {% else %}
+
+                            <button
+                                disabled
+                                class="btn mt-4 rounded-full bg-success font-medium text-white cursor-not-allowed"
+                                >
+                                Sudah Diikuti
+                            </button>
+
+                        {% endif %}
+
+                    {% endif %}
+
+                {% else %}
+
+                    {# 🆕 BELUM IKUT #}
+                    <button
+                        id="follow-btn-{{ roadmap.id }}"
+                        onclick="followRoadmap({{ roadmap.id }})"
+                        class="btn mt-4 rounded-full bg-primary font-medium text-white hover:bg-primary-focus"
+                        >
+                        Ikuti
+                    </button>
+
+                {% endif %}
+
+              </div>
+            </div>
+          </div>
+ 
+    {% endfor %}
+
+</div>
+
+<script> 
+  async function followRoadmap(roadmapId) { 
+      const button = document.getElementById(`follow-btn-${roadmapId}`);
+
+      // 🔒 cegah klik ulang
+      if (button.disabled) return;
+
+      try {
+
+          button.disabled = true;
+          button.innerText = "Memproses...";
+
+          const response = await fetch(`/student/scoring/evaluation/create/${roadmapId}/`, {
+              method: "POST",
+              headers: {
+                  "X-CSRFToken": "{{ csrf_token }}",
+                  "Content-Type": "application/json",
+              }
+          });
+
+          const data = await response.json();
+
+          if (data.success) {
+
+              button.innerText = "Sedang Dalam Konfirmasi";
+
+              button.classList.remove("bg-primary");
+              button.classList.add("bg-warning");
+
+          } else {
+
+              button.disabled = false;
+              button.innerText = "Ikuti";
+
+              alert(data.message || "Gagal mengikuti roadmap");
+
+          }
+
+      } catch (error) {
+
+          console.error(error);
+
+          button.disabled = false;
+          button.innerText = "Ikuti";
+
+          alert("Terjadi kesalahan");
+
+      }
+
+  }
+
+</script>
+{% endblock content %}

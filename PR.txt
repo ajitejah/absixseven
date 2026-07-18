@@ -1,0 +1,44 @@
+PATHWAY
+
+1. Roadmap Umum di halaman Lain
+
+------
+2. Learning Menu -> Pretest (khusus mapel tertentu) -> Soal PG/Essay/Matching 
+
+-- kalau Score 6 ke A:
+# banyaknya tugas/assignment
+# time allocation
+# minimal score
+
+-- kalau Score 7 ke B
+
+3. Teacher nanti kasih opsi Upload dan Buat Soal
+
+4. IBDP > Univ Application > Unie Test > IEALTS > Univ Accept
+
+
+Kurikulum Cambridge; nilainya A, B, C, dll
+Sec 1 -> 7
+Sec 2 -> 8
+Sec 3 -> 9
+Sec 4 -> 10
+
+Konversi Nilai
+A* -> 90-100
+A -> 80-90
+B -> 70-80
+C -> 60-70
+D -> 50-60
+
+# kalau ada nilai Cambride 50%, pretest 50%
+
+Kurikulum IBDP; nilainya 1...7
+Jc 1 -> 11
+Jc 2 -> 12
+Jc 3 -> 13
+
+===============
+
+AI DETECTOR
+KALENDER AKADEMIK; jadwal tugas, dan event
+STUDENT, TEACHER, PARENT >> Performance; Bronze, Silver, Gold.

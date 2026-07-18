@@ -1,0 +1,19 @@
+{% extends "auth/base.html" %}
+{% block content %}
+
+<form method="POST">
+    {% csrf_token %}
+
+    <div class="card mt-5 p-5">
+
+        <input type="email" name="email" placeholder="Email" class="form-input w-full mb-3" required>
+        <input type="password" name="password" placeholder="New Password" class="form-input w-full mb-3" required>
+
+        <button class="btn w-full bg-primary text-white">
+            Reset Password
+        </button>
+
+    </div>
+</form>
+
+{% endblock content %}

@@ -1,0 +1,450 @@
+{% extends 'dashboard_base.html' %}
+{% load static %}
+{% load custom_tags %}
+
+{% block content_title %} 
+    <div class="items-center space-x-4 py-5 lg:py-6">
+
+        <h2 class="text-xl font-medium text-slate-800 dark:text-navy-50 lg:text-2xl">
+            Pengaturan Aturan Umum Tracking
+        </h2>
+
+        <div class="hidden h-full py-1 sm:flex">
+            <div class="h-full w-px bg-slate-300 dark:bg-navy-600"></div>
+        </div>
+        <div class="pb-4 flex-wrap border-b border-slate-200 dark:border-navy-500">
+            <ul class="hidden flex-wrap items-center space-x-2 sm:flex">
+                <li class="flex items-center space-x-2">
+                    <a class="text-grey transition-colors hover:text-primary-focus"
+                        href="{% dashboard_url user %}"> 
+
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                            class="size-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"> 
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M3 10.5L12 3l9 7.5V21a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1v-10.5z"/>
+                        </svg> 
+                    </a>
+
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                        class="size-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M9 5l7 7-7 7"/>
+                    </svg>
+                </li> 
+                <li class="flex items-center space-x-2"> 
+                    <span>Pengaturan</span> 
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                        class="size-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"> 
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M9 5l7 7-7 7"/> 
+                    </svg>
+
+                </li> 
+                <li class="text-primary">
+                    <strong>Rule</strong>
+                </li>
+
+            </ul>
+
+        </div>
+
+    </div>
+
+{% endblock content_title %}
+
+
+{% block content %}
+
+<!-- ▀▄▀▄ load css tagify & flatpickr -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+ <form method="POST"> 
+    {% csrf_token %} 
+    <div class="space-y-6"> 
+        
+        <!-- ▀▄▀▄ General -->
+        <div class="card p-5"> 
+            <div class="mb-6"> 
+                <h2 class="text-lg font-semibold text-slate-800 dark:text-white"> 
+                    General 
+                </h2> 
+                <p class="mt-1 text-xs text-slate-500"> 
+                    Konfigurasi dasar tracking pembelajaran. 
+                </p> 
+            </div>
+
+            <div class="grid grid-cols-1 gap-5 lg:grid-cols-2"> 
+                <label class="block"> 
+                    <span>Nama</span> 
+                    <input
+                        readonly 
+                        type="text"
+                        name="name"
+                        value="{{ rule.name|default:'Tracking Rule' }}"
+                        class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent">
+
+                </label>
+
+                <label class="block">
+
+                    <span>Minimum Score (KKM)</span>
+
+                    <input
+                        type="number"
+                        name="minimum_score"
+                        value="{{ rule.minimum_score|default:75 }}"
+                        min="0"
+                        max="100"
+                        class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent">
+
+                </label>
+
+                <label class="block lg:col-span-2">
+
+                    <div class="flex items-center gap-3 mt-2">
+
+                        <input
+                            type="checkbox"
+                            name="is_active"
+                            {% if rule.is_active %}checked{% endif %}
+                            class="form-checkbox is-basic rounded border-slate-400">
+
+                        <span>Tracking Rule Active</span>
+
+                    </div>
+
+                </label>
+
+            </div>
+
+        </div>
+
+
+        <!-- ▀▄▀▄ evaluasi -->
+        <div class="card p-5"> 
+            <div class="mb-6"> 
+                <h2 class="text-lg font-semibold"> 
+                    Jadwal Evaluasi Guru
+                </h2> 
+            </div>
+
+            <div class="grid grid-cols-1 gap-5 lg:grid-cols-2"> 
+                <label> 
+                    <span>Hari Aktif Evaluasi</span> 
+                    <input
+                        type="text"
+                        name="day_to_evaluate"
+                        value="{{ rule.day_to_evaluate|join:', ' }}"
+                        placeholder="Monday, Tuesday"
+                        class="tagify form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2">
+
+                </label>
+
+                <label class="block"> 
+                    <span>Jam Aktif Pemberian Evaluasi</span> 
+                    <div class="mt-1.5 flex items-center gap-3"> 
+                        <input
+                            type="time"
+                            step="1"
+                            name="start_time_to_evaluate"
+                            value="{{ rule.start_time_to_evaluate|time:'H:i:s' }}"
+                            class="form-input w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2">
+
+                        <input
+                            type="time"
+                            step="1"
+                            name="end_time_to_evaluate"
+                            value="{{ rule.end_time_to_evaluate|time:'H:i:s' }}"
+                            class="form-input w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2">
+ 
+                    </div> 
+                </label> 
+            </div> 
+        </div>
+
+
+        <!-- ▀▄▀▄ jadwal pembuatan assignment guru -->
+        <div class="card p-5"> 
+            <div class="mb-6"> 
+                <h2 class="text-lg font-semibold"> 
+                    Jadwal Pemberian/Pembuatan Assignment Guru
+                </h2> 
+            </div> 
+            <div class="grid grid-cols-1 gap-5 lg:grid-cols-2"> 
+                <label> 
+                    <span>Hari Aktif Pembuatan Assignment</span> 
+                    <input
+                        type="text"
+                        name="day_to_serve"
+                        value="{{ rule.day_to_serve|join:', ' }}"
+                        placeholder="Saturday"
+                        class="tagify form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2">
+                </label>
+
+                <label class="block">  
+                    <span>Jam Mulai Pembuatan Assignment</span> 
+                    <div class="mt-1.5 flex items-center gap-3"> 
+                        <input
+                            type="time"
+                            step="1"
+                            name="start_time_to_serve"
+                            value="{{ rule.start_time_to_serve|time:'H:i:s' }}"
+                            class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2">
+
+                        <input
+                            type="time"
+                            step="1"
+                            name="end_time_to_serve"
+                            value="{{ rule.end_time_to_serve|time:'H:i:s' }}"
+                            class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2">
+
+                    </div>
+                </label>
+
+            </div>
+
+        </div>
+
+        <!-- ▀▄▀▄ jadwal pengerjaan siswa -->
+        <div class="card p-5">
+            <div class="mb-6">
+                <h2 class="text-lg font-semibold">Jadwal Pengerjaan Siswa</h2>
+            </div>
+            <div class="grid grid-cols-1 gap-5 lg:grid-cols-2">
+                <label> 
+                    <span>Hari Aktif Pengerjaan</span> 
+                    <input
+                        type="text"
+                        name="day_to_work"
+                        value="{{ rule.day_to_work|join:', ' }}"
+                        placeholder="Saturday"
+                        class="tagify form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2">
+                </label>
+                <label class="block"> 
+                    <span>Jam Mulai Pengerjaan</span> 
+                    <div class="mt-1.5 flex items-center gap-3">
+                        <input
+                            type="time"
+                            step="1"
+                            name="start_time_to_work"
+                            value="{{ rule.start_time_to_work|time:'H:i:s' }}"
+                            class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2">
+                        
+                        <input
+                            type="time"
+                            step="1"
+                            name="end_time_to_work"
+                            value="{{ rule.end_time_to_work|time:'H:i:s' }}"
+                            class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2">
+                        
+                    </div>
+                </label>
+
+            </div>
+
+        </div>
+
+
+        <!-- ▀▄▀▄ jadwal perbaikan -->
+        <div class="card p-5"> 
+            <div class="mb-6"> 
+                <h2 class="text-lg font-semibold"> 
+                    Jadwal Perbaikan (Correction Schedule) 
+                </h2> 
+            </div>
+
+            <div class="grid grid-cols-1 gap-5 lg:grid-cols-2"> 
+                <label> 
+                    <span>Hari Aktif Perbaikan</span> 
+                    <input
+                        type="text"
+                        name="day_to_correct"
+                        value="{{ rule.day_to_correct|join:', ' }}"
+                        placeholder="Saturday, Sunday"
+                        class="tagify form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2">
+                </label>
+
+                <label class="block">  
+                    <span>Jam Mulai Perbaikan</span> 
+                    <div class="mt-1.5 flex items-center gap-3"> 
+                        <input
+                            type="time"
+                            step="1"
+                            name="start_time_to_correct"
+                            value="{{ rule.start_time_to_correct|time:'H:i:s' }}"
+                            class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2">
+                    
+                        <input
+                            type="time"
+                            step="1"
+                            name="end_time_to_correct"
+                            value="{{ rule.end_time_to_correct|time:'H:i:s' }}"
+                            class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2">
+                    
+                    </div>
+                </label> 
+            </div> 
+        </div>
+
+
+        <!-- ▀▄▀▄ batas maksimal assignment -->
+        <div class="card p-5"> 
+            <div class="mb-6"> 
+                <h2 class="text-lg font-semibold"> 
+                    Batas Jumlah Maksimal Assigment 
+                </h2> 
+            </div> 
+            <div class="grid grid-cols-1 gap-5"> 
+                <label> 
+                    <span>Maximum Assignment</span> 
+                    <input
+                        type="number"
+                        name="limit_assignment"
+                        min="1"
+                        value="{{ rule.limit_assignment|default:60 }}"
+                        class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2">
+                </label>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ACTION -->
+
+    <div class="mt-6 flex justify-end gap-3">
+
+        <a href="{% dashboard_url user %}"
+           class="btn border border-slate-300 font-medium text-slate-700 hover:bg-slate-150 dark:border-navy-450 dark:text-navy-100 dark:hover:bg-navy-500">
+
+            Cancel
+
+        </a>
+
+        <button
+            type="submit"
+            class="btn bg-primary font-medium text-white hover:bg-primary-focus">
+
+            <i class="fa-solid fa-floppy-disk mr-2"></i>
+
+            Save Rule
+
+        </button>
+
+    </div>
+
+</form>
+
+<!-- ▀▄▀▄ load tagify dan flatpickr -->
+<script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+<!-- ▀▄▀▄ fungsi java script -->
+<script>
+    flatpickr("input[type=time]", {
+        enableTime: true,
+        noCalendar: true,
+        time_24hr: true,
+        dateFormat: "H:i"
+    });
+
+    const DAYS = [
+        {
+            value: "Monday",
+            display: "Senin",
+            searchBy: "Monday Mon Senin Sen"
+        },
+        {
+            value: "Tuesday",
+            display: "Selasa",
+            searchBy: "Tuesday Tue Selasa Sel"
+        },
+        {
+            value: "Wednesday",
+            display: "Rabu",
+            searchBy: "Wednesday Wed Rabu Rab"
+        },
+        {
+            value: "Thursday",
+            display: "Kamis",
+            searchBy: "Thursday Thu Kamis Kam"
+        },
+        {
+            value: "Friday",
+            display: "Jumat",
+            searchBy: "Friday Fri Jumat Jum Jum'at"
+        },
+        {
+            value: "Saturday",
+            display: "Sabtu",
+            searchBy: "Saturday Sat Sabtu Sab"
+        },
+        {
+            value: "Sunday",
+            display: "Minggu",
+            searchBy: "Sunday Sun Minggu Min"
+        }
+    ];
+
+    document.querySelectorAll(".tagify").forEach(function(input){ 
+
+        let tags = [];
+
+        if(input.value){ 
+            input.value.split(",").forEach(function(day){ 
+                day = day.trim(); 
+                let obj = DAYS.find(x => x.value === day); 
+                if(obj){ 
+                    tags.push({
+                        value: obj.value,
+                        display: obj.display
+                    }); 
+                } 
+            }); 
+        }
+
+        input.value = JSON.stringify(tags);
+
+        new Tagify(input,{ 
+            whitelist: DAYS, 
+            enforceWhitelist:true, 
+            tagTextProp:"display", 
+            dropdown:{
+                enabled:0,
+                maxItems:7,
+                closeOnSelect:false,
+                searchKeys:["display","searchBy"],
+                mapValueTo:"display"
+            }, 
+            originalInputValueFormat:function(values){ 
+                return values.map(x=>x.value).join(","); 
+            }
+
+        });
+
+    });
+
+</script>
+
+{% endblock content %}

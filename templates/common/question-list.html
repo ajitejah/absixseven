@@ -1,0 +1,617 @@
+{% extends 'dashboard_base.html' %}
+{% load custom_tags %} 
+{% load screening_custom_tags %} 
+
+<!-- % content title % -->
+{% block content_title %} 
+    <div class=" items-center space-x-4 py-5 lg:py-6">
+        <h2 class="text-xl font-medium text-slate-800 dark:text-navy-50 lg:text-2xl" >
+            Daftar Pertanyaan
+        </h2>
+        <div class="hidden h-full py-1 sm:flex"><div class="h-full w-px bg-slate-300 dark:bg-navy-600"></div></div>
+        <div class="pb-4 flex-wrap border-b border-slate-200 dark:border-navy-500">
+            <ul class="hidden flex-wrap items-center space-x-2 sm:flex">
+                <li class="flex items-center space-x-2">
+                    <a class="text-grey transition-colors hover:text-primary-focus dark:text-accent-light dark:hover:text-accent"
+                    href="{% dashboard_url placement_question %}" ><svg xmlns="http://www.w3.org/2000/svg" class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" > <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10.5L12 3l9 7.5V21a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1v-10.5z" /> </svg></a>
+                    <svg x-ignore xmlns="http://www.w3.org/2000/svg" class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </li> 
+                <li class="text-primary"><strong>Daftar Pertanyaan</strong></li>
+            </ul>
+        </div>
+    </div> 
+{% endblock content_title %}
+
+
+{% block content %} 
+
+    <!-- notifikasi -->
+    {% if messages %}
+        <div class="space-y-3 pb-5">
+            {% for message in messages %}
+            <div
+                class="alert flex overflow-hidden rounded-lg
+                {% if message.tags == 'success' %}
+                    bg-success/10 text-success dark:bg-success/15
+                {% elif message.tags == 'error' %}
+                    bg-error/10 text-error dark:bg-error/15
+                {% elif message.tags == 'warning' %}
+                    bg-warning/10 text-warning dark:bg-warning/15
+                {% else %}
+                    bg-slate-200 text-slate-800
+                {% endif %}
+                "
+            >
+                <div class="flex flex-1 items-center space-x-3 p-4">
+
+                <!-- ICON DINAMIS (Font Awesome) -->
+                {% if message.tags == 'success' %}
+                    <i class="fa-solid fa-circle-check text-success"></i>
+                {% elif message.tags == 'error' %}
+                    <i class="fa-solid fa-circle-xmark text-error"></i>
+                {% elif message.tags == 'warning' %}
+                    <i class="fa-solid fa-triangle-exclamation text-warning"></i>
+                {% else %}
+                    <i class="fa-solid fa-circle-info text-primary"></i>
+                {% endif %}
+
+                <!-- TEXT -->
+                <div class="flex-1">
+                    {{ message }}
+                </div>
+                </div>
+
+                <!-- BAR SAMPING -->
+                <div
+                class="w-1.5
+                {% if message.tags == 'success' %} bg-success
+                {% elif message.tags == 'error' %} bg-error
+                {% elif message.tags == 'warning' %} bg-warning
+                {% else %} bg-slate-400
+                {% endif %}
+                "
+                ></div>
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- tabel -->
+    <div class="grid grid-cols-1 gap-4 sm:gap-5 lg:gap-6">  
+        <!-- Table With Filter -->
+        <div x-data="{isFilterExpanded:false}">
+            <div class="flex items-center justify-between">
+                <h2 class="text-base font-medium tracking-wide text-slate-700 line-clamp-1 dark:text-navy-100">
+                    Tabel Daftar Pertanyaan
+                </h2>  
+
+        <!-- KANAN: CONTROLS -->
+        <div class="flex items-center gap-2"> 
+
+            <!-- BUAT BARU -->
+            <button
+                onclick="createQuestion()"
+                class="btn size-8 rounded-full p-0 bg-primary/10 text-primary hover:bg-primary/20 focus:bg-primary/20 active:bg-primary/25"
+                title="Tambah Pertanyaan">
+
+                <svg xmlns="http://www.w3.org/2000/svg"
+                    class="size-4.5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor">
+
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="1.5"
+                        d="M12 5v14m7-7H5"/>
+
+                </svg>
+
+            </button> 
+
+            <!-- KEMBALI -->
+            <a href="{% dashboard_url user %}">
+                <button
+                    class="btn size-8 rounded-full p-0 bg-slate-200 text-slate-700 hover:bg-slate-300 focus:bg-slate-300 active:bg-slate-400 dark:bg-navy-600 dark:text-navy-100"
+                    title="Kembali"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                        class="size-4.5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="1.5"
+                            d="M15 19l-7-7 7-7"
+                        />
+                    </svg>
+                </button>
+            </a> 
+
+        </div>
+            </div> 
+            <div class="card mt-3" >
+                <div class="is-scrollbar-hidden min-w-full overflow-x-auto">
+                    <table class="is-hoverable w-full text-left">
+                        <thead>
+                            <tr>
+                                <th class="px-4 py-3">#</th>
+                                <th class="px-4 py-3">Pertanyaan</th>
+                                <th class="px-4 py-3">Lampiran Gambar</th>
+                                <th class="px-4 py-3">Cakupan Leval</th> 
+                                <th class="px-4 py-3">Aksi</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for placement_question in placement_questions %}
+                            <tr class="border-b border-slate-200 dark:border-navy-500">
+
+                                <!-- No -->
+                                <td class="px-4 py-3">
+                                    {{ forloop.counter }}
+                                </td>
+
+                                <td class="px-4 py-3 font-medium text-slate-700 dark:text-navy-100">
+                                    {{ placement_question.question }} 
+                                </td>
+
+                                <!-- Foto -->
+                                <td class="px-4 py-3">
+                                    {% if placement_question.photo %}
+                                        <img src="{{ placement_question.image.url }}"
+                                            class="h-10 w-10 rounded-full object-cover" />
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td> 
+
+                                <!-- Email -->
+                                <td class="px-4 py-3">
+                                    {% for placement_option in placement_options %}
+                                        {% if placement_option.placement_question.id == placement_question.id %}
+                                            {{ placement_option.level.name }}, 
+                                        {% endif %}
+                                    {% endfor %}
+                                </td> 
+
+                                <!-- Aksi -->
+                                <td class="px-4 py-3">
+                                    <div class="flex space-x-2">
+
+                                        <!-- EDIT -->  
+                                        <button onclick="editQuestion({{ placement_question.id }})"
+                                                class="btn size-9 rounded-full bg-primary/10 p-0 text-primary hover:bg-primary/20">
+
+                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                class="size-4.5"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor">
+
+                                                <path stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    stroke-width="1.5"
+                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5"/>
+
+                                                <path stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    stroke-width="1.5"
+                                                    d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                            </svg>
+
+                                        </button>
+
+                                        <!-- DELETE --> 
+                                        <button
+                                            @click="openModal({{ placement_question.id }}, '{{ placement_question.placement_questionname }}', 'admin/placement_question')"
+                                            class="btn size-9 rounded-full bg-error/10 p-0 font-medium text-error hover:bg-error/20 focus:bg-error/20 active:bg-error/25">
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                class="size-5"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
+                                                >
+                                            <path
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                stroke-width="2"
+                                                d="M6 7h12M9 7V5a1 1 0 011-1h4a1 1 0 011 1v2m-7 0v12m4-12v12m4-12v12M5 7h14l-1 13a2 2 0 01-2 2H8a2 2 0 01-2-2L5 7z"
+                                                />
+                                            </svg>
+                                        </button> 
+                                    </div>
+                                </td>
+
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="8" class="text-center py-5 text-slate-500">
+                                    Tidak ada data Placement Question
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div> 
+
+    <template x-teleport="#x-teleport-target">
+        <div id="editModal" class="fixed inset-0 z-[100] flex flex-col items-center justify-center overflow-hidden px-4 py-6 sm:px-5 hidden" role="dialog">
+
+            <!-- Overlay -->
+            <div class="absolute inset-0 bg-slate-900/60" onclick="closeModal()"></div>
+
+            <!-- Modal -->
+            <div class="relative w-full max-w-4xl origin-top rounded-lg bg-white dark:bg-navy-700">
+
+                <!-- Header -->
+                <div class="flex justify-between rounded-t-lg bg-slate-200 px-4 py-3 dark:bg-navy-800 sm:px-5">
+
+                    <h3 class="text-base font-medium text-slate-700 dark:text-navy-100">
+                        Perbaharui Pertanyaan (Placement Question)
+                    </h3>
+
+                    <button onclick="closeModal()"
+                        class="btn -mr-1.5 size-7 rounded-full p-0 hover:bg-slate-300/20">
+
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                            class="size-4.5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor">
+
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12"/>
+
+                        </svg> 
+                    </button> 
+                </div>
+
+                <!-- Body -->
+                <div class="px-4 py-4 sm:px-5">
+
+                    <form id="editForm"> 
+                        <input type="hidden" id="questionId">
+
+                        <!-- Pertanyaan -->
+                        <div> 
+                            <label class="block font-medium text-slate-700 dark:text-navy-100">
+                                Pertanyaan
+                            </label>
+
+                            <textarea
+                                id="questionText"
+                                rows="3"
+                                class="form-textarea mt-2 w-full rounded-lg">
+                            </textarea> 
+                        </div>
+
+                        <!-- Options -->
+                        <div class="mt-6">
+
+                            <div class="flex items-center justify-between">
+
+                                <h4 class="font-medium text-slate-700 dark:text-navy-100">
+                                    Pilihan Jawaban
+                                </h4>
+
+                                <button
+                                    type="button"
+                                    onclick="addOption()"
+                                    class="btn bg-primary text-white">
+
+                                    Tambah Opsi
+
+                                </button>
+
+                            </div>
+
+                            <div
+                                id="optionsContainer"
+                                class="mt-4 space-y-3">
+
+                            </div>
+
+                        </div>
+
+                        <!-- Footer -->
+                        <div class="mt-6 text-right space-x-2">
+
+                            <button
+                                type="button"
+                                onclick="closeModal()"
+                                class="btn min-w-[7rem] rounded-full border border-slate-300 font-medium text-slate-800">
+
+                                Batal
+
+                            </button>
+
+                            <button
+                                type="button"
+                                onclick="saveQuestion()"
+                                class="btn min-w-[7rem] rounded-full bg-primary font-medium text-white">
+
+                                Simpan
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+    </template>
+
+<script>
+    
+    let isCreateMode = false;
+
+    function createQuestion() {
+
+        isCreateMode = true;
+
+        document.getElementById('questionId').value = '';
+        document.getElementById('questionText').value = '';
+
+        document.getElementById('optionsContainer').innerHTML = '';
+
+        addOption();
+        addOption();
+        addOption();
+        addOption();
+
+        document
+            .querySelector('#editModal h3')
+            .innerText = 'Tambah Pertanyaan';
+
+        document
+            .getElementById('editModal')
+            .classList.remove('hidden');
+
+        document
+            .getElementById('editModal')
+            .classList.add('flex');
+    }
+
+    // fungsi update question & option
+    async function editQuestion(id){
+
+        isCreateMode = false;
+        
+        const response = await fetch(
+            `/admin/screening/question/${id}/json/`
+        )
+
+        const data = await response.json()
+
+        document.getElementById('questionId').value = data.id
+        document.getElementById('questionText').value = data.question
+        document.querySelector('#editModal h3').innerText = 'Edit Pertanyaan'; 
+        
+        let html = ''
+
+        data.options.forEach(option => {
+
+            html += `
+                <div class="grid grid-cols-12 gap-3">
+
+                    <input
+                        type="hidden"
+                        name="option_id[]"
+                        value="${option.id}">
+
+                    <div class="col-span-8">
+
+                        <input
+                            type="text"
+                            name="answer[]"
+                            value="${option.answer}"
+                            class="form-input w-full">
+
+                    </div>
+
+                    <div class="col-span-3">
+
+                        <input
+                            type="number"
+                            name="score[]"
+                            value="${option.score}"
+                            class="form-input w-full">
+
+                    </div>
+
+                    <div class="col-span-1">
+
+                        <button
+                            type="button"
+                            onclick="this.closest('.grid').remove()"
+                            class="btn bg-error text-white">
+
+                            ×
+
+                        </button>
+
+                    </div>
+
+                </div>
+            `
+        })
+
+        document.getElementById('optionsContainer').innerHTML = html
+        document.getElementById('editModal').classList.remove('hidden')
+        document.getElementById('editModal').classList.add('flex')
+
+    }
+
+    function closeModal(){
+        document.getElementById('editModal').classList.add('hidden')
+        document.getElementById('editModal').classList.remove('flex')
+    }
+
+    // fungsi add option
+    function addOption(){ 
+        document.getElementById('optionsContainer')
+            .insertAdjacentHTML(
+                'beforeend',
+                `
+                <div class="grid grid-cols-12 gap-3">
+
+                    <input
+                        type="hidden"
+                        name="option_id[]"
+                        value="">
+
+                    <div class="col-span-8">
+
+                        <input
+                            type="text"
+                            name="answer[]"
+                            class="form-input w-full">
+
+                    </div>
+
+                    <div class="col-span-3">
+
+                        <input
+                            type="number"
+                            name="score[]"
+                            value="0"
+                            class="form-input w-full">
+
+                    </div>
+
+                    <div class="col-span-1">
+
+                        <button
+                            type="button"
+                            onclick="this.closest('.grid').remove()"
+                            class="btn bg-error text-white">
+
+                            ×
+
+                        </button>
+
+                    </div>
+
+                </div>
+                `
+            )
+    }
+
+    // fungsi save question
+    async function saveQuestion() {
+
+        const questionId = document.getElementById('questionId').value;
+        const questionText = document.getElementById('questionText').value;
+        const QUESTION_UPDATE_URL = "{% placement_question_update_url user 0 %}";
+        const options = [];
+
+        document
+            .querySelectorAll('#optionsContainer > .grid')
+            .forEach((row, index) => { 
+                options.push({
+                    id: row.querySelector('input[name="option_id[]"]').value,
+                    answer: row.querySelector('input[name="answer[]"]').value,
+                    score: parseInt(
+                        row.querySelector('input[name="score[]"]').value || 0
+                    ),
+                    order: index + 1
+                }); 
+            });
+
+        const payload = {
+            question: questionText,
+            options: options
+        };
+
+        let url = '';
+
+        if (isCreateMode) { 
+            url = `{% placement_question_create_url user %}`; 
+        } else { 
+            url = QUESTION_UPDATE_URL.replace('/0/', `/${questionId}/`);
+        }
+
+        try {
+            const response = await fetch(
+                url,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    body: JSON.stringify(payload)
+                }
+            );
+
+            const result = await response.json();
+
+            if (result.success) { 
+                alert('Pertanyaan berhasil diperbarui'); 
+                document
+                    .getElementById('editModal')
+                    .classList.add('hidden'); 
+                location.reload(); 
+            } else { 
+                alert(result.message || 'Terjadi kesalahan'); 
+            }
+
+        } catch (error) {
+
+            console.error(error);
+
+            alert('Gagal menyimpan data');
+
+        }
+
+    }
+
+    function getCookie(name) {
+
+        let cookieValue = null;
+
+        if (document.cookie && document.cookie !== '') {
+
+            const cookies = document.cookie.split(';');
+
+            for (let i = 0; i < cookies.length; i++) {
+
+                const cookie = cookies[i].trim();
+
+                if (
+                    cookie.substring(0, name.length + 1) ===
+                    (name + '=')
+                ) {
+
+                    cookieValue = decodeURIComponent(
+                        cookie.substring(name.length + 1)
+                    );
+
+                    break;
+                }
+            }
+        }
+
+        return cookieValue;
+    }
+
+</script>
+
+{% endblock content %}

@@ -1,0 +1,702 @@
+{% extends 'dashboard_base.html' %}
+{% load custom_tags %}
+{% load setting_tags %}
+
+<!-- % content title % -->
+{% block content_title %} 
+    <div class=" items-center space-x-4 py-5 lg:py-6">
+        <h2 class="text-xl font-medium text-slate-800 dark:text-navy-50 lg:text-2xl" >
+            Daftar Jawaban (Submission)
+        </h2>
+        <div class="hidden h-full py-1 sm:flex"><div class="h-full w-px bg-slate-300 dark:bg-navy-600"></div></div>
+        <div class="pb-4 flex-wrap border-b border-slate-200 dark:border-navy-500">
+            <ul class="hidden flex-wrap items-center space-x-2 sm:flex">
+                <li class="flex items-center space-x-2">
+                    <a class="text-grey transition-colors hover:text-primary-focus dark:text-accent-light dark:hover:text-accent"
+                    href="{% dashboard_url user %}" ><svg xmlns="http://www.w3.org/2000/svg" class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" > <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10.5L12 3l9 7.5V21a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1v-10.5z" /> </svg></a>
+                    <svg x-ignore xmlns="http://www.w3.org/2000/svg" class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </li>
+                <li class="flex items-center space-x-2">
+                    <a class="text-grey transition-colors hover:text-primary-focus dark:text-accent-light dark:hover:text-accent"
+                    href="{% roadmap_list_url user %}" >Roadmap</u></a>
+                    <svg x-ignore xmlns="http://www.w3.org/2000/svg" class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </li> 
+                <li class="flex items-center space-x-2">
+                    <a class="text-grey transition-colors hover:text-primary-focus dark:text-accent-light dark:hover:text-accent"
+                    href="{% roadmap_explore_url user roadmap.id %}" >Rm. <u>{{ roadmap.name }}</u></a>
+                    <svg x-ignore xmlns="http://www.w3.org/2000/svg" class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </li>  
+                <li class="flex items-center space-x-2">
+                    <a class="text-grey transition-colors hover:text-primary-focus dark:text-accent-light dark:hover:text-accent"
+                    href="{% roadmap_explore_url user roadmap.id %}" >Node <u>{{ node.name }}</u></a>
+                    <svg x-ignore xmlns="http://www.w3.org/2000/svg" class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </li>  
+                <li class="flex items-center space-x-2">
+                    <a class="text-grey transition-colors hover:text-primary-focus dark:text-accent-light dark:hover:text-accent"
+                    href="{% assignment_list_url user roadmap.id node.id %}" >Assignment <u>{{ assignment.title }}</u></a>
+                    <svg x-ignore xmlns="http://www.w3.org/2000/svg" class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </li>   
+                <li class="text-primary"><strong>Daftar Jawaban (Submission)</strong></li>
+            </ul>
+        </div>
+    </div> 
+{% endblock content_title %}
+
+<!-- % content  % -->
+{% block content %} 
+
+    <!-- </> notifikasi -->
+    {% if messages %}
+        <div class="space-y-3 pb-5">
+            {% for message in messages %}
+            <div
+                class="alert flex overflow-hidden rounded-lg
+                {% if message.tags == 'success' %}
+                    bg-success/10 text-success dark:bg-success/15
+                {% elif message.tags == 'error' %}
+                    bg-error/10 text-error dark:bg-error/15
+                {% elif message.tags == 'warning' %}
+                    bg-warning/10 text-warning dark:bg-warning/15
+                {% else %}
+                    bg-slate-200 text-slate-800
+                {% endif %}
+                "
+            >
+                <div class="flex flex-1 items-center space-x-3 p-4">
+
+                <!-- ICON DINAMIS (Font Awesome) -->
+                {% if message.tags == 'success' %}
+                    <i class="fa-solid fa-circle-check text-success"></i>
+                {% elif message.tags == 'error' %}
+                    <i class="fa-solid fa-circle-xmark text-error"></i>
+                {% elif message.tags == 'warning' %}
+                    <i class="fa-solid fa-triangle-exclamation text-warning"></i>
+                {% else %}
+                    <i class="fa-solid fa-circle-info text-primary"></i>
+                {% endif %}
+
+                <!-- TEXT -->
+                <div class="flex-1">
+                    {{ message }}
+                </div>
+                </div>
+
+                <!-- BAR SAMPING -->
+                <div
+                class="w-1.5
+                {% if message.tags == 'success' %} bg-success
+                {% elif message.tags == 'error' %} bg-error
+                {% elif message.tags == 'warning' %} bg-warning
+                {% else %} bg-slate-400
+                {% endif %}
+                "
+                ></div>
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div x-data="{  showScoreModal: false, }" class="grid grid-cols-1 gap-4 sm:gap-5 lg:gap-6">  
+        
+        <!-- Table With Filter -->
+        <div x-data="{isFilterExpanded:false}">
+            <div class="flex items-center justify-between">
+                <h2 class="text-base font-medium tracking-wide text-slate-700 line-clamp-1 dark:text-navy-100">
+                    Tabel Daftar Jawaban Siswa
+                </h2>
+                <div class="flex"> 
+                    <a href="{% assignment_list_url user roadmap.id node.id %}">
+                        <button
+                            class="btn size-8 rounded-full p-0 bg-slate-200 text-slate-700 hover:bg-slate-300 focus:bg-slate-300 active:bg-slate-400 dark:bg-navy-600 dark:text-navy-100"
+                            title="Kembali" >
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                class="size-4.5"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="1.5"
+                                    d="M15 19l-7-7 7-7"
+                                />
+                            </svg>
+                        </button>
+                    </a>  
+                </div>
+            </div> 
+
+            <div class="mt-3 rounded-lg bg-gradient-to-br from-purple-500 to-indigo-600 px-4 py-4 text-white sm:px-5"
+            >
+                <div>
+                <h2 class="text-lg font-medium tracking-wide line-clamp-1">
+                    Detail Assgn. {{ assignment.title }}
+                </h2>
+                </div>
+                <div class="pt-2">
+                <p>
+                    {{ assignment.description }}
+                </p>
+                </div>
+            </div>
+            
+            <div class="card mt-3 !overflow-visible"> 
+                <div class="is-scrollbar-hidden min-w-full overflow-x-auto">
+                    <table class="is-hoverable w-full text-left">
+                        <thead>
+                            <tr>
+                                <th class="px-4 py-3">#</th>
+                                <th class="px-4 py-3">Siswa</th>
+                                <th class="px-4 py-3">Progress Roadmap</th>
+                                <th class="px-4 py-3">File/Url</th> 
+                                <th class="px-4 py-3">Tanggal Upload</th> 
+                                <th class="px-4 py-3">Nilai</th> 
+                                <th class="px-4 py-3">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for submission in submissions %}
+                                <tr class="border-b border-slate-200 dark:border-navy-500">
+
+                                    <!-- No -->
+                                    <td class="px-4 py-3">
+                                        {{ forloop.counter }}
+                                    </td>
+
+                                    <!-- Nama Siswa -->
+                                    <td class="px-4 py-3 font-medium text-slate-700 dark:text-navy-100">
+                                        {{ submission.student.user.first_name }}
+                                        {{ submission.student.user.last_name }}
+                                    </td>
+
+                                    <td class="px-4 py-3">
+                                        <div class="progress h-2 bg-slate-150 dark:bg-navy-500">
+                                            <div class="is-active relative w-7/12 overflow-hidden rounded-full bg-info"></div>
+                                        </div>
+                                    </td>
+
+                                    <!-- File -->
+                                    <td class="px-4 py-3">
+
+                                        {% if submission.file %}
+                                            <div class="flex items-center gap-2">
+                                                <i class="fa fa-file text-grey"></i>
+                                                <span>{{ submission.file.name|cut:"submissions/" }}</span>
+                                            </div>
+
+                                        {% elif submission.url %}
+                                            <div class="flex items-center gap-2">
+                                                <i class="fa fa-link text-grey"></i>
+                                                <span class="truncate max-w-[250px]">
+                                                    {{ submission.url }}
+                                                </span>
+                                            </div>
+
+                                        {% else %}
+                                            -
+                                        {% endif %}
+
+                                    </td>
+
+                                    <!-- Waktu Upload -->
+                                    <td class="px-4 py-3 text-slate-500">
+                                        {{ submission.submitted_at|date:"d M Y H:i" }}
+                                    </td>
+
+                                    
+                                    <td class="px-4 py-3 text-slate-500">
+                                        {% if submission.score is not None %}
+                                            {{ submission.score }}
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </td>
+
+                                    <!-- Aksi -->
+                                    <td class="px-4 py-3">
+
+                                        <div class="flex space-x-2">
+                                            
+                                            {% if user.parent %}  
+                                                <div class="relative inline-block">
+
+                                                    <button
+                                                        type="button" 
+                                                        class="reaction-toggle btn h-9 w-9 rounded-full border border-slate-300 bg-white text-lg"
+                                                        data-submission="{{ submission.id }}"
+                                                        x-data="{ label: '{{ submission.reaction_label|default:'Berikan Reaksi' }}' }"
+                                                        x-tooltip="label" >
+
+                                                        {% if submission.reaction %}
+                                                            {{ submission.reaction }}
+                                                        {% else %}
+                                                            😊
+                                                        {% endif %}
+
+                                                    </button>
+
+                                                </div>
+
+                                                <a href="{% url 'parent_guidance:message_detail' submission.assignment.node.roadmap.owner.id %}?submission={{ submission.id }}">
+                                                    <button
+                                                        @click="showReplyModal = true"
+                                                        x-tooltip="'Tanyakan ke Guru'"  
+                                                        data-submission="{{ submission.id }}"
+                                                        class="btn size-9 rounded-full bg-info/10 p-0 text-info hover:bg-info/20">
+
+                                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                                            class="size-4.5"
+                                                            fill="none"
+                                                            viewBox="0 0 24 24"
+                                                            stroke="currentColor">
+
+                                                            <path
+                                                                stroke-linecap="round"
+                                                                stroke-linejoin="round"
+                                                                stroke-width="1.5"
+                                                                d="M3 10h10a5 5 0 015 5v1m0 0l-3-3m3 3l3-3M7 6l-4 4 4 4" />
+
+                                                        </svg>
+
+                                                    </button>
+                                                </a>
+                                            {% endif %}
+
+                                            <!-- File -->
+                                            {% if submission.file %}
+                                                <a href="{{ submission.file.url }}" download>
+                                                    <button
+                                                        x-tooltip="'Download File Jawaban'"
+                                                        class="btn size-9 rounded-full bg-primary/10 p-0 text-primary hover:bg-primary/20">
+
+                                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                                            class="size-4.5"
+                                                            fill="none"
+                                                            viewBox="0 0 24 24"
+                                                            stroke="currentColor">
+
+                                                            <!-- ARROW -->
+                                                            <path stroke-linecap="round"
+                                                                stroke-linejoin="round"
+                                                                stroke-width="1.5"
+                                                                d="M12 4v10" />
+
+                                                            <path stroke-linecap="round"
+                                                                stroke-linejoin="round"
+                                                                stroke-width="1.5"
+                                                                d="M8 10l4 4 4-4" />
+
+                                                            <!-- BASE -->
+                                                            <path stroke-linecap="round"
+                                                                stroke-linejoin="round"
+                                                                stroke-width="1.5"
+                                                                d="M5 19h14" />
+
+                                                        </svg>
+
+                                                    </button>
+                                                </a>
+
+                                            <!-- URL -->
+                                            {% elif submission.url %}
+                                                <a href="{{ submission.url }}"
+                                                target="_blank"
+                                                rel="noopener noreferrer">
+                                                    <button
+                                                        x-tooltip="'Buka Link Jawaban'"
+                                                        class="btn size-9 rounded-full bg-primary/10 p-0 text-primary hover:bg-primary/20">
+
+                                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                                            class="size-4.5"
+                                                            fill="none"
+                                                            viewBox="0 0 24 24"
+                                                            stroke="currentColor">
+
+                                                            <!-- External Link -->
+                                                            <path stroke-linecap="round"
+                                                                stroke-linejoin="round"
+                                                                stroke-width="1.5"
+                                                                d="M13.5 4.5H19.5V10.5"/>
+
+                                                            <path stroke-linecap="round"
+                                                                stroke-linejoin="round"
+                                                                stroke-width="1.5"
+                                                                d="M10.5 13.5L19.5 4.5"/>
+
+                                                            <path stroke-linecap="round"
+                                                                stroke-linejoin="round"
+                                                                stroke-width="1.5"
+                                                                d="M19.5 13.5V18a1.5 1.5 0 0 1-1.5 1.5H6A1.5 1.5 0 0 1 4.5 18V6A1.5 1.5 0 0 1 6 4.5h4.5"/>
+
+                                                        </svg>
+
+                                                    </button>
+                                                </a>
+                                            {% endif %}
+
+                                            <!-- Beri Nilai -->
+                                            {% if submission.file or submission.url and user.teacher %}
+                                            <button
+                                                @click="showScoreModal = true"
+                                                x-tooltip="'Beri Nilai'"
+                                                id="score-btn-{{ submission.id }}"
+                                                onclick="setSubmissionId({{ submission.id }})"
+                                                data-submission="{{ submission.id }}"
+                                                class="btn btn-score size-9 rounded-full bg-primary/10 p-0 text-primary hover:bg-primary/20">
+
+                                                <svg xmlns="http://www.w3.org/2000/svg"
+                                                    class="size-4.5"
+                                                    fill="none"
+                                                    viewBox="0 0 24 24"
+                                                    stroke="currentColor">
+
+                                                    <!-- CLIPBOARD -->
+                                                    <path stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                        stroke-width="1.5"
+                                                        d="M9 4.5h6a1.5 1.5 0 011.5 1.5V7h1a2 2 0 012 2v9a2 2 0 01-2 2H6.5a2 2 0 01-2-2V9a2 2 0 012-2h1V6A1.5 1.5 0 019 4.5z"/>
+
+                                                    <!-- CHECK -->
+                                                    <path stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                        stroke-width="1.5"
+                                                        d="M9 13l2 2 4-4"/>
+
+                                                </svg>
+
+                                            </button>
+                                            {% endif %}
+                                             
+                                            {% if user.teacher and submission.score %}
+                                                {% if submission.score|below_minimum_score %}
+
+                                                    <a
+                                                        href="{% url 'teacher_roadmap:assignment_remedial_create' roadmap.id node.id submission.id %}"
+                                                        x-tooltip="'Buat Remedial'"
+                                                        class="btn size-9 rounded-full bg-warning/10 p-0 text-warning hover:bg-warning/20">
+
+                                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                                            class="size-4.5"
+                                                            fill="none"
+                                                            viewBox="0 0 24 24"
+                                                            stroke="currentColor">
+
+                                                            <!-- Refresh / Repeat -->
+                                                            <path
+                                                                stroke-linecap="round"
+                                                                stroke-linejoin="round"
+                                                                stroke-width="1.5"
+                                                                d="M4 4v6h6"/>
+
+                                                            <path
+                                                                stroke-linecap="round"
+                                                                stroke-linejoin="round"
+                                                                stroke-width="1.5"
+                                                                d="M20 20v-6h-6"/>
+
+                                                            <path
+                                                                stroke-linecap="round"
+                                                                stroke-linejoin="round"
+                                                                stroke-width="1.5"
+                                                                d="M20 10A8 8 0 006.34 5.34L4 10m16 4l-2.34 4.66A8 8 0 014 14"/>
+
+                                                        </svg>
+
+                                                    </a>
+
+                                                {% endif %}
+                                            {% endif %}
+                                        </div>
+
+                                    </td>
+
+                                </tr> 
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center py-5 text-slate-500">
+                                    Tidak ada data submission
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL --> 
+        <template x-teleport="#x-teleport-target">
+
+            <div class="fixed inset-0 z-[100] flex items-center justify-center px-4 py-6 sm:px-5"
+                x-show="showScoreModal"
+                x-transition >
+
+                <!-- OVERLAY -->
+                <div
+                    class="absolute inset-0 bg-slate-900/60"
+                    @click="showScoreModal = false"
+                ></div>
+
+                <!-- MODAL -->
+                <div class="relative w-full max-w-md rounded-lg bg-white shadow-xl dark:bg-navy-700">
+
+                    <!-- HEADER -->
+                    <div class="flex items-center justify-between rounded-t-lg bg-slate-200 px-4 py-3 dark:bg-navy-800">
+
+                        <h3 class="text-base font-medium">
+                            Berikan Nilai (Score)
+                        </h3>
+
+                        <button
+                            type="button"
+                            @click="showScoreModal = false"
+                            class="btn size-7 rounded-full p-0"
+                        >
+                            ✕
+                        </button>
+
+                    </div>
+
+                    <form
+                        method="post"
+                        action="{% url 'teacher_roadmap:score_save' %}"
+                    >
+
+                        {% csrf_token %}
+
+                        <input
+                            type="hidden"
+                            id="score-submission-id"
+                            name="submission_id">
+
+                        <div class="px-4 py-5">
+
+                            <label class="block text-sm font-medium mb-2">
+                                Score
+                            </label>
+
+                            <input id="score-input"
+                                type="number"
+                                name="score"
+                                min="0"
+                                max="100"
+                                required
+                                class="w-full rounded-lg border px-3 py-2 text-sm"
+                                placeholder="Masukkan nilai 0 - 100">
+
+                            <label class="block text-sm font-medium mb-2 mt-4">
+                                Feedback
+                            </label>
+
+                            <textarea
+                                id="feedback-input"
+                                name="feedback"
+                                rows="5"
+                                class="w-full rounded-lg border px-3 py-2 text-sm"
+                                placeholder="Tuliskan feedback"></textarea>
+
+                        </div>
+
+                        <div class="flex justify-end gap-2 border-t px-4 py-4">
+
+                            <button
+                                type="button"
+                                @click="showScoreModal = false"
+                                class="btn border rounded-full"
+                            >
+                                Batal
+                            </button>
+
+                            <button
+                                type="submit"
+                                class="btn bg-primary text-white rounded-full"
+                            >
+                                Simpan
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </template>
+
+    </div> 
+
+    <div
+        id="reaction-popup"
+        class="hidden fixed rounded-xl border border-slate-200 bg-white shadow-2xl p-3" >
+
+        <div style=" display:grid; grid-template-columns:repeat(6,40px); gap:8px; justify-content:center; ">
+
+            {% for emoji, label in reactions %}
+
+            <button
+                type="button"
+                class="reaction-btn flex h-10 w-10 items-center justify-center rounded-lg text-2xl hover:bg-slate-100 transition"
+                data-reaction="{{ emoji }}"
+                data-label="{{ label }}"
+                x-tooltip="'{{ label }}'">
+
+                {{ emoji }}
+
+            </button>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</div>
+    <div id="reaction-config"
+     data-url="{% url 'parent_roadmap:submission_reaction_update' %}">
+</div>
+
+<script> 
+
+    document.querySelectorAll(".btn-score").forEach(button => {
+
+        button.addEventListener("click", function () {
+
+            // simpan id submission
+            document.getElementById("score-submission-id").value =
+                this.dataset.submission;
+
+            // reset form
+            document.getElementById("score-input").value = "";
+            document.getElementById("feedback-input").value = "";
+
+            // buka modal
+            showScoreModal = true;
+        });
+
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const reactionUrl = document.getElementById("reaction-config").dataset.url;
+        const popup = document.getElementById("reaction-popup");
+
+        let currentSubmission = null;
+
+        // ===========================
+        // BUKA POPUP
+        // ===========================
+        document.querySelectorAll(".reaction-toggle").forEach(button => {
+
+            button.addEventListener("click", function (e) {
+
+                e.stopPropagation();
+
+                currentSubmission = this.dataset.submission;
+
+                popup.classList.remove("hidden");
+
+                popup.style.visibility = "hidden";
+                popup.style.left = "0px";
+                popup.style.top = "0px";
+
+                const rect = this.getBoundingClientRect();
+
+                const popupWidth = popup.offsetWidth;
+                const popupHeight = popup.offsetHeight;
+
+                popup.style.left =
+                    (window.scrollX + rect.left + rect.width / 2 - popupWidth / 2) + "px";
+
+                popup.style.top =
+                    (window.scrollY + rect.top - popupHeight - 10) + "px";
+
+                popup.style.visibility = "visible";
+
+            });
+
+        });
+
+        // ===========================
+        // TUTUP POPUP
+        // ===========================
+        document.addEventListener("click", function () {
+
+            popup.classList.add("hidden");
+
+        });
+
+        popup.addEventListener("click", function (e) {
+
+            e.stopPropagation();
+
+        });
+
+        // ===========================
+        // PILIH REAKSI
+        // ===========================
+        document.querySelectorAll("#reaction-popup .reaction-btn").forEach(btn => {
+
+            btn.addEventListener("click", function () {
+
+                const emoji = this.dataset.reaction;
+                const label = this.dataset.label;
+
+                fetch(reactionUrl, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
+                    },
+                    body: JSON.stringify({
+                        submission: currentSubmission,
+                        reaction: emoji
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+
+                    if (data.success) {
+
+                        const button = document.querySelector(
+                            `.reaction-toggle[data-submission="${currentSubmission}"]`
+                        );
+
+                        // update emoji
+                        button.innerHTML = emoji;
+
+                        // update Alpine tooltip state (INI KUNCI)
+                        const alpineData = Alpine.$data(button);
+                        alpineData.label = label;
+
+                        popup.classList.add("hidden");
+
+                    } else {
+                        alert(data.message || "Gagal menyimpan reaksi.");
+                    }
+
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert("Terjadi kesalahan.");
+                });
+
+            });
+
+        });
+
+    });
+</script>
+
+{% endblock content %}

@@ -1,0 +1,563 @@
+{% extends 'dashboard_base.html' %}
+{% load static %}
+{% load custom_tags %}
+{% load setting_tags %}
+
+<!-- % content title % -->
+{% block content_title %} 
+    <div class=" items-center space-x-4 py-5 lg:py-6">
+        <h2 class="text-xl font-medium text-slate-800 dark:text-navy-50 lg:text-2xl" >
+            Daftar Tugas (Assignment) untuk Submission
+        </h2>
+        <div class="hidden h-full py-1 sm:flex"><div class="h-full w-px bg-slate-300 dark:bg-navy-600"></div></div>
+        <div class="pb-4 flex-wrap border-b border-slate-200 dark:border-navy-500">
+            <ul class="hidden flex-wrap items-center space-x-2 sm:flex">
+                <li class="flex items-center space-x-2">
+                    <a class="text-grey transition-colors hover:text-primary-focus dark:text-accent-light dark:hover:text-accent"
+                    href="{% dashboard_url user %}" ><svg xmlns="http://www.w3.org/2000/svg" class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" > <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10.5L12 3l9 7.5V21a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1v-10.5z" /> </svg></a>
+                    <svg x-ignore xmlns="http://www.w3.org/2000/svg" class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </li>
+                <li class="flex items-center space-x-2">
+                    <a class="text-grey transition-colors hover:text-primary-focus dark:text-accent-light dark:hover:text-accent"
+                    href="{% roadmap_list_url user %}" >Roadmap</a>
+                    <svg x-ignore xmlns="http://www.w3.org/2000/svg" class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </li>  
+                <li class="flex items-center space-x-2">
+                    <a class="text-grey transition-colors hover:text-primary-focus dark:text-accent-light dark:hover:text-accent"
+                    href="{% roadmap_explore_url user roadmap.id %}" >Rm. <u>{{ roadmap.name }}</u></a>
+                    <svg x-ignore xmlns="http://www.w3.org/2000/svg" class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </li>   
+                <li class="flex items-center space-x-2">
+                    <a class="text-grey transition-colors hover:text-primary-focus dark:text-accent-light dark:hover:text-accent"
+                    href="{% roadmap_explore_url user roadmap.id %}" >Node <u>{{ node.name }}</u></a>
+                    <svg x-ignore xmlns="http://www.w3.org/2000/svg" class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </li>  
+                <li class="text-primary"><strong>Submission</strong></li>
+            </ul>
+        </div>
+    </div> 
+{% endblock content_title %}
+
+<!-- % content % -->
+{% block content %} 
+
+{% if user.student %}  
+    <div class="alert flex overflow-hidden rounded-lg bg-warning/10 text-warning dark:bg-warning/15">
+        <div class="flex flex-1 items-center space-x-3 p-4">
+        <svg xmlns="http://www.w3.org/2000/svg" class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+        </svg>
+        {% start_work_time as start_work_time %}
+        {% end_work_time as end_work_time %}
+        <div class="flex-1">Waktu pengiriman jawaban (submission) dapat dilakukan pada <strong>Pkl. {{ start_work_time|time:"H:i" }} WIB </strong> hingga <strong>Pkl. {{ end_work_time|time:"H:i" }} WIB</strong></div>
+        </div>
+
+        <div class="w-1.5 bg-warning"></div>
+    </div>
+{% endif %}
+
+<div class="flex items-center justify-between pb-5 mt-4">
+    <h2 class="text-base font-medium tracking-wide text-slate-700 line-clamp-1 dark:text-navy-100">
+        Daftar Tugas untuk Pengiriman Jawaban (Submission)
+    </h2>
+    <div class="flex">   
+        <div class="flex items-center" x-data="{isInputActive:false}">
+            <a href="{% roadmap_explore_url user roadmap.id %}">
+                <button
+                    class="btn size-8 rounded-full p-0 bg-slate-200 text-slate-700 hover:bg-slate-300 focus:bg-slate-300 active:bg-slate-400 dark:bg-navy-600 dark:text-navy-100"
+                    title="Kembali" >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="size-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 19l-7-7 7-7" /> </svg>
+                </button>
+            </a>
+        </div>  
+    </div>
+</div>
+
+<!-- </> grid -->
+<div x-data="{  showUploadModal: false }" class="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3 lg:gap-6">
+    {% for assignment in assignments %}
+
+    <!-- CARD -->
+    <div class="card flex-row justify-between space-x-2 p-4 sm:p-5">
+        
+        <!-- ICON -->
+        <div class="avatar size-10 shrink-0" style="padding-right: 10px;">
+            <div class="mask is-squircle flex h-full w-full items-center justify-center bg-slate-200 dark:bg-navy-600">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                    class="size-5 text-slate-500 dark:text-navy-200"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="2"> 
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
+            </div>
+            <div class="absolute right-0 -m-0.5 size-3 rounded-full border-2 border-white bg-primary dark:border-navy-700 dark:bg-accent"></div>
+        </div>
+
+        <!-- CONTENT -->
+        <div class="min-w-0 flex-1">
+
+            <!-- TOP -->
+            <div class="flex items-start justify-between gap-2">
+
+                <!-- TITLE -->
+                <h4 class="text-base font-medium text-slate-700 line-clamp-1 dark:text-navy-100">
+                    {{ assignment.title }}
+                </h4>
+
+                <!-- BUTTON -->
+                <div class="flex shrink-0 gap-1 pb-2"> 
+                    <!-- DOWNLOAD -->
+                    {% if assignment.attachment %} 
+                        <a href="{{ assignment.attachment.url }}" download class="btn h-6 rounded-full px-2 text-xs font-medium text-primary hover:bg-primary/20">
+                            Unduh
+                        </a> 
+                    {% endif %} 
+                    <!-- STATUS -->
+                    {% if assignment.is_submitted %} 
+                        <button disabled class="btn h-6 cursor-not-allowed rounded-full bg-success px-2 text-xs font-medium text-white opacity-70">
+                            Terkirim
+                        </button> 
+                    {% else %}    
+                        {% if ""|at_work_time or ""|at_correct_time %} 
+                            <button @click="showUploadModal = true" 
+                                id="upload-btn-{{ assignment.id }}" 
+                                onclick="setAssignmentId({{ assignment.id }})"
+                                class="btn h-6 rounded-full px-2 text-xs font-medium text-primary hover:bg-primary/20">
+                                Kirim Jawaban
+                            </button>  
+                        {% else %}
+                            <button class="btn h-6 rounded-full px-2 text-xs font-medium text-primary hover:bg-primary/20">
+                                <span class="relative inline-block">
+                                    Kirim Jawaban
+                                    <i class="fa-solid fa-lock absolute -top-0.5 -right-1.5 text-[6px] text-red-500"></i>
+                                </span>
+                            </button> 
+                        {% endif %}
+                    {% endif %} 
+                </div>
+
+            </div>
+
+            <!-- DESCRIPTION -->
+            <p class="text-xs-plus transition-colors duration-300 ease-in-out hover:text-slate-800 dark:hover:text-navy-50">
+                
+                {% if not assignment.student_submission.file and not assignment.student_submission.url %}
+                    <div class="mt-1 mb-2 rounded-lg bg-slate-100 p-3 dark:bg-navy-700">
+
+                        <div class="text-xs text-slate-500">
+                            Deadline:
+                            {{ assignment.expired|date:"d M Y H:i" }}
+                        </div>
+
+                        <div
+                            class="assignment-countdown mt-2 text-sm font-semibold"
+                            data-expired="{{ assignment.expired|date:'c' }}"
+                            data-schedule='[
+                            {% for item in assignment.correct_schedule %}
+                            {
+                                "day":"{{ item.day }}",
+                                "date":"{{ item.start|date:'Y-m-d' }}",
+                                "start":"{{ item.start|date:'H:i' }}",
+                                "end":"{{ item.end|date:'H:i' }}",
+                                "start_iso":"{{ item.start|date:'c' }}",
+                                "end_iso":"{{ item.end|date:'c' }}"
+                            }{% if not forloop.last %},{% endif %}
+                            {% endfor %}
+                            ]'
+                        >
+                            Menghitung...
+                        </div>
+
+                    </div>
+                {% endif %}
+                
+                <p class="mt-2">{{ assignment.description }}</p>
+
+                <!-- INFO FILE -->
+                {% if assignment.student_submission %}
+
+                <div class="mt-2 flex items-center gap-2 text-xs text-success">
+
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                        class="size-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor">
+
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M5 13l4 4L19 7" />
+
+                    </svg>
+
+                    {% if assignment.student_submission.file %}
+
+                        <span>File sudah diupload:</span>
+
+                        <a
+                            href="{{ assignment.student_submission.file.url }}"
+                            target="_blank"
+                            class="font-medium underline">
+                            Lihat File
+                        </a>
+
+                    {% elif assignment.student_submission.url %}
+
+                        <span>Link sudah dikirim:</span>
+
+                        <a
+                            href="{{ assignment.student_submission.url }}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="font-medium underline">
+                            Buka Link
+                        </a>
+
+                    {% endif %}
+
+                </div>
+
+                {% endif %}
+            </p>
+
+        </div>
+
+    </div>
+
+    {% endfor %}
+
+
+    <!-- MODAL -->
+    <template x-teleport="#x-teleport-target">
+
+        <div
+            class="fixed inset-0 z-[100] flex items-center justify-center px-4 py-6 sm:px-5"
+            x-show="showUploadModal"
+            @close-upload-modal.window="showUploadModal = false"
+            x-transition
+        >
+
+            <!-- OVERLAY -->
+            <div
+                class="absolute inset-0 bg-slate-900/60"
+                @click="showUploadModal = false"
+            ></div>
+
+
+            <!-- MODAL CONTENT -->
+            <div
+                class="relative w-full max-w-lg rounded-lg bg-white shadow-xl dark:bg-navy-700"
+            >
+
+                <!-- HEADER -->
+                <div class="flex items-center justify-between rounded-t-lg bg-slate-200 px-4 py-3 dark:bg-navy-800">
+
+                    <h3 class="text-base font-medium text-slate-700 dark:text-navy-100">
+                        Upload Jawaban
+                    </h3>
+
+                    <button
+                        @click="showUploadModal = false"
+                        class="btn -mr-1.5 size-7 rounded-full p-0 hover:bg-slate-300/20"
+                    >
+                        ✕
+                    </button>
+
+                </div>
+
+
+                <!-- FORM -->
+                <form
+                    enctype="multipart/form-data"
+                    @submit.prevent="window.uploadSubmission(event)"
+                    x-data="{ submissionType: 'upload' }"
+                >
+
+                    {% csrf_token %}
+
+                    <div class="space-y-4 px-4 py-5 sm:px-5">
+
+                        <!-- Tipe Pengiriman -->
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 dark:text-navy-100">
+                                Tipe Pengiriman
+                            </label>
+
+                            <select
+                                x-model="submissionType"
+                                name="submission_type"
+                                class="mt-2 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm dark:border-navy-450 dark:bg-navy-600"
+                            >
+                                <option value="upload">Unggah File</option>
+                                <option value="url">Link URL</option>
+                            </select>
+                        </div>
+
+                        <!-- Upload File -->
+                        <div x-show="submissionType === 'upload'" x-transition>
+                            <label class="block text-sm font-medium text-slate-700 dark:text-navy-100">
+                                File Jawaban
+                            </label>
+
+                            <input
+                                x-bind:required="submissionType === 'upload'"
+                                type="file"
+                                name="submission_file"
+                                class="mt-2 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm dark:border-navy-450 dark:bg-navy-600">
+                        </div>
+
+                        <!-- Link URL -->
+                        <div x-show="submissionType === 'url'" x-transition>
+                            <label class="block text-sm font-medium text-slate-700 dark:text-navy-100">
+                                Link URL
+                            </label>
+
+                            <input
+                                x-bind:required="submissionType === 'url'"
+                                type="url"
+                                name="submission_url"
+                                placeholder="https://..."
+                                class="mt-2 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm dark:border-navy-450 dark:bg-navy-600">
+                        </div>
+
+                    </div>
+
+                    <!-- ACTION -->
+                    <div class="flex justify-end gap-2 border-t px-4 py-4 sm:px-5">
+
+                        <button
+                            type="button"
+                            @click="showUploadModal = false"
+                            class="btn min-w-[7rem] rounded-full border border-slate-300 font-medium text-slate-800"
+                        >
+                            Batal
+                        </button>
+
+                        <button
+                            type="submit"
+                            class="btn min-w-[7rem] rounded-full bg-primary font-medium text-white"
+                        >
+                            Kirim
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </template>
+
+</div>
+
+<!-- </> script -->
+<script>
+
+    let currentAssignmentId = null
+    const submissionBaseUrl = "{% url 'student_roadmap:submission_create' 0 %}" 
+    function setAssignmentId(id) { currentAssignmentId = id }
+
+    async function uploadSubmission(event) { 
+        event.preventDefault() 
+
+        const formData = new FormData(event.target) 
+        const url = submissionBaseUrl.replace(
+            '/0/',
+            `/${currentAssignmentId}/`
+        )
+        const submissionType = formData.get('submission_type')
+
+        if (submissionType === 'upload') {
+            formData.delete('submission_url')
+        } else if (submissionType === 'url') {
+            formData.delete('submission_file')
+        }
+
+        try { 
+            const response = await fetch(url, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            }) 
+            const data = await response.json() 
+            if (data.success) { 
+                window.dispatchEvent(
+                    new CustomEvent('close-upload-modal')
+                )  
+                const button = document.getElementById(
+                    `upload-btn-${currentAssignmentId}`
+                ) 
+                if (button) { 
+                    button.outerHTML = `
+                        <button
+                            disabled
+                            class="btn h-6 cursor-not-allowed rounded-full bg-success px-2 text-xs font-medium text-white opacity-70"
+                        >
+                            Terkirim
+                        </button>
+                    `
+                }  
+            } else { 
+                alert(data.message) 
+            } 
+        } catch (error) { 
+            alert('Terjadi kesalahan upload') 
+        }
+
+    }
+
+</script>
+
+<script>
+
+function updateCountdowns() {
+
+    document.querySelectorAll(".assignment-countdown").forEach(function (el) {
+
+        const expired = new Date(el.dataset.expired);
+        const schedules = JSON.parse(el.dataset.schedule || "[]");
+        const now = new Date();
+
+        // =====================================
+        // 1. Sebelum deadline
+        // =====================================
+
+        if (now < expired) {
+
+            let diff = expired - now;
+
+            const days = Math.floor(diff / 86400000);
+            diff %= 86400000;
+
+            const hours = Math.floor(diff / 3600000);
+            diff %= 3600000;
+
+            const minutes = Math.floor(diff / 60000);
+            diff %= 60000;
+
+            const seconds = Math.floor(diff / 1000);
+
+            let color = "text-success";
+
+            if (days === 0 && hours < 24)
+                color = "text-warning";
+
+            if (days === 0 && hours < 1)
+                color = "text-error";
+
+            el.innerHTML = `
+                <span class="${color}">
+                    ⏳
+                    ${days} hari
+                    ${String(hours).padStart(2, "0")} jam
+                    ${String(minutes).padStart(2, "0")} menit
+                    ${String(seconds).padStart(2, "0")} detik
+                </span>
+            `;
+
+            return;
+        }
+
+        // =====================================
+        // 2. Deadline lewat
+        // =====================================
+
+        if (!schedules.length) {
+
+            el.innerHTML = `
+                <span class="text-error font-medium">
+                    ❌ Anda gagal mengerjakan tugas ini.
+                </span>
+            `;
+
+            return;
+        }
+
+        let hasFutureSession = false;
+        let isCurrentSession = false;
+
+        let html = `
+            <div class="space-y-2">
+
+                <div class="font-semibold text-warning">
+                    ⚠️ Deadline pengumpulan telah berakhir.
+                </div>
+
+                <div class="text-xs text-slate-500">
+                    Anda masih dapat memperbaiki tugas pada jadwal berikut:
+                </div>
+
+                <ul class="list-disc list-inside space-y-1 text-xs">
+        `;
+
+        schedules.forEach(function(item){
+
+            const start = new Date(item.start_iso);
+            const end = new Date(item.end_iso);
+
+            if(now <= end)
+                hasFutureSession = true;
+
+            const active = now >= start && now <= end;
+
+            if(active)
+                isCurrentSession = true;
+
+            html += `
+                <li class="${active ? 'font-semibold text-success' : ''}">
+                    ${item.day},
+                    ${item.date}
+                    (${item.start} - ${item.end} WIB)
+                    ${active ? ' <strong>(Hari ini)</strong>' : ''}
+                </li>
+            `;
+        });
+
+        html += `
+                </ul>
+            </div>
+        `;
+
+        // =====================================
+        // 3. Semua sesi selesai
+        // =====================================
+
+        if(!hasFutureSession){
+
+            el.innerHTML = `
+                <span class="text-error font-medium">
+                    ❌ Anda gagal mengerjakan tugas ini.
+                </span>
+            `;
+
+            return;
+        }
+
+        el.innerHTML = html;
+
+    });
+
+}
+ 
+updateCountdowns();
+
+setInterval(updateCountdowns, 1000);
+
+</script>
+{% endblock content %}

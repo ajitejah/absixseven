@@ -1,0 +1,57 @@
+ini adalah profil website;
+
+IBSIXSEVEN merupakan platform website untuk menghubungkan antara siswa, guru dan orang tua. Siswa akan mengerjakan soal-soal yang diberikan guru dalam bentuk tugas-tugas yang tersusun ke dalam roadmap, guru akan memberi tugas dan paket roadmapnya dan menerima submission (jawaban) dari tugas yang diberikan, guru juga akan memberikan nilainya. orang tua akan memantau interaksi guru-siswa dan dapat chat guru untuk memberikan saran-rekomendasi. Disediakan juga fasilitas chat/obrolan untuk orangtua-guru.
+
+Fasilitas utama dalam IBSIXSEVEN adalah
+1. Roadmap Manager; untuk mengatur roadmap, di dalamnya ada node-node/checkpoint, didalam setiap checkpoint atau node itu ada listing tugasnya. nanti siswa mengirim submision, lalu guru beri nilai
+2. Evaluasi; untuk menampilkan progress roadmap yang dikerjakan siswa, menampilkan hasil nilai juga dalam bentuk grafis
+3. Proyeksi; ini digunakan ketika siswa sudah mengerjakan roadmap, maka akan dijadikan pijakan proyeksi terhadap ujian di institusi internasional apakah mampu atau tidak.
+4. Fasilitas chat untuk orang tua.
+5. Akun; pengelolaan akun untuk kebutuhan authentikasi.
+
+
+web setting list
+
+saya membuat app_setting di Django IBSIXSEVEN. Nah pengaturan mencakup pengaturan web dan pengaturan konten web. bisa dibuatkan rancangan tabelnya, berarti modelnya ada tabel web dan tabel content. berikut ini nama-nama pengaturan yang nanti ada default valuenya. buatkan models.py nya ya
+
+Pengaturan Web - "WEB"
+Meta Tag
+logo terang
+logo gelap
+deskripsi singkat
+alamat
+email
+whatsapp
+ig
+
+Pengaturan Content Web - "CONTENT"
+Bagian Header terdiri
+1. Judul utama
+2. Sub Judul
+3. Gambar/foto
+
+Bagian 3 icon utama
+1. icon 1, judul icon, sub judul
+1. icon 2, judul icon, sub judul
+1. icon 3, judul icon, sub judul
+
+Bagian fitur Roadmap
+1. gambar cover
+2. video short untuk hover
+3. Judul utama
+4. Sub Judul
+
+Bagian fitur Evaluasi
+1. gambar cover
+2. video short untuk hover
+3. Judul utama
+4. Sub Judul
+
+Bagian fitur Proyeksi
+1. gambar cover
+2. video short untuk hover
+3. Judul utama
+4. Sub Judul
+
+class input
+form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent

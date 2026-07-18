@@ -1,0 +1,234 @@
+{% extends 'dashboard_base.html' %}
+{% block content %}
+{% load static %}
+<div class="grid grid-cols-12 gap-4 sm:gap-5 lg:gap-6">
+
+  <!-- ================= LEFT CONTENT ================= -->
+  <div class="col-span-12 sm:col-span-8">
+
+    <!-- header card -->
+    <div class="flex justify-between items-center pb-4">
+        <p class="text-base font-medium text-slate-700 dark:text-navy-100">
+        Detail User {{ role }}
+        </p>
+
+        <a href="{% url 'admin_user_list' %}"
+            class="btn size-8 rounded-full p-0 hover:bg-slate-300/20 focus:bg-slate-300/20 active:bg-slate-300/25
+                    dark:hover:bg-navy-300/20 dark:focus:bg-navy-300/20 dark:active:bg-navy-300/25">
+
+            <svg xmlns="http://www.w3.org/2000/svg"
+                class="size-4.5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor">
+
+                <path stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                    d="M15 19l-7-7 7-7" />
+
+            </svg>
+        </a>
+    </div>
+
+    <!-- USER PROFILE -->
+    <div class="card p-4 sm:p-5"> 
+
+      <div class="mt-4 space-y-4">
+
+        <!-- PHOTO -->
+        <div class="flex items-center space-x-4">
+          {% if user.photo %}
+            <img src="{{ user.photo.url }}" class="w-16 h-16 rounded-full object-cover">
+          {% else %}
+            <div class="w-16 h-16 rounded-full bg-slate-200 flex items-center justify-center">
+              <i class="fa fa-user text-slate-500"></i>
+            </div>
+          {% endif %}
+
+          <div>
+            <p class="font-semibold">
+              {{ user.get_full_name|default:user.email }}
+            </p>
+            <p class="text-xs text-slate-400">{{ user.email }}</p>
+
+            <!-- ROLE BADGE -->
+            <span class="inline-block mt-1 text-xs px-2 py-1 rounded bg-primary text-white">
+              {{ role|default:"User" }}
+            </span>
+          </div>
+        </div>
+
+        <!-- NAME -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <span class="text-xs text-slate-400">First Name</span>
+            <p class="font-medium">{{ user.first_name|default:"-" }}</p>
+          </div>
+          <div>
+            <span class="text-xs text-slate-400">Last Name</span>
+            <p class="font-medium">{{ user.last_name|default:"-" }}</p>
+          </div>
+        </div>
+
+        <!-- EMAIL -->
+        <div>
+          <span class="text-xs text-slate-400">Email</span>
+          <p class="font-medium">{{ user.email }}</p>
+        </div>
+
+        <!-- GENDER -->
+        <div>
+          <span class="text-xs text-slate-400">Gender</span>
+          <p class="font-medium">
+            {{ user.get_gender_display|default:"-" }}
+          </p>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ================= ROLE DETAIL ================= -->
+
+    <!-- ADMIN -->
+    {% if admin_profile %}
+    <div class="card p-4 sm:p-5 mt-4">
+      <p class="text-base font-medium text-slate-700 dark:text-navy-100">
+        Admin Detail
+      </p>
+
+      <div class="mt-3">
+        <span class="text-xs text-slate-400">Position</span>
+        <p class="font-medium">{{ admin_profile.position|default:"-" }}</p>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- TEACHER -->
+    {% if teacher %}
+    <div class="card p-4 sm:p-5 mt-4">
+      <p class="text-base font-medium text-slate-700 dark:text-navy-100">
+        Teacher Detail
+      </p>
+
+      <div class="mt-3">
+        <span class="text-xs text-slate-400">Major</span>
+        <p class="font-medium">{{ teacher.major|default:"-" }}</p>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- STUDENT -->
+    {% if student %}
+    <div class="card p-4 sm:p-5 mt-4">
+        <p class="text-base font-medium text-slate-700 dark:text-navy-100">
+            Student Detail
+        </p>
+
+        <div class="mt-3 space-y-3">
+
+            <!-- GRADE -->
+            <div>
+            <span class="text-xs text-slate-400">Grade</span>
+            <p class="font-medium">{{ student.grade|default:"-" }}</p>
+            </div>
+
+            <!-- LEVEL -->
+            <div>
+            <span class="text-xs text-slate-400">Level</span>
+
+            {% if student.level %}
+                <div class="flex items-center space-x-2">
+
+                {% if student.level.icon %}
+                    <i class="{{ student.level.icon }}"></i>
+                {% endif %}
+
+                <p class="font-medium">
+                    {{ student.level.name }}
+                </p>
+                </div>
+
+                {% if student.level.description %}
+                <p class="text-xs text-slate-400">
+                    {{ student.level.description }}
+                </p>
+                {% endif %}
+
+            {% else %}
+                <p class="font-medium">-</p>
+            {% endif %}
+            </div>
+
+            <!-- ADDRESS -->
+            <div>
+            <span class="text-xs text-slate-400">Address</span>
+            <p class="font-medium">{{ student.address|default:"-" }}</p>
+            </div>
+
+            <!-- BIRTH -->
+            <div>
+            <span class="text-xs text-slate-400">Birth</span>
+            <p class="font-medium">
+                {{ student.birth|date:"d M Y"|default:"-" }}
+            </p>
+            </div>
+
+        </div>
+        </div>
+        {% endif %}
+
+    <!-- PARENT -->
+    {% if parent %}
+    <div class="card p-4 sm:p-5 mt-4">
+      <p class="text-base font-medium text-slate-700 dark:text-navy-100">
+        Parent Detail
+      </p>
+
+      <div class="mt-3">
+        <span class="text-xs text-slate-400">Position</span>
+        <p class="font-medium">{{ parent.position|default:"-" }}</p>
+      </div>
+    </div>
+    {% endif %} 
+
+  </div>
+
+  <!-- ================= RIGHT SIDE (STEP / INFO) ================= -->
+  <div class="hidden sm:col-span-4 sm:block">
+    <div class="sticky top-24 mt-3">
+      <ol class="steps is-vertical line-space">
+
+        <li class="step pb-8 before:bg-primary dark:before:bg-accent">
+          <div class="step-header rounded-full bg-primary text-white dark:bg-accent">
+            ✓
+          </div>
+          <h3 class="ml-4 text-slate-700 dark:text-navy-100">
+            User Loaded
+          </h3>
+        </li>
+
+        <li class="step pb-8 before:bg-primary dark:before:bg-accent">
+          <div class="step-header rounded-full bg-primary text-white dark:bg-accent">
+            ✓
+          </div>
+          <h3 class="ml-4 text-slate-700 dark:text-navy-100">
+            Role Detected
+          </h3>
+        </li>
+
+        <li class="step pb-8 before:bg-primary dark:before:bg-accent">
+          <div class="step-header rounded-full bg-primary text-white dark:bg-accent">
+            ✓
+          </div>
+          <h3 class="ml-4 text-slate-700 dark:text-navy-100">
+            Detail Loaded
+          </h3>
+        </li>
+
+      </ol>
+    </div>
+  </div>
+
+</div>
+{% endblock content %} 

@@ -1,0 +1,79 @@
+{% extends "auth/base.html" %}
+{% block content %}
+
+<form method="POST">
+    {% csrf_token %}
+
+    <div class="card mt-5 rounded-lg p-5 lg:p-7">
+
+        <!-- EMAIL -->
+        <label class="block">
+            <span>Email:</span>
+            <span class="relative mt-1.5 flex">
+                <input
+                    name="email"
+                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 pl-9 placeholder:text-slate-400/70"
+                    placeholder="Enter Email"
+                    type="email"
+                    required
+                />
+            </span>
+        </label>
+
+        <!-- PASSWORD -->
+        <label class="mt-4 block">
+            <span>Password:</span>
+            <span class="relative mt-1.5 flex">
+                <input
+                    name="password"
+                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 pl-9 placeholder:text-slate-400/70"
+                    placeholder="Enter Password"
+                    type="password"
+                    required
+                />
+            </span>
+        </label>
+
+        <!-- REMEMBER + RESET -->
+        <div class="mt-4 flex items-center justify-between space-x-2">
+            <label class="inline-flex items-center space-x-2">
+                <input type="checkbox" name="remember">
+                <span>Remember me</span>
+            </label>
+
+            <a href="{% url 'reset' %}" class="text-xs text-slate-400 hover:text-slate-800">
+                Forgot Password?
+            </a>
+        </div>
+
+        <!-- BUTTON -->
+        <button
+            type="submit"
+            class="btn mt-5 w-full bg-primary text-white"
+        >
+            Sign In
+        </button>
+
+        <!-- REGISTER -->
+        <div class="mt-4 text-center text-xs-plus">
+            <p>
+                <span>Dont have Account?</span>
+                <a class="text-primary" href="{% url 'register' %}">
+                    Create account
+                </a>
+            </p>
+        </div>
+
+        <!-- ERROR MESSAGE -->
+        {% if messages %}
+            <div class="mt-4 text-red-500 text-sm">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+    </div>
+</form>
+
+{% endblock content %}
