@@ -7,21 +7,21 @@ def has_attr(obj, attr_name):
     return hasattr(obj, attr_name)
 
 @register.simple_tag
-def user_detail_url(user, user_id):
+def user_update_url(user):
 
     if hasattr(user, 'admin'):
         return f'/admin/user/update/'
 
     elif hasattr(user, 'teacher'):
-        return f'/teacher/user/detail/{user_id}/'
+        return f'/teacher/user/detail/'
 
     elif hasattr(user, 'student'):
-        return f'/student/user/detail/{user_id}/'
+        return f'/student/user/detail/'
 
     elif hasattr(user, 'parent'):
-        return f'/parent/user/detail/{user_id}/'
+        return f'/parent/user/detail/'
 
-    return f'/admin/user/detail/{user_id}/'
+    return f'/admin/user/detail/'
 
 # ▀▄▀▄ redirect url dashboard
 @register.simple_tag
