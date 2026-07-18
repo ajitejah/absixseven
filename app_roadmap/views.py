@@ -49,7 +49,7 @@ def level_create(request):
     else:
         form = LevelForm()
 
-    return render(request, "admin/level-create.html", {
+    return render(request, "common/level-create.html", {
         "title": "Create Level",
         "form": form,
     })
