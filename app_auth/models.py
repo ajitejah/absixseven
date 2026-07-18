@@ -26,6 +26,7 @@ class User(AbstractUser):
         if hasattr(self, "parent"):
             return "parent"
         return None
+    
     def save(self, *args, **kwargs):
         # cek apakah update (bukan create)
         if self.pk:
