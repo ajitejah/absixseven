@@ -28,7 +28,7 @@ class LevelForm(forms.ModelForm, StyledFormMixin):
         fields = [
             "name",
             "description",
-            "score",
+            #"score",
             "icon",
         ]
 
@@ -41,11 +41,7 @@ class LevelForm(forms.ModelForm, StyledFormMixin):
                 "rows": 4,
                 "placeholder": "Description",
             }),
-
-            "score": forms.NumberInput(attrs={
-                "placeholder": "Minimum Score",
-                "min": 0,
-            }),
+ 
 
             "icon": forms.TextInput(attrs={
                 "placeholder": "fa-solid fa-medal",
@@ -63,7 +59,7 @@ class LevelForm(forms.ModelForm, StyledFormMixin):
         self.fields["icon"].help_text = (
             "Contoh: fa-solid fa-medal, fa-solid fa-star, fa-solid fa-trophy"
         )
-        
+
 # ▀▄▀▄ form create user
 class UserCreateForm(UserCreationForm, StyledFormMixin):
     class Meta:
