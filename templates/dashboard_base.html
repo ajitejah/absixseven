@@ -324,7 +324,7 @@
                           {% endif %}
                         </div>
                         <div>
-                          <a href="{% user_detail_url user user.id %}" class="text-base font-medium text-slate-700 hover:text-primary focus:text-primary dark:text-navy-100 dark:hover:text-accent-light dark:focus:text-accent-light">
+                          <a href="{% user_update_url user %}" class="text-base font-medium text-slate-700 hover:text-primary focus:text-primary dark:text-navy-100 dark:hover:text-accent-light dark:focus:text-accent-light">
                             {{ user.get_full_name }}
                           </a>
                           <p class="text-xs text-slate-400 dark:text-navy-300">
