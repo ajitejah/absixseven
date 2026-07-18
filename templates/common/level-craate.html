@@ -1,0 +1,148 @@
+{% extends 'dashboard_base.html' %}
+{% load custom_tags %}
+
+{% block content %}
+
+<form method="POST">
+{% csrf_token %}
+
+<div class="grid grid-cols-12 gap-4 sm:gap-5 lg:gap-6">
+
+    <!-- ================= LEFT ================= --> 
+    <div class="col-span-12 sm:col-span-8"> 
+        <div class="card p-4 sm:p-5"> 
+            <p class="text-base font-medium text-slate-700 dark:text-navy-100">
+                Create Level
+            </p>
+
+            <div class="mt-4 space-y-4">
+
+                <!-- NAME --> 
+                <label class="block"> 
+                    <span>Level Name</span> 
+                    <span class="relative mt-1.5 flex"> 
+                        {{ form.name }} 
+                        <span
+                            class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400">
+                            <i class="fa-solid fa-layer-group"></i>
+                        </span>
+                    </span>
+                </label>
+
+                <!-- SCORE -->
+                <label class="block">
+                    <span>Minimum Score</span>
+                    <span class="relative mt-1.5 flex">
+                        {{ form.score }}
+                        <span
+                            class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400">
+                            <i class="fa-solid fa-star"></i>
+                        </span>
+                    </span>
+                    <p class="mt-1 text-xs text-slate-400">
+                        Score minimal untuk mendapatkan level ini.
+                    </p>
+                </label>
+
+                <!-- ICON -->
+                <label class="block">
+                    <span>FontAwesome Icon</span>
+                    <span class="relative mt-1.5 flex">
+                        {{ form.icon }}
+                        <span
+                            class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400">
+                            <i class="fa-solid fa-icons"></i>
+                        </span>
+                    </span>
+                </label>
+
+                <!-- PREVIEW -->
+                <div class="rounded-lg bg-slate-100 p-4 dark:bg-navy-700">
+                    <div class="flex items-center gap-4">
+                        <i id="icon-preview"
+                           class="fa-solid fa-medal text-4xl text-primary"></i>
+                        <div>
+                            <p class="font-medium">
+                                Icon Preview
+                            </p>
+                            <p class="text-xs text-slate-500">
+                                Contoh:
+                                fa-solid fa-medal
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DESCRIPTION -->
+                <label class="block">
+                    <span>Description</span>
+                    {{ form.description }}
+                </label>
+
+                <!-- BUTTON -->
+                <div class="flex justify-end space-x-2">
+                    <a href="{% level_list_url user %}"
+                       class="btn space-x-2 bg-slate-150 font-medium text-slate-800 hover:bg-slate-200 dark:bg-navy-500 dark:text-white">
+                        <span>Cancel</span>
+                    </a>
+                    <button
+                        class="btn space-x-2 bg-primary font-medium text-white">
+                        <span>Save</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= RIGHT ================= -->
+
+    <div class="hidden sm:col-span-4 sm:block">
+        <div class="sticky top-24">
+            <ol class="steps is-vertical line-space">
+                <li class="step pb-8 before:bg-primary">
+                    <div class="step-header rounded-full bg-primary text-white">
+                        1
+                    </div>
+                    <h3 class="ml-4">
+                        Input Level
+                    </h3>
+                </li>
+                <li class="step">
+                    <div class="step-header rounded-full bg-slate-200 text-slate-700">
+                        2
+                    </div>
+                    <h3 class="ml-4">
+                        Save Level
+                    </h3>
+                </li>
+            </ol>
+        </div>
+    </div>
+</div>
+</form>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    
+    const input = document.getElementById("id_icon");
+    const preview = document.getElementById("icon-preview");
+
+    function updateIcon() {
+
+        const value = input.value.trim();
+
+        preview.className = value
+            ? value + " text-4xl text-primary"
+            : "fa-solid fa-medal text-4xl text-primary";
+
+    }
+
+    input.addEventListener("input", updateIcon);
+
+    updateIcon();
+
+});
+
+</script>
+
+{% endblock %}

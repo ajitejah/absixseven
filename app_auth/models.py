@@ -67,10 +67,21 @@ class Parent(models.Model):
 class Level(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
-    icon = models.CharField(max_length=100, blank=True)  # contoh: fa-solid fa-star
+
+    icon = models.CharField(
+        max_length=100,
+        default="fa-solid fa-medal",
+        help_text="Contoh: fa-solid fa-star"
+    )
+
+    minimum_score = models.PositiveIntegerField(default=0)
+    maximum_score = models.PositiveIntegerField(default=100)
+
+    class Meta:
+        ordering = ["minimum_score"]
 
     def __str__(self):
-        return self.name 
+        return f"{self.name} ({self.minimum_score}-{self.maximum_score})"
 
 class Student(models.Model):
     grade   = models.CharField(max_length=255)

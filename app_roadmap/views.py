@@ -3,6 +3,7 @@ import json
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render, get_object_or_404
+from app_auth.forms import LevelForm
 from app_auth.models import Level, Student
 from app_guidance.models import ParentActivityLog
 from app_guidance.service import log_parent_activity
@@ -33,6 +34,25 @@ def level_list(request):
     }
 
     return render(request, "common/level.html", context,)
+
+
+@login_required
+def level_create(request):
+
+    if request.method == "POST":
+        form = LevelForm(request.POST)
+
+        if form.is_valid():
+            form.save()
+            return redirect("level_list")
+
+    else:
+        form = LevelForm()
+
+    return render(request, "admin/level-create.html", {
+        "title": "Create Level",
+        "form": form,
+    })
 
 # ▀▄▀▄ menampilkan daftar roadmap
 def roadmap_list(request):

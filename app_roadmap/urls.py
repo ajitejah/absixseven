@@ -7,6 +7,7 @@ urlpatterns = [
     
     
     path('level', views.level_list, name='level_list'), 
+    path('level/create/', views.level_create, name='level_create'), 
 
     path('', views.roadmap_list, name='roadmap_list'), 
     path('create/', views.roadmap_create, name='roadmap_create'), 

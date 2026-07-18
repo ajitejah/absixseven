@@ -20,6 +20,50 @@ class StyledFormMixin:
                 'class': BASE_INPUT_CLASS
             })
 
+# ▀▄▀▄ Form Level
+class LevelForm(forms.ModelForm, StyledFormMixin):
+
+    class Meta:
+        model = Level
+        fields = [
+            "name",
+            "description",
+            "score",
+            "icon",
+        ]
+
+        widgets = {
+            "name": forms.TextInput(attrs={
+                "placeholder": "Level Name",
+            }),
+
+            "description": forms.Textarea(attrs={
+                "rows": 4,
+                "placeholder": "Description",
+            }),
+
+            "score": forms.NumberInput(attrs={
+                "placeholder": "Minimum Score",
+                "min": 0,
+            }),
+
+            "icon": forms.TextInput(attrs={
+                "placeholder": "fa-solid fa-medal",
+            }),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.apply_style()
+
+        self.fields["score"].help_text = (
+            "Minimal score untuk mencapai level ini."
+        )
+
+        self.fields["icon"].help_text = (
+            "Contoh: fa-solid fa-medal, fa-solid fa-star, fa-solid fa-trophy"
+        )
+        
 # ▀▄▀▄ form create user
 class UserCreateForm(UserCreationForm, StyledFormMixin):
     class Meta:
