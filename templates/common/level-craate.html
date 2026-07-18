@@ -9,6 +9,7 @@
 <div class="grid grid-cols-12 gap-4 sm:gap-5 lg:gap-6">
 
     <!-- ================= LEFT ================= -->
+
     <div class="col-span-12 sm:col-span-8">
 
         <div class="card p-4 sm:p-5">
@@ -19,11 +20,13 @@
 
             <div class="mt-4 space-y-4">
 
-                <!-- NAME -->
+                <!-- LEVEL NAME -->
                 <label class="block">
+
                     <span>Level Name</span>
 
                     <span class="relative mt-1.5 flex">
+
                         {{ form.name }}
 
                         <span
@@ -32,33 +35,61 @@
                             <i class="fa-solid fa-layer-group"></i>
 
                         </span>
+
                     </span>
+
                 </label>
 
                 <!-- SCORE -->
-                <label class="block">
-                    <span>Minimum Score</span>
 
-                    <span class="relative mt-1.5 flex">
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
 
-                        {{ form.score }}
+                    <!-- MINIMUM -->
 
-                        <span
-                            class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400 peer-focus:text-primary dark:text-navy-300 dark:peer-focus:text-accent">
+                    <label class="block">
 
-                            <i class="fa-solid fa-star"></i>
+                        <span>Minimum Score</span>
+
+                        <span class="relative mt-1.5 flex">
+
+                            {{ form.minimum_score }}
+
+                            <span
+                                class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400">
+
+                                <i class="fa-solid fa-arrow-down"></i>
+
+                            </span>
 
                         </span>
 
-                    </span>
+                    </label>
 
-                    <p class="mt-1 text-xs text-slate-400">
-                        Minimum score yang harus dicapai siswa untuk memperoleh level ini.
-                    </p>
+                    <!-- MAXIMUM -->
 
-                </label>
+                    <label class="block">
+
+                        <span>Maximum Score</span>
+
+                        <span class="relative mt-1.5 flex">
+
+                            {{ form.maximum_score }}
+
+                            <span
+                                class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400">
+
+                                <i class="fa-solid fa-arrow-up"></i>
+
+                            </span>
+
+                        </span>
+
+                    </label>
+
+                </div>
 
                 <!-- ICON -->
+
                 <label class="block">
 
                     <span>Font Awesome Icon</span>
@@ -68,7 +99,7 @@
                         {{ form.icon }}
 
                         <span
-                            class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400 peer-focus:text-primary dark:text-navy-300 dark:peer-focus:text-accent">
+                            class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400">
 
                             <i class="fa-solid fa-icons"></i>
 
@@ -77,31 +108,44 @@
                     </span>
 
                     <p class="mt-1 text-xs text-slate-400">
-                        Contoh: fa-solid fa-medal, fa-solid fa-star, fa-solid fa-trophy
+
+                        Contoh:
+                        fa-solid fa-medal,
+                        fa-solid fa-star,
+                        fa-solid fa-crown,
+                        fa-solid fa-trophy
+
                     </p>
 
                 </label>
 
-                <!-- ICON PREVIEW -->
+                <!-- PREVIEW -->
+
                 <div class="rounded-lg border border-slate-200 bg-slate-50 p-4 dark:border-navy-600 dark:bg-navy-700">
 
                     <div class="flex items-center gap-4">
 
                         <div class="flex h-16 w-16 items-center justify-center rounded-xl bg-white shadow dark:bg-navy-600">
 
-                            <i id="icon-preview"
-                               class="fa-solid fa-medal text-3xl text-primary"></i>
+                            <i
+                                id="icon-preview"
+                                class="fa-solid fa-medal text-4xl text-primary">
+                            </i>
 
                         </div>
 
                         <div>
 
                             <p class="font-medium text-slate-700 dark:text-navy-100">
-                                Preview
+
+                                Icon Preview
+
                             </p>
 
                             <p class="text-xs text-slate-400">
+
                                 Icon akan berubah secara otomatis.
+
                             </p>
 
                         </div>
@@ -111,6 +155,7 @@
                 </div>
 
                 <!-- DESCRIPTION -->
+
                 <label class="block">
 
                     <span>Description</span>
@@ -120,9 +165,11 @@
                 </label>
 
                 <!-- BUTTON -->
+
                 <div class="flex justify-end space-x-2">
 
-                    <a href="{% level_list_url user %}"
+                    <a
+                        href="{% level_list_url user %}"
                         class="btn space-x-2 bg-slate-150 font-medium text-slate-800 hover:bg-slate-200 focus:bg-slate-200 active:bg-slate-200/80 dark:bg-navy-500 dark:text-navy-50 dark:hover:bg-navy-450 dark:focus:bg-navy-450 dark:active:bg-navy-450/90">
 
                         <span>Cancel</span>
@@ -155,11 +202,15 @@
                 <li class="step pb-8 before:bg-primary dark:before:bg-accent">
 
                     <div class="step-header rounded-full bg-primary text-white dark:bg-accent">
+
                         1
+
                     </div>
 
                     <h3 class="ml-4 text-slate-700 dark:text-navy-100">
+
                         Input Data
+
                     </h3>
 
                 </li>
@@ -167,11 +218,15 @@
                 <li class="step pb-8 before:bg-slate-200 dark:before:bg-navy-500">
 
                     <div class="step-header rounded-full bg-slate-200 text-slate-800 dark:bg-navy-500 dark:text-white">
+
                         2
+
                     </div>
 
                     <h3 class="ml-4 text-slate-700 dark:text-navy-100">
+
                         Save Level
+
                     </h3>
 
                 </li>
@@ -201,7 +256,7 @@ document.addEventListener("DOMContentLoaded", function () {
             value = "fa-solid fa-medal";
         }
 
-        preview.className = value + " text-3xl text-primary";
+        preview.className = value + " text-4xl text-primary";
     }
 
     input.addEventListener("input", updatePreview);

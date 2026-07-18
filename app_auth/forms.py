@@ -66,13 +66,22 @@ class LevelForm(forms.ModelForm, StyledFormMixin):
         super().__init__(*args, **kwargs)
         self.apply_style()
 
-        self.fields["score"].help_text = (
-            "Minimal score untuk mencapai level ini."
-        )
+    def clean(self):
+        cleaned = super().clean()
 
-        self.fields["icon"].help_text = (
-            "Contoh: fa-solid fa-medal, fa-solid fa-star, fa-solid fa-trophy"
-        )
+        minimum = cleaned.get("minimum_score")
+        maximum = cleaned.get("maximum_score")
+
+        if (
+            minimum is not None
+            and maximum is not None
+            and minimum > maximum
+        ):
+            raise forms.ValidationError(
+                "Minimum Score tidak boleh lebih besar dari Maximum Score."
+            )
+
+        return cleaned
 
 # ▀▄▀▄ form create user
 class UserCreateForm(UserCreationForm, StyledFormMixin):
