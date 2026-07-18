@@ -328,7 +328,17 @@
                             {{ user.get_full_name }}
                           </a>
                           <p class="text-xs text-slate-400 dark:text-navy-300">
-                            {{ request.user.role }}
+                            {% if user.admin %}
+                                Admin
+                            {% elif user.teacher %}
+                                Guru (Teacher)
+                            {% elif user.student %}
+                                Siswa (Student)
+                            {% elif user.parent %}
+                                Orang Tua (Parent)
+                            {% else %}
+                                User
+                            {% endif %}
                           </p>
                         </div>
                       </div>
