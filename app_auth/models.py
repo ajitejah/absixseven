@@ -14,6 +14,18 @@ class User(AbstractUser):
     
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
+
+    @property
+    def role(self):
+        if hasattr(self, "admin"):
+            return "admin"
+        if hasattr(self, "teacher"):
+            return "teacher"
+        if hasattr(self, "student"):
+            return "student"
+        if hasattr(self, "parent"):
+            return "parent"
+        return None
     def save(self, *args, **kwargs):
         # cek apakah update (bukan create)
         if self.pk:

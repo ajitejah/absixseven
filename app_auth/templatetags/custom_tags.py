@@ -6,6 +6,23 @@ register = template.Library()
 def has_attr(obj, attr_name):
     return hasattr(obj, attr_name)
 
+@register.simple_tag
+def user_detail_url(user, user_id):
+
+    if hasattr(user, 'admin'):
+        return f'/admin/user/detail/{user_id}/'
+
+    elif hasattr(user, 'teacher'):
+        return f'/teacher/user/detail/{user_id}/'
+
+    elif hasattr(user, 'student'):
+        return f'/student/user/detail/{user_id}/'
+
+    elif hasattr(user, 'parent'):
+        return f'/parent/user/detail/{user_id}/'
+
+    return f'/admin/user/detail/{user_id}/'
+
 # ▀▄▀▄ redirect url dashboard
 @register.simple_tag
 def dashboard_url(user):
