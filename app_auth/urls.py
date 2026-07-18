@@ -14,6 +14,7 @@ urlpatterns = [
     # ▀▄▀▄ pengelolaan user di dashboard admin
     path('list/', views.user_list, name='admin_user_list'),
     path('detail/<int:id>/', views.user_detail, name='admin_user_detail'),
+    path('update/<int:id>/', views.user_update, name='admin_user_update'),
     path('delete/<int:id>/', views.user_delete, name='admin_user_delete'),
     path("student-own-parent/<int:student_id>/", views.student_own_parent, name="student_own_parent"),
 

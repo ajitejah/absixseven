@@ -10,7 +10,7 @@ def has_attr(obj, attr_name):
 def user_detail_url(user, user_id):
 
     if hasattr(user, 'admin'):
-        return f'/admin/user/detail/{user_id}/'
+        return f'/admin/user/update/{user_id}/'
 
     elif hasattr(user, 'teacher'):
         return f'/teacher/user/detail/{user_id}/'

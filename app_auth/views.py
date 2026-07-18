@@ -9,6 +9,12 @@ from django.contrib.auth import get_user_model
 from django.db import transaction 
 
 from app_auth.forms import StudentParentForm 
+from app_auth.forms import (
+    UserUpdateForm,
+    AdminForm,
+    TeacherForm,
+    ParentForm,
+)
 
 User = get_user_model() 
 
@@ -255,6 +261,105 @@ def user_delete(request, id):
 
     messages.warning(request, 'Akses tidak valid')
     return redirect('admin_user_list')
+
+@login_required
+def user_update(request): 
+
+    user = request.user 
+    admin_profile = getattr(user, "admin", None)
+    teacher = getattr(user, "teacher", None)
+    parent = getattr(user, "parent", None)
+    student = getattr(user, "student", None)
+
+    if request.method == "POST": 
+        user_form = UserUpdateForm(
+            request.POST,
+            request.FILES,
+            instance=user,
+        ) 
+        admin_form = AdminForm(
+            request.POST,
+            instance=admin_profile,
+            prefix="admin",
+        ) if admin_profile else None
+
+        teacher_form = TeacherForm(
+            request.POST,
+            instance=teacher,
+            prefix="teacher",
+        ) if teacher else None
+
+        parent_form = ParentForm(
+            request.POST,
+            instance=parent,
+            prefix="parent",
+        ) if parent else None
+
+        valid = user_form.is_valid()
+
+        if admin_form:
+            valid = valid and admin_form.is_valid()
+
+        if teacher_form:
+            valid = valid and teacher_form.is_valid()
+
+        if parent_form:
+            valid = valid and parent_form.is_valid()
+
+        if valid:
+
+            user_form.save()
+
+            if admin_form:
+                admin_form.save()
+
+            if teacher_form:
+                teacher_form.save()
+
+            if parent_form:
+                parent_form.save()
+
+            messages.success(
+                request,
+                "Profil berhasil diperbarui."
+            )
+
+            return redirect("user_update")
+
+    else:
+
+        user_form = UserUpdateForm(instance=user)
+
+        admin_form = (
+            AdminForm(instance=admin_profile, prefix="admin")
+            if admin_profile else None
+        )
+
+        teacher_form = (
+            TeacherForm(instance=teacher, prefix="teacher")
+            if teacher else None
+        )
+
+        parent_form = (
+            ParentForm(instance=parent, prefix="parent")
+            if parent else None
+        )
+
+    return render(
+        request,
+        "admin/user-update.html",
+        {
+            "title": "Profil Saya",
+
+            "user_form": user_form,
+
+            "admin_form": admin_form,
+            "teacher_form": teacher_form,
+            "parent_form": parent_form,
+
+            "student": student,
+        },
+    )
 
 @login_required
 @transaction.atomic

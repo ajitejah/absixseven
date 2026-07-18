@@ -56,16 +56,31 @@ class UserCreateForm(UserCreationForm, StyledFormMixin):
             user.save()
         return user
 
-# ▀▄▀▄ form untuk update/preview user
-class UserUpdateForm(UserChangeForm, StyledFormMixin):
-    password = None
+# ▀▄▀▄ Form Update User
+class UserUpdateForm(forms.ModelForm, StyledFormMixin):
 
     class Meta:
         model = User
-        fields = ['email', 'gender', 'photo']
+        fields = [
+            "first_name",
+            "last_name",
+            "email",
+            "gender",
+            "photo",
+        ]
+
         widgets = {
-            'email': forms.EmailInput(attrs={
-                'placeholder': 'Enter Email'
+            "first_name": forms.TextInput(attrs={
+                "placeholder": "First Name",
+            }),
+            "last_name": forms.TextInput(attrs={
+                "placeholder": "Last Name",
+            }),
+            "email": forms.EmailInput(attrs={
+                "placeholder": "Email",
+            }),
+            "gender": forms.Select(attrs={
+                "class": BASE_INPUT_CLASS,
             }),
         }
 
@@ -73,73 +88,103 @@ class UserUpdateForm(UserChangeForm, StyledFormMixin):
         super().__init__(*args, **kwargs)
         self.apply_style()
 
-# ▀▄▀▄ form admin
+
+# ▀▄▀▄ Form Admin
 class AdminForm(forms.ModelForm, StyledFormMixin):
+
     class Meta:
         model = Admin
-        fields = ['position']
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.apply_style()
-
-# ▀▄▀▄ form teacher
-class TeacherForm(forms.ModelForm, StyledFormMixin):
-    class Meta:
-        model = Teacher
-        fields = ['major']
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.apply_style()
-
-# ▀▄▀▄ form parent
-class ParentForm(forms.ModelForm, StyledFormMixin):
-    class Meta:
-        model = Parent
-        fields = ['position']
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.apply_style()
-
-# ▀▄▀▄ form student
-class StudentForm(forms.ModelForm, StyledFormMixin):
-    class Meta:
-        model = Student
-        fields = ['grade', 'level', 'address', 'birth', 'parent']
+        fields = ["position"]
 
         widgets = {
-            'grade': forms.TextInput(attrs={
-                'placeholder': 'Grade'
+            "position": forms.TextInput(attrs={
+                "placeholder": "Position",
             }),
-            'level': forms.Select(attrs={
-                'class': BASE_INPUT_CLASS
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.apply_style()
+
+
+# ▀▄▀▄ Form Teacher
+class TeacherForm(forms.ModelForm, StyledFormMixin):
+
+    class Meta:
+        model = Teacher
+        fields = ["major"]
+
+        widgets = {
+            "major": forms.TextInput(attrs={
+                "placeholder": "Major",
             }),
-            'address': forms.Textarea(attrs={
-                'placeholder': 'Address',
-                'rows': 3
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.apply_style()
+
+# ▀▄▀▄ Form Parent
+class ParentForm(forms.ModelForm, StyledFormMixin):
+
+    class Meta:
+        model = Parent
+        fields = ["position"]
+
+        widgets = {
+            "position": forms.TextInput(attrs={
+                "placeholder": "Position",
             }),
-            'birth': forms.DateInput(attrs={
-                'type': 'date',
-                'class': BASE_INPUT_CLASS
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.apply_style()
+
+# ▀▄▀▄ Form Student
+class StudentForm(forms.ModelForm, StyledFormMixin):
+
+    class Meta:
+        model = Student
+        fields = [
+            "grade",
+            "level",
+            "address",
+            "birth",
+            "parent",
+        ]
+
+        widgets = {
+            "grade": forms.TextInput(attrs={
+                "placeholder": "Grade",
             }),
-            'parent': forms.Select(attrs={
-                'class': BASE_INPUT_CLASS
+            "level": forms.Select(attrs={
+                "class": BASE_INPUT_CLASS,
+            }),
+            "address": forms.Textarea(attrs={
+                "placeholder": "Address",
+                "rows": 3,
+            }),
+            "birth": forms.DateInput(attrs={
+                "type": "date",
+                "class": BASE_INPUT_CLASS,
+            }),
+            "parent": forms.Select(attrs={
+                "class": BASE_INPUT_CLASS,
             }),
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        # 🔥 OPTIMASI: ambil level dari database
-        self.fields['level'].queryset = Level.objects.all()
+        self.fields["level"].queryset = Level.objects.all()
+        self.fields["level"].empty_label = "Pilih Level"
+        self.fields["level"].label_from_instance = (
+            lambda obj: f"{obj.name} - {obj.description}"
+        )
 
-        # 🔥 OPTIONAL: label kosong
-        self.fields['level'].empty_label = "Pilih Level"
-
-        # 🔥 OPTIONAL: tampilkan name + description
-        self.fields['level'].label_from_instance = lambda obj: f"{obj.name} - {obj.description}"
+        self.fields["parent"].queryset = Parent.objects.select_related("user")
+        self.fields["parent"].empty_label = "Pilih Orang Tua"
 
         self.apply_style()
 

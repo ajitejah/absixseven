@@ -1,0 +1,299 @@
+{% extends 'dashboard_base.html' %}
+{% load custom_tags %}
+
+{% block content %}
+
+    <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+        <div class="grid grid-cols-12 gap-4 sm:gap-5 lg:gap-6">
+
+            <!-- ================= LEFT ================= -->
+            <div class="col-span-12 sm:col-span-8">
+
+                <div class="card p-4 sm:p-5">
+
+                    <p class="text-base font-medium text-slate-700 dark:text-navy-100">
+                        Update Profil
+                    </p>
+
+                    <div class="mt-4 space-y-4">
+
+                        <!-- PHOTO -->
+                        <label class="block">
+                            <span>Photo</span>
+
+                            <div class="mt-3 flex items-center gap-5">
+
+                                {% if request.user.photo %}
+                                    <img
+                                        src="{{ request.user.photo.url }}"
+                                        class="size-24 rounded-full object-cover border border-slate-200">
+                                {% else %}
+                                    <div class="flex size-24 items-center justify-center rounded-full bg-slate-200 dark:bg-navy-600">
+                                        <i class="fa fa-user text-3xl text-slate-500"></i>
+                                    </div>
+                                {% endif %}
+
+                                <div class="flex-1">
+                                    {{ user_form.photo }}
+                                </div>
+
+                            </div>
+                        </label>
+
+                        <!-- FIRST & LAST -->
+                        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+
+                            <label class="block">
+                                <span>First Name</span>
+                                <span class="relative mt-1.5 flex">
+
+                                    {{ user_form.first_name }}
+
+                                    <span class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400">
+                                        <i class="fa fa-user"></i>
+                                    </span>
+
+                                </span>
+                            </label>
+
+                            <label class="block">
+                                <span>Last Name</span>
+                                <span class="relative mt-1.5 flex">
+
+                                    {{ user_form.last_name }}
+
+                                    <span class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400">
+                                        <i class="fa fa-user"></i>
+                                    </span>
+
+                                </span>
+                            </label>
+
+                        </div>
+
+                        <!-- EMAIL -->
+                        <label class="block">
+
+                            <span>Email</span>
+
+                            <span class="relative mt-1.5 flex">
+
+                                {{ user_form.email }}
+
+                                <span class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400">
+                                    <i class="fa fa-envelope"></i>
+                                </span>
+
+                            </span>
+
+                        </label>
+
+                        <!-- GENDER -->
+                        <label class="block">
+
+                            <span>Gender</span>
+
+                            {{ user_form.gender }}
+
+                        </label>
+
+                        <!-- ================= ROLE ================= -->
+
+                        {% if admin_form %}
+
+                        <label class="block">
+
+                            <span>Position</span>
+
+                            <span class="relative mt-1.5 flex">
+
+                                {{ admin_form.position }}
+
+                                <span class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400">
+                                    <i class="fa fa-briefcase"></i>
+                                </span>
+
+                            </span>
+
+                        </label>
+
+                        {% endif %}
+
+                        {% if teacher_form %}
+
+                        <label class="block">
+
+                            <span>Major</span>
+
+                            <span class="relative mt-1.5 flex">
+
+                                {{ teacher_form.major }}
+
+                                <span class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400">
+                                    <i class="fa fa-book"></i>
+                                </span>
+
+                            </span>
+
+                        </label>
+
+                        {% endif %}
+
+                        {% if parent_form %}
+
+                        <label class="block">
+
+                            <span>Position</span>
+
+                            <span class="relative mt-1.5 flex">
+
+                                {{ parent_form.position }}
+
+                                <span class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400">
+                                    <i class="fa fa-briefcase"></i>
+                                </span>
+
+                            </span>
+
+                        </label>
+
+                        {% endif %}
+
+                        {% if student %}
+
+                        <div class="rounded-lg border border-slate-200 p-4 dark:border-navy-600">
+
+                            <p class="font-medium text-slate-700 dark:text-navy-100">
+                                Student Information
+                            </p>
+
+                            <div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+
+                                <div>
+                                    <span class="text-xs text-slate-400">
+                                        Grade
+                                    </span>
+
+                                    <p class="font-medium">
+                                        {{ student.grade }}
+                                    </p>
+                                </div>
+
+                                <div>
+                                    <span class="text-xs text-slate-400">
+                                        Birth
+                                    </span>
+
+                                    <p class="font-medium">
+                                        {{ student.birth|date:"d M Y" }}
+                                    </p>
+                                </div>
+
+                                <div class="sm:col-span-2">
+                                    <span class="text-xs text-slate-400">
+                                        Address
+                                    </span>
+
+                                    <p class="font-medium">
+                                        {{ student.address }}
+                                    </p>
+                                </div>
+
+                                <div class="sm:col-span-2">
+
+                                    <span class="text-xs text-slate-400">
+                                        Level
+                                    </span>
+
+                                    <div class="mt-1 flex items-center gap-2">
+
+                                        {% if student.level.icon %}
+                                            <i class="{{ student.level.icon }}"></i>
+                                        {% endif %}
+
+                                        <span class="font-medium">
+                                            {{ student.level.name }}
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        {% endif %}
+
+                        <!-- BUTTON -->
+
+                        <div class="flex justify-end space-x-2">
+
+                            <a
+                                href="{% dashboard_url request.user %}"
+                                class="btn space-x-2 bg-slate-150 font-medium text-slate-800 hover:bg-slate-200 dark:bg-navy-500 dark:text-navy-50">
+
+                                <span>Cancel</span>
+
+                            </a>
+
+                            <button
+                                class="btn space-x-2 bg-primary font-medium text-white hover:bg-primary-focus dark:bg-accent">
+
+                                <span>Save</span>
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- ================= RIGHT ================= -->
+
+            <div class="hidden sm:col-span-4 sm:block">
+
+                <div class="sticky top-24 mt-3">
+
+                    <ol class="steps is-vertical line-space">
+
+                        <li class="step pb-8 before:bg-primary dark:before:bg-accent">
+
+                            <div class="step-header rounded-full bg-primary text-white dark:bg-accent">
+                                1
+                            </div>
+
+                            <h3 class="ml-4 text-slate-700 dark:text-navy-100">
+                                Update Profile
+                            </h3>
+
+                        </li>
+
+                        <li class="step before:bg-slate-200 dark:before:bg-navy-500">
+
+                            <div class="step-header rounded-full bg-slate-200 text-slate-800 dark:bg-navy-500 dark:text-white">
+                                2
+                            </div>
+
+                            <h3 class="ml-4 text-slate-700 dark:text-navy-100">
+                                Save Changes
+                            </h3>
+
+                        </li>
+
+                    </ol>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </form>
+
+{% endblock %}
