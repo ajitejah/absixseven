@@ -8,23 +8,29 @@
 
 <div class="grid grid-cols-12 gap-4 sm:gap-5 lg:gap-6">
 
-    <!-- ================= LEFT ================= --> 
-    <div class="col-span-12 sm:col-span-8"> 
-        <div class="card p-4 sm:p-5"> 
+    <!-- ================= LEFT ================= -->
+    <div class="col-span-12 sm:col-span-8">
+
+        <div class="card p-4 sm:p-5">
+
             <p class="text-base font-medium text-slate-700 dark:text-navy-100">
                 Create Level
             </p>
 
             <div class="mt-4 space-y-4">
 
-                <!-- NAME --> 
-                <label class="block"> 
-                    <span>Level Name</span> 
-                    <span class="relative mt-1.5 flex"> 
-                        {{ form.name }} 
+                <!-- NAME -->
+                <label class="block">
+                    <span>Level Name</span>
+
+                    <span class="relative mt-1.5 flex">
+                        {{ form.name }}
+
                         <span
-                            class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400">
+                            class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400 peer-focus:text-primary dark:text-navy-300 dark:peer-focus:text-accent">
+
                             <i class="fa-solid fa-layer-group"></i>
+
                         </span>
                     </span>
                 </label>
@@ -32,114 +38,175 @@
                 <!-- SCORE -->
                 <label class="block">
                     <span>Minimum Score</span>
+
                     <span class="relative mt-1.5 flex">
+
                         {{ form.score }}
+
                         <span
-                            class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400">
+                            class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400 peer-focus:text-primary dark:text-navy-300 dark:peer-focus:text-accent">
+
                             <i class="fa-solid fa-star"></i>
+
                         </span>
+
                     </span>
+
                     <p class="mt-1 text-xs text-slate-400">
-                        Score minimal untuk mendapatkan level ini.
+                        Minimum score yang harus dicapai siswa untuk memperoleh level ini.
                     </p>
+
                 </label>
 
                 <!-- ICON -->
                 <label class="block">
-                    <span>FontAwesome Icon</span>
+
+                    <span>Font Awesome Icon</span>
+
                     <span class="relative mt-1.5 flex">
+
                         {{ form.icon }}
+
                         <span
-                            class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400">
+                            class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400 peer-focus:text-primary dark:text-navy-300 dark:peer-focus:text-accent">
+
                             <i class="fa-solid fa-icons"></i>
+
                         </span>
+
                     </span>
+
+                    <p class="mt-1 text-xs text-slate-400">
+                        Contoh: fa-solid fa-medal, fa-solid fa-star, fa-solid fa-trophy
+                    </p>
+
                 </label>
 
-                <!-- PREVIEW -->
-                <div class="rounded-lg bg-slate-100 p-4 dark:bg-navy-700">
+                <!-- ICON PREVIEW -->
+                <div class="rounded-lg border border-slate-200 bg-slate-50 p-4 dark:border-navy-600 dark:bg-navy-700">
+
                     <div class="flex items-center gap-4">
-                        <i id="icon-preview"
-                           class="fa-solid fa-medal text-4xl text-primary"></i>
-                        <div>
-                            <p class="font-medium">
-                                Icon Preview
-                            </p>
-                            <p class="text-xs text-slate-500">
-                                Contoh:
-                                fa-solid fa-medal
-                            </p>
+
+                        <div class="flex h-16 w-16 items-center justify-center rounded-xl bg-white shadow dark:bg-navy-600">
+
+                            <i id="icon-preview"
+                               class="fa-solid fa-medal text-3xl text-primary"></i>
+
                         </div>
+
+                        <div>
+
+                            <p class="font-medium text-slate-700 dark:text-navy-100">
+                                Preview
+                            </p>
+
+                            <p class="text-xs text-slate-400">
+                                Icon akan berubah secara otomatis.
+                            </p>
+
+                        </div>
+
                     </div>
+
                 </div>
 
                 <!-- DESCRIPTION -->
                 <label class="block">
+
                     <span>Description</span>
+
                     {{ form.description }}
+
                 </label>
 
                 <!-- BUTTON -->
                 <div class="flex justify-end space-x-2">
+
                     <a href="{% level_list_url user %}"
-                       class="btn space-x-2 bg-slate-150 font-medium text-slate-800 hover:bg-slate-200 dark:bg-navy-500 dark:text-white">
+                        class="btn space-x-2 bg-slate-150 font-medium text-slate-800 hover:bg-slate-200 focus:bg-slate-200 active:bg-slate-200/80 dark:bg-navy-500 dark:text-navy-50 dark:hover:bg-navy-450 dark:focus:bg-navy-450 dark:active:bg-navy-450/90">
+
                         <span>Cancel</span>
+
                     </a>
+
                     <button
-                        class="btn space-x-2 bg-primary font-medium text-white">
+                        class="btn space-x-2 bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90">
+
                         <span>Save</span>
+
                     </button>
+
                 </div>
+
             </div>
+
         </div>
+
     </div>
 
     <!-- ================= RIGHT ================= -->
 
     <div class="hidden sm:col-span-4 sm:block">
-        <div class="sticky top-24">
+
+        <div class="sticky top-24 mt-3">
+
             <ol class="steps is-vertical line-space">
-                <li class="step pb-8 before:bg-primary">
-                    <div class="step-header rounded-full bg-primary text-white">
+
+                <li class="step pb-8 before:bg-primary dark:before:bg-accent">
+
+                    <div class="step-header rounded-full bg-primary text-white dark:bg-accent">
                         1
                     </div>
-                    <h3 class="ml-4">
-                        Input Level
+
+                    <h3 class="ml-4 text-slate-700 dark:text-navy-100">
+                        Input Data
                     </h3>
+
                 </li>
-                <li class="step">
-                    <div class="step-header rounded-full bg-slate-200 text-slate-700">
+
+                <li class="step pb-8 before:bg-slate-200 dark:before:bg-navy-500">
+
+                    <div class="step-header rounded-full bg-slate-200 text-slate-800 dark:bg-navy-500 dark:text-white">
                         2
                     </div>
-                    <h3 class="ml-4">
+
+                    <h3 class="ml-4 text-slate-700 dark:text-navy-100">
                         Save Level
                     </h3>
+
                 </li>
+
             </ol>
+
         </div>
+
     </div>
+
 </div>
+
 </form>
 
 <script>
+
 document.addEventListener("DOMContentLoaded", function () {
-    
+
     const input = document.getElementById("id_icon");
     const preview = document.getElementById("icon-preview");
 
-    function updateIcon() {
+    function updatePreview() {
 
-        const value = input.value.trim();
+        let value = input.value.trim();
 
-        preview.className = value
-            ? value + " text-4xl text-primary"
-            : "fa-solid fa-medal text-4xl text-primary";
+        if (value === "") {
+            value = "fa-solid fa-medal";
+        }
 
+        preview.className = value + " text-3xl text-primary";
     }
 
-    input.addEventListener("input", updateIcon);
+    input.addEventListener("input", updatePreview);
 
-    updateIcon();
+    updatePreview();
 
 });
 
