@@ -4,7 +4,10 @@ from django.urls import include, path
 from . import views
 app_name = 'app_roadmap'
 urlpatterns = [ 
-     
+    
+    
+    path('level', views.level_list, name='level_list'), 
+
     path('', views.roadmap_list, name='roadmap_list'), 
     path('create/', views.roadmap_create, name='roadmap_create'), 
     path('update/<int:id>/', views.roadmap_update, name='roadmap_update'), 

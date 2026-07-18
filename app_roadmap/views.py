@@ -3,7 +3,7 @@ import json
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render, get_object_or_404
-from app_auth.models import Student
+from app_auth.models import Level, Student
 from app_guidance.models import ParentActivityLog
 from app_guidance.service import log_parent_activity
 from app_roadmap.forms import NodeForm, RoadmapForm
@@ -16,7 +16,27 @@ from app_tracking.service import get_correct_schedule
 from app_scoring.models import Evaluation  
 from .models import Assignment, Roadmap, Node, Submission
 from .forms import AssignmentForm, NodeForm
-from django.db.models import Max
+from django.db.models import Count, Max
+
+@login_required
+def level_list(request):
+
+    levels = (
+        Level.objects
+        .annotate(total_students=Count("student"))
+        .order_by("id")
+    )
+
+    context = {
+        "title": "Level",
+        "levels": levels,
+    }
+
+    return render(
+        request,
+        "admin/setting/level/level.html",
+        context,
+    )
 
 # ▀▄▀▄ menampilkan daftar roadmap
 def roadmap_list(request):
