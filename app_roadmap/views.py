@@ -54,6 +54,38 @@ def level_create(request):
         "form": form,
     })
 
+
+@login_required
+def level_update(request, id):
+
+    level = get_object_or_404(Level, pk=id)
+    if request.method == "POST":
+        form = LevelForm(
+            request.POST,
+            instance=level,
+        )
+        if form.is_valid():
+            form.save()
+            messages.success(
+                request,
+                "Level berhasil diperbaharui."
+            )
+            return redirect("admin_setting:level_list")
+    else: 
+        form = LevelForm(instance=level)
+
+    context = {
+        "title": "Perbaharui Level",
+        "level": level,
+        "form": form,
+    }
+
+    return render(
+        request,
+        "common/level-update.html",
+        context,
+    )
+
 # ▀▄▀▄ menampilkan daftar roadmap
 def roadmap_list(request):
     user = request.user

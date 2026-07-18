@@ -1,0 +1,180 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="transition-content grid grid-cols-12 gap-4 pb-8 sm:gap-5 lg:gap-6">
+
+    <div class="col-span-12">
+
+        <div class="flex items-center justify-between">
+
+            <div>
+                <h2 class="text-xl font-medium text-slate-700 dark:text-navy-50">
+                    Perbaharui Level
+                </h2>
+
+                <p class="mt-1 text-sm text-slate-500">
+                    Silahkan perbaharui informasi level.
+                </p>
+            </div>
+
+            <a href="{% url 'admin_setting:level_list' %}"
+               class="btn border border-slate-300 dark:border-navy-450">
+
+                Kembali
+
+            </a>
+
+        </div>
+
+    </div>
+
+    <div class="col-span-12">
+
+        <div class="card p-5 lg:p-6">
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+                <div class="grid grid-cols-1 gap-5 lg:grid-cols-2">
+
+                    <div>
+
+                        <label class="block">
+                            <span>Nama Level</span>
+
+                            {{ form.name }}
+
+                            {% if form.name.errors %}
+                                <p class="mt-1 text-xs text-error">
+                                    {{ form.name.errors.0 }}
+                                </p>
+                            {% endif %}
+
+                        </label>
+
+                    </div>
+
+                    <div>
+
+                        <label class="block">
+
+                            <span>Icon</span>
+
+                            {{ form.icon }}
+
+                            <p class="mt-1 text-xs text-slate-400">
+                                Contoh :
+                                <code>fa-solid fa-medal</code>
+                            </p>
+
+                            {% if form.icon.errors %}
+                                <p class="mt-1 text-xs text-error">
+                                    {{ form.icon.errors.0 }}
+                                </p>
+                            {% endif %}
+
+                        </label>
+
+                    </div>
+
+                </div>
+
+                <div class="mt-5">
+
+                    <label class="block">
+
+                        <span>Deskripsi</span>
+
+                        {{ form.description }}
+
+                        {% if form.description.errors %}
+                            <p class="mt-1 text-xs text-error">
+                                {{ form.description.errors.0 }}
+                            </p>
+                        {% endif %}
+
+                    </label>
+
+                </div>
+
+                <div class="mt-5 grid grid-cols-1 gap-5 lg:grid-cols-2">
+
+                    <div>
+
+                        <label class="block">
+
+                            <span>Minimum Score</span>
+
+                            {{ form.minimum_score }}
+
+                            {% if form.minimum_score.errors %}
+                                <p class="mt-1 text-xs text-error">
+                                    {{ form.minimum_score.errors.0 }}
+                                </p>
+                            {% endif %}
+
+                        </label>
+
+                    </div>
+
+                    <div>
+
+                        <label class="block">
+
+                            <span>Maximum Score</span>
+
+                            {{ form.maximum_score }}
+
+                            {% if form.maximum_score.errors %}
+                                <p class="mt-1 text-xs text-error">
+                                    {{ form.maximum_score.errors.0 }}
+                                </p>
+                            {% endif %}
+
+                        </label>
+
+                    </div>
+
+                </div>
+
+                {% if form.non_field_errors %}
+
+                    <div class="mt-5 rounded-lg bg-error/10 p-4 text-error">
+
+                        {{ form.non_field_errors }}
+
+                    </div>
+
+                {% endif %}
+
+                <div class="mt-8 flex justify-end gap-3">
+
+                    <a href="{% url 'admin_setting:level_list' %}"
+                       class="btn border border-slate-300 dark:border-navy-450">
+
+                        Batal
+
+                    </a>
+
+                    <button
+                        type="submit"
+                        class="btn bg-primary font-medium text-white hover:bg-primary-focus">
+
+                        Simpan Perubahan
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
