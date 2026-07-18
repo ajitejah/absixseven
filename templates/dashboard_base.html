@@ -1919,6 +1919,7 @@
       <div
         x-show="$store.global.isRightSidebarExpanded"
         @keydown.window.escape="$store.global.isRightSidebarExpanded = false" >
+        <!--
         <div
           class="fixed inset-0 z-[150] bg-slate-900/60 transition-opacity duration-200"
           @click="$store.global.isRightSidebarExpanded = false"
@@ -1930,6 +1931,7 @@
           x-transition:leave-start="opacity-100"
           x-transition:leave-end="opacity-0"
         ></div>
+-->
         <div class="fixed right-0 top-0 z-[151] h-full w-full sm:w-80">
           <div
             x-data="{activeTab:'tabHome'}"
