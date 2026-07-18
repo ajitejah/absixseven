@@ -98,9 +98,9 @@ WSGI_APPLICATION = 'absixseven.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE'    : 'django.db.backends.mysql', # Ubah sesuai jenis DB (mysql, postgresql, dsb)
-        'NAME'      : 't_db',                       # Nama database Anda
-        'USER'      : 'root',                       # Username database
-        'PASSWORD'  : '',          # Password database
+        'NAME'      : 'abst7245_ab64',                       # Nama database Anda
+        'USER'      : 'abst7245_ab64',                       # Username database
+        'PASSWORD'  : 'NAXzBUR_pTM^R%A-',          # Password database
         'HOST'      : 'localhost',                  # Atau alamat IP server DB
         'PORT'      : '3306',  
         'OPTIONS': {
