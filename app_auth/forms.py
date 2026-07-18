@@ -28,7 +28,7 @@ class LevelForm(forms.ModelForm, StyledFormMixin):
         fields = [
             "name",
             "description",
-            #"score",
+            "score",
             "icon",
         ]
 
@@ -41,7 +41,11 @@ class LevelForm(forms.ModelForm, StyledFormMixin):
                 "rows": 4,
                 "placeholder": "Description",
             }),
- 
+
+            "score": forms.NumberInput(attrs={
+                "placeholder": "Minimum Score",
+                "min": 0,
+            }),
 
             "icon": forms.TextInput(attrs={
                 "placeholder": "fa-solid fa-medal",
