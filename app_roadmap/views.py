@@ -32,11 +32,7 @@ def level_list(request):
         "levels": levels,
     }
 
-    return render(
-        request,
-        "admin/setting/level/level.html",
-        context,
-    )
+    return render(request, "admin/common/level.html", context,)
 
 # ▀▄▀▄ menampilkan daftar roadmap
 def roadmap_list(request):
