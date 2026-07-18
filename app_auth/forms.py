@@ -27,9 +27,10 @@ class LevelForm(forms.ModelForm, StyledFormMixin):
         model = Level
         fields = [
             "name",
-            "description",
-            "score",
+            "description", 
             "icon",
+            "minimum_score",
+            "maximum_score",
         ]
 
         widgets = {
@@ -40,16 +41,25 @@ class LevelForm(forms.ModelForm, StyledFormMixin):
             "description": forms.Textarea(attrs={
                 "rows": 4,
                 "placeholder": "Description",
-            }),
-
-            "score": forms.NumberInput(attrs={
-                "placeholder": "Minimum Score",
-                "min": 0,
-            }),
+            }), 
 
             "icon": forms.TextInput(attrs={
                 "placeholder": "fa-solid fa-medal",
             }),
+
+
+
+            "minimum_score": forms.NumberInput(attrs={
+                "min": 0,
+                "placeholder": "0",
+                "class": BASE_INPUT_CLASS,
+            }),
+
+            "maximum_score": forms.NumberInput(attrs={
+                "min": 0,
+                "placeholder": "100",
+                "class": BASE_INPUT_CLASS,
+            }), 
         }
 
     def __init__(self, *args, **kwargs):
