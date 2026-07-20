@@ -27,6 +27,14 @@ urlpatterns = [
     path('auth/', include('app_auth.urls'), name='auth'), 
     path('admin/user/', include('app_auth.urls')), 
     
+    
+    #-------------------------------------------------------#
+    #   >> Screening
+    #-------------------------------------------------------# 
+
+    path('admin/pretest/', include(('app_preetest.urls', 'app_preetest'), namespace='admin_pretest')),
+    path('teacher/pretest/', include(('app_preetest.urls', 'app_preetest'), namespace='teacher_pretest')),
+ 
     #-------------------------------------------------------#
     #   >> APP_ROADMAP untuk diakses admin, teacher, student
     #-------------------------------------------------------# 
