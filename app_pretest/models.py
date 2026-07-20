@@ -19,7 +19,7 @@ class Lesson(models.Model):
 # QUESTION SET
 # ========================================== 
 class QuestionSet(models.Model):
-    lesson      = models.ForeignKey("app_lesson.Lesson", on_delete=models.CASCADE, related_name="question_sets")
+    lesson      = models.ForeignKey(Lesson, on_delete=models.CASCADE, related_name="question_sets")
     owner       = models.ForeignKey( User, on_delete=models.CASCADE, related_name="question_sets" )
     name        = models.CharField(max_length=255)
     description = models.TextField(blank=True)
