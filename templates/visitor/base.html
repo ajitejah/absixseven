@@ -62,12 +62,12 @@
             <!-- Application Logo -->
             <div class="flex pt-4">
               <a href="/">
-                {% web_setting 'BRANDING' "dark_logo" as dark_logo %} 
-                {% if dark_logo %} 
+                /media/{% web_setting  'BRANDING' 'favicon' as logo %}
+                {% if logo %} 
                 <img
                   class="size-11 transition-transform duration-500 ease-in-out hover:rotate-[360deg]"
-                  src="{{ dark_logo.url }}"
-                  alt="IBSIXSEVEN"
+                  src="{{ logo.url }}"
+                  alt="ABSIXSEVEN"
                 />
                 {% endif %}
               </a>
