@@ -86,8 +86,71 @@
                 </svg>
               </a>
 
-              <!-- ⬜ roadmap -->
-              
+              <a
+                href="{{ roadmap_list_user_url }}"
+                class="flex size-11 items-center justify-center rounded-lg {% if request.path == roadmap_list_user_url %} bg-primary/10 text-primary {% else %} text-gray-500 hover:bg-gray-100 {% endif %}"
+                x-tooltip.placement.right="'Pretest'">
+                <svg
+                  class="size-7"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24">
+
+                  <!-- Paper -->
+                  <path
+                      d="M7 3h8l3 3v13a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linejoin="round"
+                      opacity="0.35"
+                  />
+
+                  <!-- Fold -->
+                  <path
+                      d="M15 3v4h4"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linejoin="round"
+                  />
+
+                  <!-- Checklist -->
+                  <path
+                      d="M8.5 10.5l1 1 2-2"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                  />
+
+                  <!-- Lines -->
+                  <path
+                      d="M13 10.5h3"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      opacity="0.7"
+                  />
+
+                  <path
+                      d="M8 14h8"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      opacity="0.7"
+                  />
+
+                  <path
+                      d="M8 17h6"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      opacity="0.7"
+                  />
+
+              </svg>
+              </a>
+
+              <!-- ⬜ roadmap --> 
               {% roadmap_list_url user as roadmap_list_user_url %}
               <a
                 href="{{ roadmap_list_user_url }}"
