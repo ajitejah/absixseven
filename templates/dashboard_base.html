@@ -50,8 +50,8 @@
             
             <!-- Application Logo -->
             <div class="flex pt-4">
-              <a href="/">
-                <img class="size-11 transition-transform duration-500 ease-in-out hover:rotate-[360deg]" src="{% web_setting  'BRANDING' 'logo_light' %}" alt="logo"/>
+              <a href="{% dashboard_url user %}">
+                <img class="size-11 transition-transform duration-500 ease-in-out hover:rotate-[360deg]" src="/{% web_setting  'BRANDING' 'logo_light' %}" alt="logo"/>
               </a> 
             </div>
 
