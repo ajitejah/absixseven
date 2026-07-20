@@ -32,8 +32,8 @@ urlpatterns = [
     #   >> Screening
     #-------------------------------------------------------# 
 
-    path('admin/pretest/', include(('app_preetest.urls', 'app_preetest'), namespace='admin_pretest')),
-    path('teacher/pretest/', include(('app_preetest.urls', 'app_preetest'), namespace='teacher_pretest')),
+    path('admin/pretest/', include(('app_pretest.urls', 'app_pretest'), namespace='admin_pretest')),
+    path('teacher/pretest/', include(('app_pretest.urls', 'app_pretest'), namespace='teacher_pretest')),
  
     #-------------------------------------------------------#
     #   >> APP_ROADMAP untuk diakses admin, teacher, student
