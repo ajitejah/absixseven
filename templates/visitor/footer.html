@@ -7,11 +7,11 @@
             <!-- Logo -->
             <div>
                 <a href="/" class="flex items-center gap-3">
-                    <img src="/static/images/logo-white.png"
+                    <img src="{% web_setting  'BRANDING' 'favicon' %}"
                         class="h-10"
-                        alt="IBSIXSEVEN">
+                        alt="{% web_setting  'SEO' 'site_name' %}">
                     <span class="text-xl font-semibold tracking-wide">
-                        IBSIXSEVEN
+                        {% web_setting  'SEO' 'site_name' %}
                     </span>
                 </a>
 
@@ -130,9 +130,9 @@
                             Email
                         </p>
 
-                        <a href="mailto:info@ibsixseven.com"
+                        <a href="mailto:info@absixseven.com"
                         class="transition hover:text-primary-400">
-                            info@ibsixseven.com
+                            info@absixseven.com
                         </a>
                     </div>
 
@@ -156,7 +156,7 @@
             <div class="flex flex-col items-center justify-between gap-4 md:flex-row">
 
                 <p class="text-sm text-navy-400">
-                    © {% now "Y" %} IBSIXSEVEN. All rights reserved.
+                    © {% now "Y" %} {% web_setting  'SEO' 'site_name' %}. All rights reserved.
                 </p>
 
                 <div class="flex gap-6 text-sm">
