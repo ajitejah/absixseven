@@ -46,6 +46,10 @@ def lesson_update(request, lesson_id):
     lesson = get_object_or_404(Lesson, pk=lesson_id,)
 
     if request.method == "POST":
+
+        print(request.POST)
+        print(request.POST.get("description"))
+
         form = LessonForm(
             request.POST,
             instance=lesson,
