@@ -85,9 +85,10 @@
                   />
                 </svg>
               </a>
-
+              
+              {% pretest_url user as pretest_user_url %}
               <a
-                href="{{ roadmap_list_user_url }}"
+                href="{{ pretest_user_url }}"
                 class="flex size-11 items-center justify-center rounded-lg {% if request.path == roadmap_list_user_url %} bg-primary/10 text-primary {% else %} text-gray-500 hover:bg-gray-100 {% endif %}"
                 x-tooltip.placement.right="'Pretest'">
                 <svg
