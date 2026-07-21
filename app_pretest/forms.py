@@ -16,7 +16,7 @@ class LessonForm(forms.ModelForm):
         widgets = {
             "name": forms.TextInput(
                 attrs={
-                    "class": "form-input w-full",
+                    "class": "form-input w-full ml-4",
                     "placeholder": "Masukkan nama pelajaran",
                     "maxlength": 255,
                 }
