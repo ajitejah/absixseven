@@ -38,7 +38,12 @@ class LessonForm(forms.ModelForm):
     def clean_name(self):
         name = self.cleaned_data["name"].strip()
 
-        if Lesson.objects.filter(name__iexact=name).exists():
+        queryset = Lesson.objects.filter(name__iexact=name)
+
+        if self.instance.pk:
+            queryset = queryset.exclude(pk=self.instance.pk)
+
+        if queryset.exists():
             raise forms.ValidationError("Lesson sudah ada.")
 
         return name
