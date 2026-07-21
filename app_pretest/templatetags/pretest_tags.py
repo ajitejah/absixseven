@@ -61,3 +61,14 @@ def pretest_url(user):
         return "/teacher/pretest/"
 
     return "#"
+
+@register.simple_tag
+def question_set_url(user):
+
+    if hasattr(user, "admin"):
+        return "/admin/pretest/question-set"
+
+    elif hasattr(user, "teacher"):
+        return "/teacher/pretest/question-set"
+
+    return "#"

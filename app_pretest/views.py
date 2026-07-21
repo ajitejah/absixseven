@@ -1,9 +1,9 @@
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect, render
 
-from app_pretest.forms import LessonForm
+from app_pretest.forms import LessonForm, QuestionSetForm
 
-from .models import Lesson, Pretest
+from .models import Lesson, Pretest, QuestionSet
 
 # ▀▄▀▄ menampilkan seluruh lesson
 def lesson(request):
@@ -19,6 +19,8 @@ def lesson(request):
     )
 
  # ▀▄▀▄ laman create lesson
+
+# ▀▄▀▄ menampilkan form CREATE lesson
 def lesson_create(request): 
 
     if request.method == "POST": 
@@ -101,3 +103,111 @@ def pretest(request):
             "pretests": pretests,
         },
     )
+
+# ▀▄▀▄ question list
+def question_set(request):
+
+    question_sets = (
+        QuestionSet.objects
+        .select_related(
+            "lesson",
+            "owner",
+        )
+        .all()
+    )
+
+    return render(
+        request,
+        "common/question-set.html",
+        {
+            "question_sets": question_sets,
+        },
+    )
+
+# ▀▄▀▄ menampilkan form CREATE question set
+def question_set_create(request):
+
+    if request.method == "POST":
+
+        form = QuestionSetForm(request.POST)
+
+        if form.is_valid():
+
+            question_set = form.save(commit=False)
+            question_set.owner = request.user
+            question_set.save()
+
+            messages.success(
+                request,
+                "Question Set berhasil ditambahkan."
+            )
+
+            return redirect("app_pretest:question_set")
+
+    else:
+
+        form = QuestionSetForm()
+
+    return render(
+        request,
+        "common/question-set-create.html",
+        {
+            "form": form,
+        },
+    )
+
+
+# ▀▄▀▄ menampilkan form UPDATE question set
+def question_set_update(request, question_set_id):
+
+    question_set = get_object_or_404(QuestionSet, pk=question_set_id,)
+
+    if request.method == "POST":
+
+        form = QuestionSetForm(
+            request.POST,
+            instance=question_set,
+        )
+
+        if form.is_valid():
+
+            question_set = form.save(commit=False)
+            question_set.owner = request.user
+            question_set.save()
+
+            messages.success(
+                request,
+                "Question Set berhasil diperbarui."
+            )
+
+            return redirect("app_pretest:question_set")
+
+    else:
+
+        form = QuestionSetForm(
+            instance=question_set,
+        )
+
+    return render(
+        request,
+        "common/question-set-update.html",
+        {
+            "question_set": question_set,
+            "form": form,
+        },
+    )
+
+
+# ▀▄▀▄ fungsi DELETE question set
+def question_set_delete(request, question_set_id):
+
+    question_set = get_object_or_404(QuestionSet, pk=question_set_id,)
+
+    question_set.delete()
+
+    messages.success(
+        request,
+        "Question Set berhasil dihapus."
+    )
+
+    return redirect("app_pretest:question_set")

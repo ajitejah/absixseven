@@ -12,4 +12,9 @@ urlpatterns = [
 
     path('', views.pretest, name='pretest'), 
 
+    path("question-set", views.question_set, name="question_set",),
+    path("question-set/create", views.question_set_create, name="question_set_create",),
+    path("question-set/<int:question_set_id>/update", views.question_set_update, name="question_set_update",),
+    path("question-set/<int:question_set_id>/delete", views.question_set_delete, name="question_set_delete",),
+
 ]   

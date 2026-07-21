@@ -89,7 +89,7 @@
 {% block content_title %} 
     <div class=" items-center space-x-4 py-5 lg:py-6">
         <h2 class="text-xl font-medium text-slate-800 dark:text-navy-50 lg:text-2xl" >
-            Daftar Paket Pretest
+            Daftar Question Set
         </h2>
         <div class="hidden h-full py-1 sm:flex"><div class="h-full w-px bg-slate-300 dark:bg-navy-600"></div></div>
         <div class="pb-4 flex-wrap border-b border-slate-200 dark:border-navy-500">
@@ -168,7 +168,7 @@
             <div class="flex items-center justify-between">
 
                 <h2 class="text-base font-medium tracking-wide text-slate-700 dark:text-navy-100">
-                    Tabel Daftar Paket Pretest
+                    Tabel Daftar Question Set
                 </h2>
 
                 <div class="flex">
@@ -203,67 +203,67 @@
                         <thead>
                             <tr>
                                 <th class="px-4 py-3">#</th>
-                                <th class="px-4 py-3">Judul</th>
-                                <th class="px-4 py-3">Deskripsi</th> 
-                                <th class="px-4 py-3">Question Set</th>
-                                <th class="px-4 py-3">Jumlah Question</th>
-                                <th class="px-4 py-3">Release</th>
-                                <th class="px-4 py-3">Berlaku selama</th>
+                                <th class="px-4 py-3">Mapel</th>
+                                <th class="px-4 py-3">Question Set</th> 
+                                <th class="px-4 py-3">Description</th>
+                                <th class="px-4 py-3">Owner</th>
+                                <th class="px-4 py-3">Status</th> 
                                 <th class="px-4 py-3">Aksi</th>
                             </tr>
                         </thead>
 
                         <tbody>
 
-                            {% for pretest in pretests %}
+                            {% for question_set in question_sets %}
 
                             <tr class="border-b border-slate-200 dark:border-navy-500">
 
-                                <!-- NO -->
                                 <td class="px-4 py-3">
                                     {{ forloop.counter }}
-                                </td> 
-
-                                <!-- NAME -->
-                                <td class="px-4 py-3 font-medium text-slate-700 dark:text-navy-100">
-                                    {{ pretest.title }}
                                 </td>
 
-                                <!-- DESCRIPTION -->
                                 <td class="px-4 py-3">
-                                    {{ pretest.description|default:"-"|truncatechars:120 }}
+                                    {{ question_set.lesson.name }}
                                 </td>
 
-                                <!-- NAME -->
                                 <td class="px-4 py-3 font-medium text-slate-700 dark:text-navy-100">
-                                    {{ pretest.question_set }}
+                                    {{ question_set.name }}
                                 </td>
 
-                                <!-- NAME -->
-                                <td class="px-4 py-3 font-medium text-slate-700 dark:text-navy-100">
-                                    {{ pretest.question_count }}
+                                <td class="px-4 py-3">
+                                    {{ question_set.description|default:"-"|truncatechars:100 }}
                                 </td>
 
-                                <!-- NAME -->
-                                <td class="px-4 py-3 font-medium text-slate-700 dark:text-navy-100">
-                                    {{ pretest.release }}
+                                <td class="px-4 py-3">
+                                    {{ question_set.owner.get_full_name|default:question_set.owner.username }}
                                 </td>
 
-                                <!-- NAME -->
-                                <td class="px-4 py-3 font-medium text-slate-700 dark:text-navy-100">
-                                    -
+                                <td class="px-4 py-3">
+
+                                    {% if question_set.is_active %}
+
+                                        <span class="badge rounded-full bg-success/10 text-success">
+                                            Aktif
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="badge rounded-full bg-error/10 text-error">
+                                            Nonaktif
+                                        </span>
+
+                                    {% endif %}
+
                                 </td>
 
-                                <!-- ACTION -->
                                 <td class="px-4 py-3">
 
                                     <div class="flex space-x-2">
 
-                                        <!-- UPDATE -->
-                                        <a href="{% pretest_url user %}">
+                                        <a href="{% url 'app_pretest:question_set_update' question_set.id %}">
 
                                             <button
-                                                x-tooltip="'Perbaharui pretest'"
+                                                x-tooltip="'Perbaharui Question Set'"
                                                 class="btn size-9 rounded-full bg-primary/10 p-0 text-primary hover:bg-primary/20">
 
                                                 <svg xmlns="http://www.w3.org/2000/svg"
@@ -288,10 +288,13 @@
 
                                         </a>
 
-                                        <!-- DELETE -->
                                         <button
-                                            x-tooltip="'Hapus pretest'"
-                                            @click="openModal({{ pretest.id }}, '{{ pretest.name }}', 'admin/setting/pretest')"
+                                            x-tooltip="'Hapus Question Set'"
+                                            @click="openModal(
+                                                {{ question_set.id }},
+                                                '{{ question_set.name|escapejs }}',
+                                                'admin/pretest/question-set'
+                                            )"
                                             class="btn size-9 rounded-full bg-error/10 p-0 text-error hover:bg-error/20">
 
                                             <svg xmlns="http://www.w3.org/2000/svg"
@@ -338,14 +341,16 @@
                             {% empty %}
 
                             <tr>
-                                <td colspan="6" class="py-6 text-center text-slate-500">
-                                    Belum ada data pretest.
+
+                                <td colspan="7" class="py-6 text-center text-slate-500">
+                                    Belum ada Question Set.
                                 </td>
+
                             </tr>
 
                             {% endfor %}
 
-                        </tbody>
+                            </tbody>
 
                     </table>
 
