@@ -1,6 +1,8 @@
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect, render
 
+from app_pretest.forms import LessonForm
+
 from .models import Lesson, Pretest
 
 # ▀▄▀▄ menampilkan seluruh lesson
@@ -17,47 +19,55 @@ def lesson(request):
     )
 
  # ▀▄▀▄ laman create lesson
-def lesson_create(request):
+def lesson_create(request): 
 
-    if request.method == "POST":
-
-        Lesson.objects.create(
-            name=request.POST.get("name"),
-            description=request.POST.get("description", ""),
-        )
-
-        messages.success(request, "Lesson berhasil ditambahkan.")
-
-        return redirect("app_pretest:lesson")
-
+    if request.method == "POST": 
+        form = LessonForm(request.POST) 
+        if form.is_valid():
+            form.save()
+            messages.success(
+                request,
+                "Lesson berhasil ditambahkan."
+            )
+            return redirect("app_pretest:lesson")
+    else:
+        form = LessonForm()
     return render(
         request,
-        "admin/lesson-create.html",
+        "common/lesson-create.html",
+        {
+            "form": form,
+        },
     )
 
 # ▀▄▀▄ menampilkan laman update lesson
 def lesson_update(request, lesson_id):
 
-    lesson = get_object_or_404(
-        Lesson,
-        pk=lesson_id,
-    )
+    lesson = get_object_or_404(Lesson, pk=lesson_id,)
 
     if request.method == "POST":
-
-        lesson.name = request.POST.get("name")
-        lesson.description = request.POST.get("description", "")
-        lesson.save()
-
-        messages.success(request, "Lesson berhasil diperbarui.")
-
-        return redirect("app_pretest:lesson")
+        form = LessonForm(
+            request.POST,
+            instance=lesson,
+        )
+        if form.is_valid():
+            form.save()
+            messages.success(
+                request,
+                "Lesson berhasil diperbarui."
+            )
+            return redirect("app_pretest:lesson")
+    else:
+        form = LessonForm(
+            instance=lesson,
+        )
 
     return render(
         request,
-        "admin/lesson-update.html",
+        "common/lesson-update.html",
         {
             "lesson": lesson,
+            "form": form,
         },
     )
 
