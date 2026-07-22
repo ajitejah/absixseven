@@ -1,0 +1,224 @@
+{% extends 'dashboard_base.html' %}
+{% load custom_tags %}
+{% load pretest_tags %}
+
+{% block content %}
+
+<form method="POST" enctype="multipart/form-data">
+{% csrf_token %}
+
+<div class="grid grid-cols-12 gap-4 sm:gap-5 lg:gap-6">
+
+    <!-- LEFT -->
+    <div class="col-span-12 lg:col-span-8">
+
+        <div class="card p-5">
+
+            <h2 class="text-lg font-semibold">
+                {% if question %}
+                    Perbarui Soal
+                {% else %}
+                    Tambah Soal Baru
+                {% endif %}
+            </h2>
+
+            <div class="mt-6 space-y-5">
+
+                <!-- Jenis -->
+                <label class="block">
+                    <span>Jenis Soal</span>
+
+                    <span class="relative mt-1.5 flex">
+                        {{ form.question_type }}
+
+                        <span
+                            class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400">
+                            <i class="fa fa-list"></i>
+                        </span>
+                    </span>
+                </label>
+
+                <!-- Pertanyaan -->
+                <label class="block">
+                    <span>Pertanyaan</span>
+
+                    {{ form.question }}
+                </label>
+
+                <!-- Lampiran -->
+                <label class="block">
+                    <span>Lampiran</span>
+
+                    {{ form.attachment }}
+                </label>
+
+                <!-- Point -->
+                <label class="block">
+                    <span>Point</span>
+
+                    {{ form.point }}
+                </label>
+
+                <!-- Urutan -->
+                <label class="block">
+                    <span>Urutan</span>
+
+                    {{ form.order }}
+                </label>
+
+                <!-- Wajib -->
+                <div class="flex items-center gap-2">
+                    {{ form.required }}
+                    <span>Wajib Dijawab</span>
+                </div>
+
+                <!-- ================================= -->
+                <!-- MULTIPLE CHOICE -->
+                <!-- ================================= -->
+
+                <div id="mcq-area" class="hidden">
+
+                    <hr>
+
+                    <h3 class="font-semibold">
+                        Pilihan Jawaban
+                    </h3>
+
+                    {{ choice_formset.management_form }}
+
+                    {% for form in choice_formset %}
+
+                    <div class="mt-4 rounded-lg border p-4">
+
+                        {{ form.id }}
+
+                        <label class="block">
+
+                            <span>Jawaban</span>
+
+                            {{ form.option }}
+
+                        </label>
+
+                        <label class="mt-3 flex items-center gap-2">
+
+                            {{ form.is_correct }}
+
+                            <span>Jawaban Benar</span>
+
+                        </label>
+
+                        {{ form.order }}
+
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+                <!-- ================================= -->
+                <!-- MATCHING -->
+                <!-- ================================= -->
+
+                <div id="matching-area" class="hidden">
+
+                    <hr>
+
+                    <h3 class="font-semibold">
+                        Pasangan
+                    </h3>
+
+                    {{ matching_formset.management_form }}
+
+                    {% for form in matching_formset %}
+
+                    <div class="mt-4 grid grid-cols-2 gap-3 rounded-lg border p-4">
+
+                        {{ form.id }}
+
+                        <div>
+
+                            <span>Kiri</span>
+
+                            {{ form.left_text }}
+
+                        </div>
+
+                        <div>
+
+                            <span>Kanan</span>
+
+                            {{ form.right_text }}
+
+                        </div>
+
+                        {{ form.order }}
+
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+                <!-- BUTTON -->
+
+                <div class="flex justify-end gap-2">
+
+                    <a href="{% question_set_url user %}"
+                       class="btn bg-slate-200">
+
+                        Batal
+
+                    </a>
+
+                    <button
+                        class="btn bg-primary text-white">
+
+                        Simpan
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</form>
+
+<script>
+
+function toggleQuestionType(){
+
+    const type=document.getElementById("id_question_type").value;
+
+    document.getElementById("mcq-area").classList.add("hidden");
+    document.getElementById("matching-area").classList.add("hidden");
+
+    if(type==="MCQ"){
+        document.getElementById("mcq-area").classList.remove("hidden");
+    }
+
+    if(type==="MATCHING"){
+        document.getElementById("matching-area").classList.remove("hidden");
+    }
+
+}
+
+document.addEventListener("DOMContentLoaded",function(){
+
+    toggleQuestionType();
+
+    document
+        .getElementById("id_question_type")
+        .addEventListener("change",toggleQuestionType);
+
+});
+
+</script>
+
+{% endblock %}

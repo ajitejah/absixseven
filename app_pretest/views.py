@@ -1,9 +1,9 @@
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect, render
 
-from app_pretest.forms import LessonForm, QuestionSetForm
+from app_pretest.forms import LessonForm, QuestionForm, QuestionSetForm
 
-from .models import Lesson, Pretest, QuestionSet
+from .models import Lesson, Pretest, Question, QuestionSet
 
 # ▀▄▀▄ menampilkan seluruh lesson
 def lesson(request):
@@ -207,3 +207,140 @@ def question_set_delete(request, question_set_id):
     )
 
     return redirect("app_pretest:question_set")
+
+# ▀▄▀▄ menampilkan tabel daftar question sesuai dengan paketnya/questionset
+def question(request, question_set_id):
+
+    question_set = get_object_or_404(
+        QuestionSet,
+        pk=question_set_id,
+    )
+
+    questions = Question.objects.filter(
+        question_set=question_set,
+    ).order_by(
+        "order",
+        "id",
+    )
+
+    return render(
+        request,
+        "common/question.html",
+        {
+            "question_set": question_set,
+            "questions": questions,
+        },
+    )
+ 
+# ▀▄▀▄ menampilkan form CREATE question
+def question_create(request, question_set_id):
+
+    question_set = get_object_or_404(
+        QuestionSet,
+        pk=question_set_id,
+    )
+
+    if request.method == "POST":
+
+        form = QuestionForm(
+            request.POST,
+            request.FILES,
+        )
+
+        if form.is_valid():
+
+            question = form.save(commit=False)
+            question.question_set = question_set
+            question.save()
+
+            messages.success(
+                request,
+                "Soal berhasil ditambahkan.",
+            )
+
+            return redirect(
+                "app_pretest:question",
+                question_set_id=question_set.id,
+            )
+
+    else:
+
+        form = QuestionForm()
+
+    return render(
+        request,
+        "common/question-create-update.html",
+        {
+            "form": form,
+            "question": None,
+            "question_set": question_set,
+        },
+    )
+
+# ▀▄▀▄ menampilkan form UPDATE question
+def question_update(request, question_id):
+
+    question = get_object_or_404(
+        Question,
+        pk=question_id,
+    )
+
+    if request.method == "POST":
+
+        form = QuestionForm(
+            request.POST,
+            request.FILES,
+            instance=question,
+        )
+
+        if form.is_valid():
+
+            form.save()
+
+            messages.success(
+                request,
+                "Soal berhasil diperbarui.",
+            )
+
+            return redirect(
+                "app_pretest:question",
+                question_set_id=question.question_set.id,
+            )
+
+    else:
+
+        form = QuestionForm(
+            instance=question,
+        )
+
+    return render(
+        request,
+        "common/question-create-update.html",
+        {
+            "form": form,
+            "question": question,
+            "question_set": question.question_set,
+        },
+    )
+
+# ▀▄▀▄ fungsi delete question
+def question_delete(request, question_id):
+
+    question = get_object_or_404(
+        Question,
+        pk=question_id,
+    )
+
+    question_set_id = question.question_set.id
+
+    question.delete()
+
+    messages.success(
+        request,
+        "Soal berhasil dihapus.",
+    )
+
+    return redirect(
+        "app_pretest:question",
+        question_set_id=question_set_id,
+    )

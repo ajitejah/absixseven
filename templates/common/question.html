@@ -1,0 +1,418 @@
+{% extends 'dashboard_base.html' %}
+{% load custom_tags %}
+{% load pretest_tags %}
+
+{% block content %}
+
+<!-- ===================== TITLE ===================== -->
+
+<div class="items-center space-x-4 py-5 lg:py-6">
+
+    <h2 class="text-xl font-medium text-slate-800 dark:text-navy-50 lg:text-2xl">
+        Daftar Pertanyaan
+    </h2>
+
+    <div class="hidden h-full py-1 sm:flex">
+        <div class="h-full w-px bg-slate-300 dark:bg-navy-600"></div>
+    </div>
+
+    <div class="pb-4 flex-wrap border-b border-slate-200 dark:border-navy-500">
+
+        <ul class="hidden flex-wrap items-center space-x-2 sm:flex">
+
+            <li class="flex items-center space-x-2">
+
+                <a
+                    class="text-grey transition-colors hover:text-primary-focus dark:text-accent-light dark:hover:text-accent"
+                    href="{% dashboard_url user %}">
+
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                        class="size-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor">
+
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M3 10.5L12 3l9 7.5V21a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1v-10.5z"/>
+
+                    </svg>
+
+                </a>
+
+                <svg xmlns="http://www.w3.org/2000/svg"
+                    class="size-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor">
+
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M9 5l7 7-7 7"/>
+
+                </svg>
+
+            </li>
+
+            <li>
+
+                <a href="{% question_set_url user %}"
+                    class="hover:text-primary">
+
+                    Bank Soal
+
+                </a>
+
+            </li>
+
+            <li>
+
+                <svg xmlns="http://www.w3.org/2000/svg"
+                    class="size-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor">
+
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M9 5l7 7-7 7"/>
+
+                </svg>
+
+            </li>
+
+            <li class="text-primary">
+
+                <strong>Daftar Pertanyaan</strong>
+
+            </li>
+
+        </ul>
+
+    </div>
+
+</div>
+
+<!-- ===================== CONTENT ===================== -->
+
+{% if messages %}
+
+<div class="space-y-3 pb-5">
+
+    {% for message in messages %}
+
+    <div class="alert flex overflow-hidden rounded-lg
+        {% if message.tags == 'success' %}
+            bg-success/10 text-success
+        {% elif message.tags == 'error' %}
+            bg-error/10 text-error
+        {% else %}
+            bg-slate-200 text-slate-700
+        {% endif %}
+    ">
+
+        <div class="flex flex-1 items-center space-x-3 p-4">
+
+            <i class="fa fa-circle-info"></i>
+
+            <div class="flex-1">
+                {{ message }}
+            </div>
+
+        </div>
+
+        <div class="w-1.5
+            {% if message.tags == 'success' %}
+                bg-success
+            {% elif message.tags == 'error' %}
+                bg-error
+            {% else %}
+                bg-slate-400
+            {% endif %}
+        "></div>
+
+    </div>
+
+    {% endfor %}
+
+</div>
+
+{% endif %}
+
+<div class="grid grid-cols-1 gap-4">
+
+    <div class="card p-4">
+
+        <div class="grid gap-2 sm:grid-cols-3">
+
+            <div>
+
+                <span class="text-xs text-slate-500">
+
+                    Mata Pelajaran
+
+                </span>
+
+                <div class="font-medium">
+
+                    {{ question_set.lesson.name }}
+
+                </div>
+
+            </div>
+
+            <div>
+
+                <span class="text-xs text-slate-500">
+
+                    Bank Soal
+
+                </span>
+
+                <div class="font-medium">
+
+                    {{ question_set.name }}
+
+                </div>
+
+            </div>
+
+            <div>
+
+                <span class="text-xs text-slate-500">
+
+                    Jumlah Pertanyaan
+
+                </span>
+
+                <div class="font-medium">
+
+                    {{ questions.count }}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div>
+
+        <div class="flex items-center justify-between">
+
+            <h2 class="text-base font-medium tracking-wide text-slate-700 dark:text-navy-100">
+
+                Tabel Daftar Pertanyaan
+
+            </h2>
+
+            <div class="flex gap-2">
+
+                <a href="{% question_create_url user question_set %}">
+
+                    <button
+                        class="btn size-8 rounded-full bg-primary/10 p-0 text-primary hover:bg-primary/20"
+                        title="Tambah Pertanyaan">
+
+                        <i class="fa fa-plus"></i>
+
+                    </button>
+
+                </a>
+
+                <a href="{% question_set_url user %}">
+
+                    <button
+                        class="btn size-8 rounded-full bg-slate-200 p-0 text-slate-700 hover:bg-slate-300"
+                        title="Kembali">
+
+                        <i class="fa fa-arrow-left"></i>
+
+                    </button>
+
+                </a>
+
+            </div>
+
+        </div>
+
+        <div class="card mt-3">
+
+            <div class="is-scrollbar-hidden min-w-full overflow-x-auto">
+
+                <table class="is-hoverable w-full text-left">
+
+                    <thead>
+
+                        <tr>
+
+                            <th class="px-4 py-3">#</th>
+
+                            <th class="px-4 py-3">Urutan</th>
+
+                            <th class="px-4 py-3">Jenis</th>
+
+                            <th class="px-4 py-3">Pertanyaan</th>
+
+                            <th class="px-4 py-3">Lampiran</th>
+
+                            <th class="px-4 py-3">Point</th>
+
+                            <th class="px-4 py-3">Wajib</th>
+
+                            <th class="px-4 py-3">Aksi</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for question in questions %}
+
+                        <tr class="border-b border-slate-200 dark:border-navy-500">
+
+                            <td class="px-4 py-3">
+
+                                {{ forloop.counter }}
+
+                            </td>
+
+                            <td class="px-4 py-3">
+
+                                {{ question.order }}
+
+                            </td>
+
+                            <td class="px-4 py-3">
+
+                                {% if question.question_type == "MCQ" %}
+
+                                    <span class="badge bg-primary text-white">
+                                        Pilihan Ganda
+                                    </span>
+
+                                {% elif question.question_type == "ESSAY" %}
+
+                                    <span class="badge bg-warning text-white">
+                                        Essay
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge bg-info text-white">
+                                        Matching
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                            <td class="px-4 py-3">
+
+                                {{ question.question|truncatechars:120 }}
+
+                            </td>
+
+                            <td class="px-4 py-3">
+
+                                {% if question.attachment %}
+
+                                    <a href="{{ question.attachment.url }}" target="_blank">
+
+                                        <i class="fa fa-image text-success text-lg"></i>
+
+                                    </a>
+
+                                {% else %}
+
+                                    -
+
+                                {% endif %}
+
+                            </td>
+
+                            <td class="px-4 py-3">
+
+                                {{ question.point }}
+
+                            </td>
+
+                            <td class="px-4 py-3">
+
+                                {% if question.required %}
+
+                                    <i class="fa fa-check text-success"></i>
+
+                                {% else %}
+
+                                    <i class="fa fa-times text-error"></i>
+
+                                {% endif %}
+
+                            </td>
+
+                            <td class="px-4 py-3">
+
+                                <div class="flex space-x-2">
+
+                                    <a href="{% question_update_url user question %}">
+
+                                        <button
+                                            class="btn size-9 rounded-full bg-primary/10 p-0 text-primary hover:bg-primary/20">
+
+                                            <i class="fa fa-pen"></i>
+
+                                        </button>
+
+                                    </a>
+
+                                    <button
+                                        @click="openModal({{ question.id }}, '{{ question.question|escapejs|truncatechars:30 }}', 'admin/pretest/question')"
+                                        class="btn size-9 rounded-full bg-error/10 p-0 text-error hover:bg-error/20">
+
+                                        <i class="fa fa-trash"></i>
+
+                                    </button>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                        {% empty %}
+
+                        <tr>
+
+                            <td colspan="8"
+                                class="py-8 text-center text-slate-500">
+
+                                Belum ada pertanyaan pada Bank Soal ini.
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
