@@ -382,7 +382,7 @@ def student_own_parent(request, student_id):
             mode = form.cleaned_data["mode"] 
             if mode == "existing": 
                 student.parent = form.cleaned_data["parent"] 
-                user = student.user
+                user_parent = student.parent.user
             else: 
                 email = form.cleaned_data["email"] 
                 if User.objects.filter(email=email).exists(): 
@@ -392,7 +392,7 @@ def student_own_parent(request, student_id):
                     ) 
                 else: 
                     first_name = email.split("@")[0] 
-                    user = User.objects.create_user(
+                    user_parent = User.objects.create_user(
                         photo="/user/photos/default.jpg",
                         username=email,
                         email=email,
@@ -400,7 +400,7 @@ def student_own_parent(request, student_id):
                         password=parent_password,
                     ) 
                     parent = Parent.objects.create(
-                        user=user,
+                        user=user_parent,
                         position=""
                     )
                     student.parent = parent 
@@ -412,7 +412,7 @@ def student_own_parent(request, student_id):
                     "Orang tua berhasil dihubungkan."
                 ) 
                 create_notification(
-                        receiver=user,
+                        receiver=user_parent,
                         sender=request.user,
                         notification_type=Notification.NotificationType.SYSTEM,
                         title="Hubungan Orang Tua dan Siswa",
@@ -424,7 +424,7 @@ def student_own_parent(request, student_id):
                         sender=request.user,
                         notification_type=Notification.NotificationType.SYSTEM,
                         title="Hubungan Orang Tua dan Siswa",
-                        description=f"Admin telah menghubungkan Anda ke Orang Tua {user.get_full_name}",
+                        description=f"Admin telah menghubungkan Anda ke Orang Tua {user_parent.get_full_name}",
                         path="#"
                     )
                 return redirect(
