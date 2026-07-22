@@ -120,7 +120,7 @@
                 <!-- MATCHING -->
                 <!-- ================================= -->
 
-                <div id="matching-area" class="hidden">
+                <div id="matching-area" class="">
 
                     <hr>
 
@@ -205,21 +205,12 @@ function toggleQuestionType(){
 
     if(type==="MATCHING"){
         document.getElementById("matching-area").classList.remove("hidden");
-    }
-    
-    console.log(document.getElementById("mcq-area"));
-    console.log(document.getElementById("mcq-area").className);
-    console.log(document.getElementById("mcq-area").classList);
-
-    console.log(document.getElementById("matching-area"));
-    console.log(document.getElementById("matching-area").className);
-    console.log(document.getElementById("matching-area").classList);
-
+    } 
 }
 
 document.addEventListener("DOMContentLoaded",function(){
 
-    toggleQuestionType();
+    //toggleQuestionType();
 
     document
         .getElementById("id_question_type")
