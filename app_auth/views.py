@@ -416,16 +416,16 @@ def student_own_parent(request, student_id):
                         sender=request.user,
                         notification_type=Notification.NotificationType.SYSTEM,
                         title="Hubungan Orang Tua dan Siswa",
-                        description=f"Admin telah menghubungkan Anda ke Siswa {student.user.get_full_name}",
-                        path="#"
+                        description=f"Admin telah menghubungkan Anda ke Siswa {student.user.get_full_name()}",
+                        path="/"
                     )
                 create_notification(
                         receiver=student.user,
                         sender=request.user,
                         notification_type=Notification.NotificationType.SYSTEM,
                         title="Hubungan Orang Tua dan Siswa",
-                        description=f"Admin telah menghubungkan Anda ke Orang Tua {user_parent.get_full_name}",
-                        path="#"
+                        description=f"Admin telah menghubungkan Anda ke Orang Tua {user_parent.get_full_name()}",
+                        path="/"
                     )
                 return redirect(
                     "admin_user_list"
