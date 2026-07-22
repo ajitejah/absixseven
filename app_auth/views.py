@@ -388,6 +388,7 @@ def student_own_parent(request, student_id):
                 else: 
                     first_name = email.split("@")[0] 
                     user = User.objects.create_user(
+                        photo="/user/photos/default.jpg",
                         username=email,
                         email=email,
                         first_name=first_name,
