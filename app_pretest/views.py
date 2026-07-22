@@ -316,7 +316,7 @@ def question_create(request, question_set_id):
     )
 
 # ▀▄▀▄ UPDATE QUESTION
-def question_update(request, question_id):
+def question_update(request, question_set_id, question_id):
 
     question = get_object_or_404(
         Question,
@@ -375,6 +375,7 @@ def question_update(request, question_id):
             return redirect(
                 "app_pretest:question",
                 question_set_id=question.question_set.id,
+                question_set_id=question_set_id,
             )
 
     else:

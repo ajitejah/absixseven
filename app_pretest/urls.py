@@ -19,6 +19,6 @@ urlpatterns = [
 
     path("question-set/<int:question_set_id>/question",views.question,name="question",),
     path("question-set/<int:question_set_id>/question/create",views.question_create,name="question_create",),
-    path("question/<int:question_id>/update",views.question_update,name="question_update",), 
-    path("question/<int:question_id>/delete",views.question_delete,name="question_delete",),
+    path("question-set/<int:question_set_id>/question/<int:question_id>/update",views.question_update,name="question_update",), 
+    path("question-set/<int:question_set_id>/question/<int:question_id>/delete",views.question_delete,name="question_delete",),
 ]   
