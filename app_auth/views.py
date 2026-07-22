@@ -3,6 +3,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from app_auth.models import User
+from app_guidance.models import Notification
+from app_guidance.service import create_notification
 from .forms import UserCreateForm, UserUpdateForm
 from .models import Level, Teacher, Student, Parent 
 from django.contrib.auth import get_user_model
@@ -262,6 +264,7 @@ def user_delete(request, id):
     messages.warning(request, 'Akses tidak valid')
     return redirect('admin_user_list')
 
+# ▀▄▀▄ menampilkan form UPDATE user
 @login_required
 def user_update(request): 
 
@@ -361,6 +364,7 @@ def user_update(request):
         },
     )
 
+# ▀▄▀▄ menampilkan form Hubungan orang tua dan Siswa
 @login_required
 @transaction.atomic
 def student_own_parent(request, student_id):
@@ -398,13 +402,30 @@ def student_own_parent(request, student_id):
                         user=user,
                         position=""
                     )
-                    student.parent = parent
+                    student.parent = parent 
+                    
             if not form.errors:
                 student.save()
                 messages.success(
                     request,
                     "Orang tua berhasil dihubungkan."
-                )
+                ) 
+                create_notification(
+                        receiver=user,
+                        sender=request.user,
+                        notification_type=Notification.NotificationType.SYSTEM,
+                        title="Hubungan Orang Tua dan Siswa",
+                        description=f"Admin telah menghubungkan Anda ke Siswa {student.user.get_full_name}",
+                        path="#"
+                    )
+                create_notification(
+                        receiver=student.user,
+                        sender=request.user,
+                        notification_type=Notification.NotificationType.SYSTEM,
+                        title="Hubungan Orang Tua dan Siswa",
+                        description=f"Admin telah menghubungkan Anda ke Orang Tua {user.get_full_name}",
+                        path="#"
+                    )
                 return redirect(
                     "admin_user_list"
                 )

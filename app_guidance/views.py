@@ -9,6 +9,10 @@ from app_auth import admin
 from app_auth.models import Teacher, User
 from app_guidance.service import create_notification, log_parent_activity
 from app_roadmap.models import Submission
+from django.db.models import Q
+from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from .models import Message, User
 
 from .models import Message, Notification, ParentActivityLog
 
@@ -54,10 +58,6 @@ def message_redirect(request):
      # fallback wajib
     return redirect('/')
 
-from django.db.models import Q
-from django.shortcuts import render, get_object_or_404
-from django.contrib.auth.decorators import login_required
-from .models import Message, User
 
 # ▀▄▀▄ message
 @login_required
