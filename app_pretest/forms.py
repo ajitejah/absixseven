@@ -80,8 +80,7 @@ class QuestionSetForm(forms.ModelForm):
             ),
             "description": forms.Textarea(
                 attrs={
-                    "class": "form-textarea w-full",
-                    'style': 'padding-left: 2.5rem;',
+                    "class": "form-textarea w-full", 
                     "placeholder": "Deskripsi Question Set (opsional)",
                     "rows": 4,
                 }
