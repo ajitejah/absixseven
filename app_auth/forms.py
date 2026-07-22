@@ -264,7 +264,8 @@ class StudentParentForm(forms.Form, StyledFormMixin):
         required=False,
         empty_label="Pilih Orang Tua",
         widget=forms.Select(attrs={
-            "class": BASE_INPUT_CLASS
+            "class": BASE_INPUT_CLASS,
+            'style': 'padding-left: 2.5rem;',
         })
     )
 
@@ -273,7 +274,8 @@ class StudentParentForm(forms.Form, StyledFormMixin):
         required=False,
         widget=forms.EmailInput(attrs={
             "placeholder": "Masukkan email orang tua",
-            "class": BASE_INPUT_CLASS
+            "class": BASE_INPUT_CLASS,
+            'style': 'padding-left: 2.5rem;',
         })
     )
 
