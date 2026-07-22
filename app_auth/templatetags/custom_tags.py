@@ -35,6 +35,9 @@ def dashboard_url(user):
 
     elif hasattr(user, 'student'):
         return '/student/'
+    
+    elif hasattr(user, 'parent'):
+        return '/parent/'
 
     return '/admin/'
 
@@ -49,7 +52,7 @@ def roadmap_list_url(user):
         return '/teacher/roadmap/'
 
     elif hasattr(user, 'student'):
-        return '/student/roadmap/'
+        return '/student/roadmap/' 
 
     return '/admin/roadmap/'
 

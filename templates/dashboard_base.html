@@ -152,39 +152,64 @@
 
               </svg>
               </a>
+              
+              {% if not user.parent %}
+                <!-- ⬜ roadmap --> 
+                {% roadmap_list_url user as roadmap_list_user_url %}
+                <a
+                  href="{{ roadmap_list_user_url }}"
+                  class="flex size-11 items-center justify-center rounded-lg {% if request.path == roadmap_list_user_url %} bg-primary/10 text-primary {% else %} text-gray-500 hover:bg-gray-100 {% endif %}"
+                  x-tooltip.placement.right="'Roadmap Manager'">
+                  <svg
+                    class="size-7"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24">
 
-              <!-- ⬜ roadmap --> 
-              {% roadmap_list_url user as roadmap_list_user_url %}
-              <a
-                href="{{ roadmap_list_user_url }}"
-                class="flex size-11 items-center justify-center rounded-lg {% if request.path == roadmap_list_user_url %} bg-primary/10 text-primary {% else %} text-gray-500 hover:bg-gray-100 {% endif %}"
-                x-tooltip.placement.right="'Roadmap Manager'">
-                <svg
-                  class="size-7"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24">
+                    <!-- Path / Road -->
+                    <path
+                      d="M4 18C8 18 8 6 12 6C16 6 16 18 20 18"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      opacity="0.3"
+                    />
 
-                  <!-- Path / Road -->
-                  <path
-                    d="M4 18C8 18 8 6 12 6C16 6 16 18 20 18"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    opacity="0.3"
-                  />
+                    <!-- Milestones -->
+                    <circle cx="4" cy="18" r="1.5" fill="currentColor"/>
+                    <circle cx="12" cy="6" r="1.5" fill="currentColor"/>
+                    <circle cx="20" cy="18" r="1.5" fill="currentColor"/>
 
-                  <!-- Milestones -->
-                  <circle cx="4" cy="18" r="1.5" fill="currentColor"/>
-                  <circle cx="12" cy="6" r="1.5" fill="currentColor"/>
-                  <circle cx="20" cy="18" r="1.5" fill="currentColor"/>
+                    <!-- Checkpoint (middle highlight) -->
+                    <circle cx="12" cy="6" r="3" stroke="currentColor" stroke-width="1.5"/>
 
-                  <!-- Checkpoint (middle highlight) -->
-                  <circle cx="12" cy="6" r="3" stroke="currentColor" stroke-width="1.5"/>
+                  </svg>
+                </a>
+              {% endif %}
 
-                </svg>
-              </a>
+              {% if user.parent %} 
+                <a
+                  href="#"
+                  class="flex size-11 items-center justify-center rounded-lg {% if request.path == roadmap_list_user_url %} bg-primary/10 text-primary {% else %} text-gray-500 hover:bg-gray-100 {% endif %}"
+                  x-tooltip.placement.right="'Roadmap Manager'">
+                  <svg
+                    class="size-7"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor">
+
+                    <path stroke-width="1.5" stroke-linecap="round" d="M9 7h9"/>
+                    <path stroke-width="1.5" stroke-linecap="round" d="M9 12h9"/>
+                    <path stroke-width="1.5" stroke-linecap="round" d="M9 17h9"/>
+
+                    <circle cx="5" cy="7" r="1"/>
+                    <circle cx="5" cy="12" r="1"/>
+                    <circle cx="5" cy="17" r="1"/> 
+                  </svg>
+                </a>
+              {% endif %}
 
               <!-- ⬜ evaluasi -->
               {% evaluation_list_url user as evaluation_list_user_url %}
