@@ -395,7 +395,7 @@ def question_update(request, question_set_id, question_id):
 
     return render(
         request,
-        "common/question-create-update.html",
+        "teacher/question-create-update.html",
         {
             "form": form,
             "question": question,
