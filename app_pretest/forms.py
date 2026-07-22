@@ -17,6 +17,7 @@ class LessonForm(forms.ModelForm):
             "name": forms.TextInput(
                 attrs={
                     "class": "form-input w-full ml-4",
+                    'style': 'padding-left: 2.5rem;',
                     "placeholder": "Masukkan nama pelajaran",
                     "maxlength": 255,
                 }
@@ -24,6 +25,7 @@ class LessonForm(forms.ModelForm):
             "description": forms.Textarea(
                 attrs={
                     "class": "form-textarea w-full",
+                    'style': 'padding-left: 2.5rem;',
                     "placeholder": "Deskripsi pelajaran (opsional)",
                     "rows": 4,
                 }
@@ -65,11 +67,13 @@ class QuestionSetForm(forms.ModelForm):
             "lesson": forms.Select(
                 attrs={
                     "class": "form-select w-full",
+                    'style': 'padding-left: 2.5rem;',
                 }
             ),
             "name": forms.TextInput(
                 attrs={
                     "class": "form-input w-full",
+                    'style': 'padding-left: 2.5rem;',
                     "placeholder": "Masukkan nama Question Set",
                     "maxlength": 255,
                 }
@@ -77,12 +81,14 @@ class QuestionSetForm(forms.ModelForm):
             "description": forms.Textarea(
                 attrs={
                     "class": "form-textarea w-full",
+                    'style': 'padding-left: 2.5rem;',
                     "placeholder": "Deskripsi Question Set (opsional)",
                     "rows": 4,
                 }
             ),
             "is_active": forms.CheckboxInput(
                 attrs={
+                    'style': 'padding-left: 2.5rem;',
                     "class": "form-checkbox h-5 w-5 rounded border-slate-400",
                 }
             ),
