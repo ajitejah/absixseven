@@ -264,7 +264,7 @@
                 </h2>
                 <div class="flex gap-2">
                     {% if user.teacher %}
-                        <a href="{% url 'teacher_pretest:question_create' %}"
+                        <a href="{% url 'teacher_pretest:question_create' question_set.id %}"
                             class="btn size-8 rounded-full bg-primary/10 p-0 text-primary hover:bg-primary/20"
                             title="Tambah Pertanyaan"> 
                             <i class="fa fa-plus"></i>  
