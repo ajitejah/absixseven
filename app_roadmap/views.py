@@ -19,6 +19,7 @@ from .models import Assignment, Roadmap, Node, Submission
 from .forms import AssignmentForm, NodeForm
 from django.db.models import Count, Max
 
+# ▀▄▀▄ menampilkan tabel list level
 @login_required
 def level_list(request):
 
@@ -35,7 +36,7 @@ def level_list(request):
 
     return render(request, "common/level.html", context,)
 
-
+# ▀▄▀▄ menampilkan form create level
 @login_required
 def level_create(request):
 
@@ -54,7 +55,7 @@ def level_create(request):
         "form": form,
     })
 
-
+# ▀▄▀▄ menampilkan form update level
 @login_required
 def level_update(request, id):
 
@@ -563,6 +564,7 @@ def assignment_delete(request, roadmap_id, node_id, assignment_id):
         'assignment': assignment
     })
 
+# ▀▄▀▄ menampilkan tabel list submission
 def submission_list(request, roadmap_id, node_id, assignment_id):
 
     # ambil data
@@ -617,6 +619,7 @@ def submission_list(request, roadmap_id, node_id, assignment_id):
 
     return render(request, 'common/assignment-submission-list.html', context)
 
+# ▀▄▀▄ fungsi simpan score
 def score_save(request):
 
     if request.method != "POST":
@@ -638,6 +641,7 @@ def score_save(request):
 
     return redirect(request.META.get("HTTP_REFERER", "/"))
 
+# ▀▄▀▄ fungsi update reaction
 @login_required
 @require_POST
 def submission_reaction_update(request):

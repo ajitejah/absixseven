@@ -148,10 +148,8 @@ def question_set_create(request):
 
         form = QuestionSetForm()
 
-    return render(
-        request,
-        "common/question-set-create.html",
-        {
+    return render( request, "common/question-set-create-update.html",
+        { 
             "form": form,
         },
     )
@@ -188,9 +186,7 @@ def question_set_update(request, question_set_id):
             instance=question_set,
         )
 
-    return render(
-        request,
-        "common/question-set-update.html",
+    return render( request, "common/question-set-create-update.html",
         {
             "question_set": question_set,
             "form": form,

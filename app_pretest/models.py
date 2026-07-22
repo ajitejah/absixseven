@@ -1,9 +1,7 @@
 from django.db import models
 from app_auth.models import Student, User
 
-# ==========================================
-# LESSON
-# ========================================== 
+# ▀▄▀▄ model lesson/mata pelajaran
 class Lesson(models.Model): 
     name            = models.CharField(max_length=255) 
     description     = models.TextField(blank=True)    
@@ -15,9 +13,7 @@ class Lesson(models.Model):
     def __str__(self):
         return self.name
 
-# ==========================================
-# QUESTION SET
-# ========================================== 
+# ▀▄▀▄ model question set (paket pertanyaan/soal) 
 class QuestionSet(models.Model):
     lesson      = models.ForeignKey(Lesson, on_delete=models.CASCADE, related_name="question_sets")
     owner       = models.ForeignKey( User, on_delete=models.CASCADE, related_name="question_sets" )
@@ -32,10 +28,7 @@ class QuestionSet(models.Model):
     def __str__(self):
         return f"{self.lesson.name} - {self.name}"
     
-# ==========================================
-# PRETEST
-# ========================================== 
-
+# ▀▄▀▄ paket pretest (mengacak dari question set)
 class Pretest(models.Model):
 
     class Type(models.TextChoices):
@@ -60,11 +53,8 @@ class Pretest(models.Model):
 
     def __str__(self):
         return self.title
-     
-    
-# ==========================================
-# QUESTION
-# ========================================== 
+         
+# ▀▄▀▄ model question/pertanyaan-pertanyaan sesuai tipe
 class Question(models.Model):
 
     class Type(models.TextChoices):
@@ -90,10 +80,7 @@ class Question(models.Model):
     def __str__(self):
         return self.question[:60]
 
-
-# ==========================================
-# MULTIPLE CHOICE OPTION
-# ========================================== 
+# ▀▄▀▄ opsi pilihan untuk PG
 class ChoiceOption(models.Model): 
     question    = models.ForeignKey(Question, on_delete=models.CASCADE, related_name="choices")
     option      = models.CharField(max_length=255)
@@ -106,9 +93,7 @@ class ChoiceOption(models.Model):
     def __str__(self):
         return self.option
 
-# ==========================================
-# MATCHING PAIR
-# ========================================== 
+# ▀▄▀▄ pencocokan
 class MatchingPair(models.Model):
     question    = models.ForeignKey(Question, on_delete=models.CASCADE, related_name="pairs")
     left_text   = models.CharField(max_length=255)
@@ -121,9 +106,7 @@ class MatchingPair(models.Model):
     def __str__(self):
         return self.left_text
 
-# ==========================================
-# STUDENT ATTEMPT
-# ========================================== 
+# ▀▄▀▄ ringkasan data pengerjaan
 class Attempt(models.Model): 
     class Status(models.TextChoices):
         DRAFT       = "DRAFT", "Draft"
@@ -152,10 +135,7 @@ class Attempt(models.Model):
     def __str__(self):
         return f"{self.student.user.first_name} - {self.pretest.title}"
 
-
-# ==========================================
-# STUDENT ANSWER
-# ========================================== 
+# ▀▄▀▄ jawaban
 class Answer(models.Model): 
     attempt         = models.ForeignKey(Attempt, on_delete=models.CASCADE, related_name="answers")
     question        = models.ForeignKey(Question, on_delete=models.CASCADE)
