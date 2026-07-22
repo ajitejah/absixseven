@@ -2,6 +2,9 @@ from django import forms
 from .models import ChoiceOption, Lesson, MatchingPair, Question, QuestionSet 
 from django.forms import inlineformset_factory
 
+
+BASE_INPUT_CLASS = "form-input w-full rounded-lg border border-slate-300 px-3 py-2 pl-4"
+
 # ▀▄▀▄ form lesson/mapel
 class LessonForm(forms.ModelForm):
 
@@ -16,7 +19,7 @@ class LessonForm(forms.ModelForm):
         widgets = {
             "name": forms.TextInput(
                 attrs={
-                    "class": "form-input w-full ml-4",
+                    "class": BASE_INPUT_CLASS,
                     'style': 'padding-left: 2.5rem;',
                     "placeholder": "Masukkan nama pelajaran",
                     "maxlength": 255,
@@ -24,7 +27,7 @@ class LessonForm(forms.ModelForm):
             ),
             "description": forms.Textarea(
                 attrs={
-                    "class": "form-textarea w-full",
+                    "class": BASE_INPUT_CLASS,
                     'style': 'padding-left: 2.5rem;',
                     "placeholder": "Deskripsi pelajaran (opsional)",
                     "rows": 4,
@@ -66,13 +69,13 @@ class QuestionSetForm(forms.ModelForm):
         widgets = {
             "lesson": forms.Select(
                 attrs={
-                    "class": "form-select w-full",
+                    "class": BASE_INPUT_CLASS,
                     'style': 'padding-left: 2.5rem;',
                 }
             ),
             "name": forms.TextInput(
                 attrs={
-                    "class": "form-input w-full",
+                    "class": BASE_INPUT_CLASS,
                     'style': 'padding-left: 2.5rem;',
                     "placeholder": "Masukkan nama Question Set",
                     "maxlength": 255,
@@ -80,7 +83,7 @@ class QuestionSetForm(forms.ModelForm):
             ),
             "description": forms.Textarea(
                 attrs={
-                    "class": "form-textarea w-full", 
+                    "class": BASE_INPUT_CLASS, 
                     "placeholder": "Deskripsi Question Set (opsional)",
                     "rows": 4,
                 }
@@ -88,7 +91,7 @@ class QuestionSetForm(forms.ModelForm):
             "is_active": forms.CheckboxInput(
                 attrs={
                     'style': 'padding-left: 2.5rem;',
-                    "class": "form-checkbox h-5 w-5 rounded border-slate-400",
+                    "class": BASE_INPUT_CLASS,
                 }
             ),
         }
@@ -137,14 +140,14 @@ class QuestionForm(forms.ModelForm):
 
             "question_type": forms.Select(
                 attrs={
-                    "class": "form-select w-full",
+                    "class": BASE_INPUT_CLASS,
                     "style": "padding-left:2.5rem;",
                 }
             ),
 
             "question": forms.Textarea(
                 attrs={
-                    "class": "form-textarea w-full",
+                    "class": BASE_INPUT_CLASS,
                     "placeholder": "Masukkan pertanyaan",
                     "rows": 4,
                 }
@@ -152,13 +155,13 @@ class QuestionForm(forms.ModelForm):
 
             "attachment": forms.ClearableFileInput(
                 attrs={
-                    "class": "form-input w-full",
+                    "class": BASE_INPUT_CLASS,
                 }
             ),
 
             "point": forms.NumberInput(
                 attrs={
-                    "class": "form-input w-full",
+                    "class": BASE_INPUT_CLASS,
                     "style": "padding-left:2.5rem;",
                     "min": 0,
                     "step": 0.5,
@@ -167,7 +170,7 @@ class QuestionForm(forms.ModelForm):
 
             "order": forms.NumberInput(
                 attrs={
-                    "class": "form-input w-full",
+                    "class": BASE_INPUT_CLASS,
                     "style": "padding-left:2.5rem;",
                     "min": 1,
                 }
@@ -175,7 +178,7 @@ class QuestionForm(forms.ModelForm):
 
             "required": forms.CheckboxInput(
                 attrs={
-                    "class": "form-checkbox h-5 w-5 rounded border-slate-400",
+                    "class": BASE_INPUT_CLASS,
                 }
             ),
         }
@@ -188,7 +191,6 @@ class QuestionForm(forms.ModelForm):
             "order": "Urutan",
             "required": "Wajib Dijawab",
         }
-
 
 # ▀▄▀▄ form untuk jenis question: choice option
 class ChoiceOptionForm(forms.ModelForm):
@@ -206,25 +208,24 @@ class ChoiceOptionForm(forms.ModelForm):
 
             "option": forms.TextInput(
                 attrs={
-                    "class": "form-input w-full",
+                    "class": BASE_INPUT_CLASS,
                     "placeholder": "Pilihan jawaban",
                 }
             ),
 
             "is_correct": forms.CheckboxInput(
                 attrs={
-                    "class": "form-checkbox h-5 w-5 rounded border-slate-400",
+                    "class": BASE_INPUT_CLASS,
                 }
             ),
 
             "order": forms.NumberInput(
                 attrs={
-                    "class": "form-input w-24",
-                    "min": 1,
+                    "class" : BASE_INPUT_CLASS,
+                    "min"   : 1,
                 }
             ),
         }
-
 
 # ▀▄▀▄ form untuk jenis question: matching
 class MatchingPairForm(forms.ModelForm):
@@ -242,21 +243,21 @@ class MatchingPairForm(forms.ModelForm):
 
             "left_text": forms.TextInput(
                 attrs={
-                    "class": "form-input w-full",
+                    "class": BASE_INPUT_CLASS,
                     "placeholder": "Kolom kiri",
                 }
             ),
 
             "right_text": forms.TextInput(
                 attrs={
-                    "class": "form-input w-full",
+                    "class": BASE_INPUT_CLASS,
                     "placeholder": "Kolom kanan",
                 }
             ),
 
             "order": forms.NumberInput(
                 attrs={
-                    "class": "form-input w-24",
+                    "class": "BASE_INPUT_CLASS",
                     "min": 1,
                 }
             ),
