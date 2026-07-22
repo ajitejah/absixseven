@@ -374,8 +374,7 @@ def question_update(request, question_set_id, question_id):
 
             return redirect(
                 "app_pretest:question",
-                question_set_id=question.question_set.id,
-                question_set_id=question_set_id,
+                question_set_id=question.question_set.id, 
             )
 
     else:
