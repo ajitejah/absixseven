@@ -382,6 +382,7 @@ def student_own_parent(request, student_id):
             mode = form.cleaned_data["mode"] 
             if mode == "existing": 
                 student.parent = form.cleaned_data["parent"] 
+                user = student.user
             else: 
                 email = form.cleaned_data["email"] 
                 if User.objects.filter(email=email).exists(): 
