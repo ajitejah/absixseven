@@ -198,6 +198,7 @@
                 <div class="is-scrollbar-hidden min-w-full overflow-x-auto">
 
                     <table class="is-hoverable w-full text-left"> 
+                        
                         <thead>
                             <tr>
                                 <th class="px-4 py-3">#</th>
@@ -257,77 +258,69 @@
 
                                         <div class="flex space-x-2">
 
-                                            <a href="{% question_set_update_url user question_set %}">
+                                            <!-- update -->
+                                            <a href="{% question_set_update_url user question_set %}"
+                                                x-tooltip="'Perbaharui Question Set'"
+                                                class="btn size-9 rounded-full bg-primary/10 p-0 text-primary hover:bg-primary/20">
 
-                                                <button
-                                                    x-tooltip="'Perbaharui Question Set'"
-                                                    class="btn size-9 rounded-full bg-primary/10 p-0 text-primary hover:bg-primary/20">
+                                                <svg xmlns="http://www.w3.org/2000/svg"
+                                                    class="size-4.5"
+                                                    fill="none"
+                                                    viewBox="0 0 24 24"
+                                                    stroke="currentColor">
 
-                                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                                        class="size-4.5"
-                                                        fill="none"
-                                                        viewBox="0 0 24 24"
-                                                        stroke="currentColor">
+                                                    <path stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                        stroke-width="1.5"
+                                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5"/>
 
-                                                        <path stroke-linecap="round"
-                                                            stroke-linejoin="round"
-                                                            stroke-width="1.5"
-                                                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5"/>
+                                                    <path stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                        stroke-width="1.5"
+                                                        d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5"/>
 
-                                                        <path stroke-linecap="round"
-                                                            stroke-linejoin="round"
-                                                            stroke-width="1.5"
-                                                            d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5"/>
-
-                                                    </svg>
-
-                                                </button>
-
+                                                </svg>  
                                             </a>
 
-                                            <!-- QUESTION -->
-                                            <a href="{% question_url user question_set %}">
+                                            <!-- soal-soal/question -->
+                                            <a href="{% question_url user question_set %}"
+                                                x-tooltip="'Kelola Soal-Soal'"
+                                                class="btn size-9 rounded-full bg-info/10 p-0 text-info hover:bg-info/20">
 
-                                                <button
-                                                    x-tooltip="'Kelola Soal-Soal'"
-                                                    class="btn size-9 rounded-full bg-info/10 p-0 text-info hover:bg-info/20">
+                                                <svg xmlns="http://www.w3.org/2000/svg"
+                                                    class="size-4.5"
+                                                    fill="none"
+                                                    viewBox="0 0 24 24"
+                                                    stroke="currentColor">
 
-                                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                                        class="size-4.5"
-                                                        fill="none"
-                                                        viewBox="0 0 24 24"
-                                                        stroke="currentColor">
+                                                    <path
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                        stroke-width="1.5"
+                                                        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/>
 
-                                                        <path
-                                                            stroke-linecap="round"
-                                                            stroke-linejoin="round"
-                                                            stroke-width="1.5"
-                                                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/>
+                                                    <path
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                        stroke-width="1.5"
+                                                        d="M9 5a3 3 0 006 0"/>
 
-                                                        <path
-                                                            stroke-linecap="round"
-                                                            stroke-linejoin="round"
-                                                            stroke-width="1.5"
-                                                            d="M9 5a3 3 0 006 0"/>
+                                                    <path
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                        stroke-width="1.5"
+                                                        d="M9 11h6"/>
 
-                                                        <path
-                                                            stroke-linecap="round"
-                                                            stroke-linejoin="round"
-                                                            stroke-width="1.5"
-                                                            d="M9 11h6"/>
+                                                    <path
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                        stroke-width="1.5"
+                                                        d="M9 15h6"/>
 
-                                                        <path
-                                                            stroke-linecap="round"
-                                                            stroke-linejoin="round"
-                                                            stroke-width="1.5"
-                                                            d="M9 15h6"/>
-
-                                                    </svg>
-
-                                                </button>
-
+                                                </svg> 
                                             </a>
 
+                                            <!-- delete -->
                                             <button
                                                 x-tooltip="'Hapus Question Set'"
                                                 @click="openModal(
@@ -388,12 +381,8 @@
                             {% endfor %} 
                         </tbody> 
                     </table> 
-                </div>
-
+                </div> 
             </div>
-
         </div>
-
     </div>
-
 {% endblock content %}
