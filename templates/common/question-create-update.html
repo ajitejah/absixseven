@@ -9,110 +9,189 @@
 
 <div class="grid grid-cols-12 gap-4 sm:gap-5 lg:gap-6">
 
-    <!-- LEFT -->
+    <!-- ================= LEFT ================= -->
     <div class="col-span-12 lg:col-span-8">
 
-        <div class="card p-5">
+        <div class="card p-4 sm:p-5">
 
-            <h2 class="text-lg font-semibold">
+            <p class="text-base font-medium text-slate-700 dark:text-navy-100">
+
                 {% if question %}
                     Perbarui Soal
                 {% else %}
                     Tambah Soal Baru
                 {% endif %}
-            </h2>
 
-            <div class="mt-6 space-y-5">
+            </p>
 
-                <!-- Jenis -->
+            <div class="mt-5 space-y-5">
+
+                <!-- ================================= -->
+                <!-- QUESTION TYPE -->
+                <!-- ================================= -->
+
                 <label class="block">
+
                     <span>Jenis Soal</span>
 
                     <span class="relative mt-1.5 flex">
+
                         {{ form.question_type }}
 
                         <span
                             class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400">
+
                             <i class="fa fa-list"></i>
+
                         </span>
+
                     </span>
+
                 </label>
 
-                <!-- Pertanyaan -->
+                <!-- ================================= -->
+                <!-- QUESTION -->
+                <!-- ================================= -->
+
                 <label class="block">
+
                     <span>Pertanyaan</span>
 
                     {{ form.question }}
+
                 </label>
 
-                <!-- Lampiran -->
+                <!-- ================================= -->
+                <!-- ATTACHMENT -->
+                <!-- ================================= -->
+
                 <label class="block">
+
                     <span>Lampiran</span>
 
                     {{ form.attachment }}
+
                 </label>
 
-                <!-- Point -->
-                <label class="block">
-                    <span>Point</span>
+                <!-- ================================= -->
+                <!-- POINT & ORDER -->
+                <!-- ================================= -->
 
-                    {{ form.point }}
-                </label>
+                <div class="grid grid-cols-2 gap-4">
 
-                <!-- Urutan -->
-                <label class="block">
-                    <span>Urutan</span>
+                    <label class="block">
 
-                    {{ form.order }}
-                </label>
+                        <span>Point</span>
 
-                <!-- Wajib -->
-                <div class="flex items-center gap-2">
-                    {{ form.required }}
-                    <span>Wajib Dijawab</span>
+                        <span class="relative mt-1.5 flex">
+
+                            {{ form.point }}
+
+                            <span
+                                class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400">
+
+                                <i class="fa fa-star"></i>
+
+                            </span>
+
+                        </span>
+
+                    </label>
+
+                    <label class="block">
+
+                        <span>Urutan</span>
+
+                        <span class="relative mt-1.5 flex">
+
+                            {{ form.order }}
+
+                            <span
+                                class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400">
+
+                                <i class="fa fa-sort-numeric-up"></i>
+
+                            </span>
+
+                        </span>
+
+                    </label>
+
                 </div>
+
+                <!-- ================================= -->
+                <!-- REQUIRED -->
+                <!-- ================================= -->
+
+                <label class="flex items-center gap-2">
+
+                    {{ form.required }}
+
+                    <span>Wajib Dijawab</span>
+
+                </label>
 
                 <!-- ================================= -->
                 <!-- MULTIPLE CHOICE -->
                 <!-- ================================= -->
 
-                <div id="mcq-area" class="">
+                <div id="mcq-area" class="hidden">
 
-                    <hr>
+                    <div class="flex items-center justify-between">
 
-                    <h3 class="font-semibold">
-                        Pilihan Jawaban
-                    </h3>
+                        <h3 class="text-base font-semibold">
+                            Pilihan Jawaban
+                        </h3>
 
-                    {{ choice_formset.management_form }}
+                        <button
+                            type="button"
+                            onclick="addChoice()"
+                            class="btn bg-primary text-white">
 
-                    {% for form in choice_formset %}
+                            <i class="fa fa-plus mr-1"></i>
+                            Tambah Pilihan
 
-                    <div class="mt-4 rounded-lg border p-4">
-
-                        {{ form.id }}
-
-                        <label class="block">
-
-                            <span>Jawaban</span>
-
-                            {{ form.option }}
-
-                        </label>
-
-                        <label class="mt-3 flex items-center gap-2">
-
-                            {{ form.is_correct }}
-
-                            <span>Jawaban Benar</span>
-
-                        </label>
-
-                        {{ form.order }}
+                        </button>
 
                     </div>
 
-                    {% endfor %}
+                    {{ choice_formset.management_form }}
+
+                    <div id="choice-container">
+
+                        {% for form in choice_formset %}
+
+                        <div class="choice-form mt-4 rounded-lg border p-4">
+
+                            {{ form.id }}
+
+                            <div class="space-y-3">
+
+                                <label class="block">
+
+                                    <span>Pilihan</span>
+
+                                    {{ form.option }}
+
+                                </label>
+
+                                <label class="flex items-center gap-2">
+
+                                    {{ form.is_correct }}
+
+                                    <span>Jawaban Benar</span>
+
+                                </label>
+
+                                {{ form.order }}
+
+                            </div>
+
+                        </div>
+
+                        {% endfor %}
+
+                    </div>
 
                 </div>
 
@@ -120,63 +199,148 @@
                 <!-- MATCHING -->
                 <!-- ================================= -->
 
-                <div id="matching-area" class="">
+                <div id="matching-area" class="hidden">
 
-                    <hr>
+                    <div class="flex items-center justify-between">
 
-                    <h3 class="font-semibold">
-                        Pasangan
-                    </h3>
+                        <h3 class="text-base font-semibold">
+                            Pasangan Jawaban
+                        </h3>
 
-                    {{ matching_formset.management_form }}
+                        <button
+                            type="button"
+                            onclick="addPair()"
+                            class="btn bg-primary text-white">
 
-                    {% for form in matching_formset %}
+                            <i class="fa fa-plus mr-1"></i>
+                            Tambah Pasangan
 
-                    <div class="mt-4 grid grid-cols-2 gap-3 rounded-lg border p-4">
-
-                        {{ form.id }}
-
-                        <div>
-
-                            <span>Kiri</span>
-
-                            {{ form.left_text }}
-
-                        </div>
-
-                        <div>
-
-                            <span>Kanan</span>
-
-                            {{ form.right_text }}
-
-                        </div>
-
-                        {{ form.order }}
+                        </button>
 
                     </div>
 
-                    {% endfor %}
+                    {{ matching_formset.management_form }}
+
+                    <div id="matching-container">
+
+                        {% for form in matching_formset %}
+
+                        <div class="matching-form mt-4 rounded-lg border p-4">
+
+                            {{ form.id }}
+
+                            <div class="grid grid-cols-2 gap-4">
+
+                                <div>
+
+                                    <span>Kiri</span>
+
+                                    {{ form.left_text }}
+
+                                </div>
+
+                                <div>
+
+                                    <span>Kanan</span>
+
+                                    {{ form.right_text }}
+
+                                </div>
+
+                            </div>
+
+                            <div class="mt-3">
+
+                                {{ form.order }}
+
+                            </div>
+
+                        </div>
+
+                        {% endfor %}
+
+                    </div>
 
                 </div>
 
+                                <!-- ================================= -->
                 <!-- BUTTON -->
+                <!-- ================================= -->
 
-                <div class="flex justify-end gap-2">
+                <div class="flex justify-end space-x-2">
 
-                    <a href="{% question_set_url user %}"
-                       class="btn bg-slate-200">
+                    <a href="{% question_url user question_set %}"
+                       class="btn bg-slate-150 font-medium text-slate-800 hover:bg-slate-200 dark:bg-navy-500 dark:text-white">
 
                         Batal
 
                     </a>
 
                     <button
-                        class="btn bg-primary text-white">
+                        type="submit"
+                        class="btn bg-primary font-medium text-white">
 
-                        Simpan
+                        {% if question %}
+                            Perbarui Soal
+                        {% else %}
+                            Simpan Soal
+                        {% endif %}
 
                     </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ================= RIGHT ================= -->
+
+    <div class="hidden lg:col-span-4 lg:block">
+
+        <div class="sticky top-24">
+
+            <div class="card p-5">
+
+                <h3 class="font-semibold text-slate-700 dark:text-navy-100">
+
+                    Informasi
+
+                </h3>
+
+                <div class="mt-4 space-y-3 text-sm">
+
+                    <div>
+
+                        <strong>Bank Soal</strong>
+
+                        <br>
+
+                        {{ question_set.name }}
+
+                    </div>
+
+                    <div>
+
+                        <strong>Mata Pelajaran</strong>
+
+                        <br>
+
+                        {{ question_set.lesson.name }}
+
+                    </div>
+
+                    <div>
+
+                        <strong>Pemilik</strong>
+
+                        <br>
+
+                        {{ question_set.owner }}
+
+                    </div>
 
                 </div>
 
@@ -192,31 +356,139 @@
 
 <script>
 
-function toggleQuestionType(){
+document.addEventListener("DOMContentLoaded", function () {
 
-    const type=document.getElementById("id_question_type").value;
-
-    document.getElementById("mcq-area").classList.add("hidden");
-    document.getElementById("matching-area").classList.add("hidden");
-
-    if(type==="MCQ"){
-        document.getElementById("mcq-area").classList.remove("hidden");
-    }
-
-    if(type==="MATCHING"){
-        document.getElementById("matching-area").classList.remove("hidden");
-    } 
-}
-
-document.addEventListener("DOMContentLoaded",function(){
-
-    //toggleQuestionType();
+    toggleQuestionType();
 
     document
         .getElementById("id_question_type")
-        .addEventListener("change",toggleQuestionType);
+        .addEventListener("change", toggleQuestionType);
 
 });
+
+function toggleQuestionType(){
+
+    const type = document.getElementById("id_question_type").value;
+
+    document
+        .getElementById("mcq-area")
+        .classList.add("hidden");
+
+    document
+        .getElementById("matching-area")
+        .classList.add("hidden");
+
+    if(type==="MCQ"){
+
+        document
+            .getElementById("mcq-area")
+            .classList.remove("hidden");
+
+    }
+
+    if(type==="MATCHING"){
+
+        document
+            .getElementById("matching-area")
+            .classList.remove("hidden");
+
+    }
+
+}
+
+function addChoice(){
+
+    const total = document.getElementById("id_choice-TOTAL_FORMS");
+
+    const index = parseInt(total.value);
+
+    const html = `
+        <div class="choice-form mt-4 rounded-lg border p-4">
+
+            <div class="space-y-3">
+
+                <label>
+
+                    <span>Pilihan</span>
+
+                    <input
+                        type="text"
+                        name="choice-${index}-option"
+                        class="form-input w-full">
+
+                </label>
+
+                <label class="flex items-center gap-2">
+
+                    <input
+                        type="checkbox"
+                        name="choice-${index}-is_correct"
+                        class="form-checkbox">
+
+                    <span>Jawaban Benar</span>
+
+                </label>
+
+                <input
+                    type="number"
+                    name="choice-${index}-order"
+                    value="${index+1}"
+                    class="form-input w-24">
+
+            </div>
+
+        </div>
+    `;
+
+    document
+        .getElementById("choice-container")
+        .insertAdjacentHTML("beforeend", html);
+
+    total.value = index + 1;
+
+}
+
+function addPair(){
+
+    const total = document.getElementById("id_matching-TOTAL_FORMS");
+
+    const index = parseInt(total.value);
+
+    const html = `
+        <div class="matching-form mt-4 rounded-lg border p-4">
+
+            <div class="grid grid-cols-2 gap-4">
+
+                <input
+                    type="text"
+                    name="matching-${index}-left_text"
+                    class="form-input"
+                    placeholder="Kolom kiri">
+
+                <input
+                    type="text"
+                    name="matching-${index}-right_text"
+                    class="form-input"
+                    placeholder="Kolom kanan">
+
+            </div>
+
+            <input
+                type="number"
+                name="matching-${index}-order"
+                value="${index+1}"
+                class="form-input w-24 mt-3">
+
+        </div>
+    `;
+
+    document
+        .getElementById("matching-container")
+        .insertAdjacentHTML("beforeend", html);
+
+    total.value = index + 1;
+
+}
 
 </script>
 

@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect, render
-
-from app_pretest.forms import LessonForm, QuestionForm, QuestionSetForm
+from django.db import transaction
+from app_pretest.forms import ChoiceOptionFormSet, LessonForm, MatchingPairFormSet, QuestionForm, QuestionSetForm
 
 from .models import Lesson, Pretest, Question, QuestionSet
 
@@ -154,7 +154,6 @@ def question_set_create(request):
         },
     )
 
-
 # ▀▄▀▄ menampilkan form UPDATE question set
 def question_set_update(request, question_set_id):
 
@@ -192,7 +191,6 @@ def question_set_update(request, question_set_id):
             "form": form,
         },
     )
-
 
 # ▀▄▀▄ fungsi DELETE question set
 def question_set_delete(request, question_set_id):
@@ -232,7 +230,7 @@ def question(request, question_set_id):
         },
     )
  
-# ▀▄▀▄ menampilkan form CREATE question
+# ▀▄▀▄ CREATE QUESTION
 def question_create(request, question_set_id):
 
     question_set = get_object_or_404(
@@ -247,11 +245,41 @@ def question_create(request, question_set_id):
             request.FILES,
         )
 
+        choice_formset = ChoiceOptionFormSet(
+            request.POST,
+            prefix="choice",
+        )
+
+        matching_formset = MatchingPairFormSet(
+            request.POST,
+            prefix="matching",
+        )
+
         if form.is_valid():
 
-            question = form.save(commit=False)
-            question.question_set = question_set
-            question.save()
+            with transaction.atomic():
+
+                question = form.save(commit=False)
+                question.question_set = question_set
+                question.save()
+
+                if question.question_type == Question.Type.MULTIPLE_CHOICE:
+
+                    choice_formset.instance = question
+
+                    if choice_formset.is_valid():
+                        choice_formset.save()
+                    else:
+                        raise Exception(choice_formset.errors)
+
+                elif question.question_type == Question.Type.MATCHING:
+
+                    matching_formset.instance = question
+
+                    if matching_formset.is_valid():
+                        matching_formset.save()
+                    else:
+                        raise Exception(matching_formset.errors)
 
             messages.success(
                 request,
@@ -267,6 +295,14 @@ def question_create(request, question_set_id):
 
         form = QuestionForm()
 
+        choice_formset = ChoiceOptionFormSet(
+            prefix="choice",
+        )
+
+        matching_formset = MatchingPairFormSet(
+            prefix="matching",
+        )
+
     return render(
         request,
         "common/question-create-update.html",
@@ -274,10 +310,12 @@ def question_create(request, question_set_id):
             "form": form,
             "question": None,
             "question_set": question_set,
+            "choice_formset": choice_formset,
+            "matching_formset": matching_formset,
         },
     )
 
-# ▀▄▀▄ menampilkan form UPDATE question
+# ▀▄▀▄ UPDATE QUESTION
 def question_update(request, question_id):
 
     question = get_object_or_404(
@@ -293,9 +331,41 @@ def question_update(request, question_id):
             instance=question,
         )
 
+        choice_formset = ChoiceOptionFormSet(
+            request.POST,
+            instance=question,
+            prefix="choice",
+        )
+
+        matching_formset = MatchingPairFormSet(
+            request.POST,
+            instance=question,
+            prefix="matching",
+        )
+
         if form.is_valid():
 
-            form.save()
+            with transaction.atomic():
+
+                question = form.save()
+
+                if question.question_type == Question.Type.MULTIPLE_CHOICE:
+
+                    choice_formset.instance = question
+
+                    if choice_formset.is_valid():
+                        choice_formset.save()
+                    else:
+                        raise Exception(choice_formset.errors)
+
+                elif question.question_type == Question.Type.MATCHING:
+
+                    matching_formset.instance = question
+
+                    if matching_formset.is_valid():
+                        matching_formset.save()
+                    else:
+                        raise Exception(matching_formset.errors)
 
             messages.success(
                 request,
@@ -313,6 +383,16 @@ def question_update(request, question_id):
             instance=question,
         )
 
+        choice_formset = ChoiceOptionFormSet(
+            instance=question,
+            prefix="choice",
+        )
+
+        matching_formset = MatchingPairFormSet(
+            instance=question,
+            prefix="matching",
+        )
+
     return render(
         request,
         "common/question-create-update.html",
@@ -320,6 +400,8 @@ def question_update(request, question_id):
             "form": form,
             "question": question,
             "question_set": question.question_set,
+            "choice_formset": choice_formset,
+            "matching_formset": matching_formset,
         },
     )
 
