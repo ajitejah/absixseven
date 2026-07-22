@@ -98,7 +98,7 @@ def pretest(request):
 
     return render(
         request,
-        "common/pretest.html",
+        "teacher/pretest.html",
         {
             "pretests": pretests,
         },
@@ -118,7 +118,7 @@ def question_set(request):
 
     return render(
         request,
-        "common/question-set.html",
+        "teacher/question-set.html",
         {
             "question_sets": question_sets,
         },
@@ -148,7 +148,7 @@ def question_set_create(request):
 
         form = QuestionSetForm()
 
-    return render( request, "common/question-set-create-update.html",
+    return render( request, "teacher/question-set-create-update.html",
         { 
             "form": form,
         },
@@ -185,7 +185,7 @@ def question_set_update(request, question_set_id):
             instance=question_set,
         )
 
-    return render( request, "common/question-set-create-update.html",
+    return render( request, "teacher/question-set-create-update.html",
         {
             "question_set": question_set,
             "form": form,
@@ -223,7 +223,7 @@ def question(request, question_set_id):
 
     return render(
         request,
-        "common/question.html",
+        "teacher/question.html",
         {
             "question_set": question_set,
             "questions": questions,
