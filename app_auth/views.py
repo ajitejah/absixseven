@@ -417,7 +417,7 @@ def student_own_parent(request, student_id):
                         notification_type=Notification.NotificationType.SYSTEM,
                         title="Hubungan Orang Tua dan Siswa",
                         description=f"Admin telah menghubungkan Anda ke Siswa {student.user.get_full_name()}",
-                        path="/"
+                        path=f"/teacher/guidance/notification/"
                     )
                 create_notification(
                         receiver=student.user,
@@ -425,7 +425,7 @@ def student_own_parent(request, student_id):
                         notification_type=Notification.NotificationType.SYSTEM,
                         title="Hubungan Orang Tua dan Siswa",
                         description=f"Admin telah menghubungkan Anda ke Orang Tua {user_parent.get_full_name()}",
-                        path="/"
+                        path=f"/student/guidance/notification/"
                     )
                 return redirect(
                     "admin_user_list"
