@@ -151,7 +151,6 @@ class UserUpdateForm(forms.ModelForm, StyledFormMixin):
         super().__init__(*args, **kwargs)
         self.apply_style()
 
-
 # ▀▄▀▄ Form Admin
 class AdminForm(forms.ModelForm, StyledFormMixin):
 

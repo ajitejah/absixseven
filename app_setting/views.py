@@ -9,9 +9,8 @@ from app_setting.models import Setting
 from app_tracking.models import Rule
 from datetime import datetime, timedelta
  
-def rule(request):
-
-    # Selalu gunakan satu Rule saja
+# ▀▄▀▄ menampilkan halaman UPDATE pengaturan rule
+def rule(request): 
     rule, created = Rule.objects.get_or_create(
         pk=1,
         defaults={
@@ -35,8 +34,7 @@ def rule(request):
 
         # ----------------------------------
         # JSON TAG
-        # ----------------------------------
-
+        # ---------------------------------- 
         def parse_days(value):
             if not value:
                 return []
@@ -106,6 +104,7 @@ def rule(request):
         }
     )
 
+# ▀▄▀▄ menampilkan halaman UPDATE pengaturan web
 def web(request):
 
     if request.method == "POST": 
@@ -132,7 +131,7 @@ def web(request):
 
         messages.success(
             request,
-            "Pengaturan berhasil disimpan."
+            "Pengaturan website berhasil disimpan."
         )
 
         return redirect(request.path)
@@ -177,7 +176,7 @@ def web(request):
         context,
     )
 
-
+# ▀▄▀▄ menampilkan halaman UPDATE pengaturan content
 def content(request):
 
     if request.method == "POST":

@@ -370,69 +370,50 @@ def student_own_parent(request, student_id):
         user_id=student_id
     )
 
-    if request.method == "POST":
+    if request.method == "POST": 
+        form                = StudentParentForm(request.POST) 
+        parent_password     = request.POST.get('parent_password') or ''
 
-        form = StudentParentForm(request.POST)
-
-        if form.is_valid():
-
-            mode = form.cleaned_data["mode"]
-
-            if mode == "existing":
-
-                student.parent = form.cleaned_data["parent"]
-
-            else:
-
-                email = form.cleaned_data["email"]
-
-                if User.objects.filter(email=email).exists():
-
+        if form.is_valid(): 
+            mode = form.cleaned_data["mode"] 
+            if mode == "existing": 
+                student.parent = form.cleaned_data["parent"] 
+            else: 
+                email = form.cleaned_data["email"] 
+                if User.objects.filter(email=email).exists(): 
                     form.add_error(
                         "email",
                         "Email sudah terdaftar."
-                    )
-
-                else:
-
-                    first_name = email.split("@")[0]
-
+                    ) 
+                else: 
+                    first_name = email.split("@")[0] 
                     user = User.objects.create_user(
                         username=email,
                         email=email,
                         first_name=first_name,
-                        password="default",
-                    )
-
+                        password=parent_password,
+                    ) 
                     parent = Parent.objects.create(
                         user=user,
                         position=""
                     )
-
                     student.parent = parent
-
             if not form.errors:
-
                 student.save()
-
                 messages.success(
                     request,
                     "Orang tua berhasil dihubungkan."
                 )
-
                 return redirect(
                     "admin_user_list"
                 )
-
     else:
-
         form = StudentParentForm(
             initial={
                 "mode": "existing",
                 "parent": student.parent
             }
         )
-
     return render(
         request,
         "admin/user-student-own-parent.html",
