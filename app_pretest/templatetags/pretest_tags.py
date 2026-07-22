@@ -94,3 +94,51 @@ def question_set_update_url(user, question_set):
         return f"/teacher/pretest/question-set/{question_set.id}/update"
 
     return "#"
+
+@register.simple_tag
+def question_url(user, question_set):
+
+    if hasattr(user, "admin"):
+        return f"/admin/pretest/question-set/{question_set.id}/question"
+
+    elif hasattr(user, "teacher"):
+        return f"/teacher/pretest/question-set/{question_set.id}/question"
+
+    return "#"
+
+
+@register.simple_tag
+def question_create_url(user, question_set):
+
+    if hasattr(user, "admin"):
+        return f"/admin/pretest/question-set/{question_set.id}/question/create"
+
+    elif hasattr(user, "teacher"):
+        return f"/teacher/pretest/question-set/{question_set.id}/question/create"
+
+    return "#"
+
+
+@register.simple_tag
+def question_update_url(user, question):
+
+    if hasattr(user, "admin"):
+        return f"/admin/pretest/question/{question.id}/update"
+
+    elif hasattr(user, "teacher"):
+        return f"/teacher/pretest/question/{question.id}/update"
+
+    return "#"
+
+
+@register.simple_tag
+def question_delete_url(user, question):
+
+    if hasattr(user, "admin"):
+        return f"/admin/pretest/question/{question.id}/delete"
+
+    elif hasattr(user, "teacher"):
+        return f"/teacher/pretest/question/{question.id}/delete"
+
+    return "#"
+
