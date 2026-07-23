@@ -53,6 +53,9 @@ def roadmap_list_url(user):
 
     elif hasattr(user, 'student'):
         return '/student/roadmap/' 
+    
+    elif hasattr(user, 'parent'):
+        return '/parent/roadmap/' 
 
     return '/admin/roadmap/'
 
