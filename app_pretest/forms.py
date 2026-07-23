@@ -3,7 +3,8 @@ from .models import ChoiceOption, Lesson, MatchingPair, Question, QuestionSet
 from django.forms import inlineformset_factory
 
 
-BASE_INPUT_CLASS = "form-input w-full rounded-lg border border-slate-300 px-3 py-2 pl-4"
+BASE_INPUT_CLASS    = "form-input w-full rounded-lg border border-slate-300 px-3 py-2 pl-4"
+CHECKBOX_CLASS      = "form-checkbox is-outline size-5 rounded-full border-slate-400/70 before:bg-slate-500 checked:border-slate-500 hover:border-slate-500 focus:border-slate-500 dark:border-navy-400 dark:before:bg-navy-200 dark:checked:border-navy-200 dark:hover:border-navy-200 dark:focus:border-navy-200"
 
 # ▀▄▀▄ form lesson/mapel
 class LessonForm(forms.ModelForm):
@@ -91,7 +92,7 @@ class QuestionSetForm(forms.ModelForm):
             "is_active": forms.CheckboxInput(
                 attrs={
                     'style': 'padding-left: 2.5rem;',
-                    "class": BASE_INPUT_CLASS,
+                    "class": CHECKBOX_CLASS,
                 }
             ),
         }
@@ -178,7 +179,7 @@ class QuestionForm(forms.ModelForm):
 
             "required": forms.CheckboxInput(
                 attrs={
-                    "class": BASE_INPUT_CLASS,
+                    "class": CHECKBOX_CLASS,
                 }
             ),
         }
