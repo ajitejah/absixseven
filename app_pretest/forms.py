@@ -4,7 +4,7 @@ from django.forms import inlineformset_factory
 
 
 BASE_INPUT_CLASS    = "form-input w-full rounded-lg border border-slate-300 px-3 py-2 pl-4"
-CHECKBOX_CLASS      = "form-checkbox is-outline size-5 rounded-full border-slate-400/70 before:bg-slate-500 checked:border-slate-500 hover:border-slate-500 focus:border-slate-500 dark:border-navy-400 dark:before:bg-navy-200 dark:checked:border-navy-200 dark:hover:border-navy-200 dark:focus:border-navy-200"
+CHECKBOX_CLASS      = "form-checkbox is-outline size-5 rounded-full border-slate-400/70 before:bg-primary checked:border-primary hover:border-primary focus:border-primary dark:border-navy-400 dark:before:bg-accent dark:checked:border-accent dark:hover:border-accent dark:focus:border-accent"
 
 # ▀▄▀▄ form lesson/mapel
 class LessonForm(forms.ModelForm):
