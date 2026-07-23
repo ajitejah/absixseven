@@ -58,7 +58,7 @@
             {% include "dashboard_menu.html" %}
             
             <!-- ▀▄▀▄ pengaturan -->
-            {% if not user.student or not user.teacher or not user.parent %}  
+            {% if user.admin %}  
               <!-- Bottom Links -->
               <div class="flex flex-col items-center space-y-3 py-3">
                 <!-- Settings -->
