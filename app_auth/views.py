@@ -20,7 +20,6 @@ from app_auth.forms import (
 
 User = get_user_model() 
 
-# ▀▄▀▄ auth login
 def login_view(request):
     if request.method == 'POST':
         email = request.POST.get('email')

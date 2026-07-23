@@ -1,0 +1,308 @@
+{% load static %}
+{% load custom_tags %}
+{% load screening_custom_tags %}
+{% load guidance_custom_tags %} 
+{% load setting_tags %}
+{% load pretest_tags %}
+{% load humanize %}
+
+<div class="is-scrollbar-hidden flex grow flex-col space-y-4 overflow-y-auto pt-6">
+              
+    <!-- ▀▄▀▄ dashboard -->
+    {% dashboard_url user as dashboard_user_url %}
+    <a href="{{ dashboard_user_url }}" class="flex size-11 items-center justify-center rounded-lg {% if request.path == dashboard_user_url %} bg-primary/10 text-primary {% else %} text-gray-500 hover:bg-gray-100 {% endif %}" x-tooltip.placement.right="'Dashboard'">
+    <svg
+        class="size-7"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24" >
+        <path
+        fill="currentColor"
+        fill-opacity=".3"
+        d="M5 14.059c0-1.01 0-1.514.222-1.945.221-.43.632-.724 1.453-1.31l4.163-2.974c.56-.4.842-.601 1.162-.601.32 0 .601.2 1.162.601l4.163 2.974c.821.586 1.232.88 1.453 1.31.222.43.222.935.222 1.945V19c0 .943 0 1.414-.293 1.707C18.414 21 17.943 21 17 21H7c-.943 0-1.414 0-1.707-.293C5 20.414 5 19.943 5 19v-4.94Z"
+        />
+        <path
+        fill="currentColor"
+        d="M3 12.387c0 .267 0 .4.084.441.084.041.19-.04.4-.204l7.288-5.669c.59-.459.885-.688 1.228-.688.343 0 .638.23 1.228.688l7.288 5.669c.21.163.316.245.4.204.084-.04.084-.174.084-.441v-.409c0-.48 0-.72-.102-.928-.101-.208-.291-.355-.67-.65l-7-5.445c-.59-.459-.885-.688-1.228-.688-.343 0-.638.23-1.228.688l-7 5.445c-.379.295-.569.442-.67.65-.102.208-.102.448-.102.928v.409Z"
+        />
+        <path
+        fill="currentColor"
+        d="M11.5 15.5h1A1.5 1.5 0 0 1 14 17v3.5h-4V17a1.5 1.5 0 0 1 1.5-1.5Z"
+        />
+        <path
+        fill="currentColor"
+        d="M17.5 5h-1a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5Z"
+        />
+    </svg>
+    </a>
+    
+    <!-- ▀▄▀▄ pretest -->
+    {% pretest_url user as pretest_user_url %}
+    <a
+    href="{{ pretest_user_url }}"
+    class="flex size-11 items-center justify-center rounded-lg {% if request.path == roadmap_list_user_url %} bg-primary/10 text-primary {% else %} text-gray-500 hover:bg-gray-100 {% endif %}"
+    x-tooltip.placement.right="'Pretest'">
+    <svg
+        class="size-7"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24">
+
+        <!-- Paper -->
+        <path
+            d="M7 3h8l3 3v13a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linejoin="round"
+            opacity="0.35"
+        />
+
+        <!-- Fold -->
+        <path
+            d="M15 3v4h4"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linejoin="round"
+        />
+
+        <!-- Checklist -->
+        <path
+            d="M8.5 10.5l1 1 2-2"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+        />
+
+        <!-- Lines -->
+        <path
+            d="M13 10.5h3"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            opacity="0.7"
+        />
+
+        <path
+            d="M8 14h8"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            opacity="0.7"
+        />
+
+        <path
+            d="M8 17h6"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            opacity="0.7"
+        />
+
+    </svg>
+    </a>
+    
+    <!-- ▀▄▀▄ roadmap -->
+    {% if not user.parent %} 
+    {% roadmap_list_url user as roadmap_list_user_url %}
+    <a
+        href="{{ roadmap_list_user_url }}"
+        class="flex size-11 items-center justify-center rounded-lg {% if request.path == roadmap_list_user_url %} bg-primary/10 text-primary {% else %} text-gray-500 hover:bg-gray-100 {% endif %}"
+        x-tooltip.placement.right="'Roadmap Manager'">
+        <svg
+        class="size-7"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24">
+
+        <!-- Path / Road -->
+        <path
+            d="M4 18C8 18 8 6 12 6C16 6 16 18 20 18"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            opacity="0.3"
+        />
+
+        <!-- Milestones -->
+        <circle cx="4" cy="18" r="1.5" fill="currentColor"/>
+        <circle cx="12" cy="6" r="1.5" fill="currentColor"/>
+        <circle cx="20" cy="18" r="1.5" fill="currentColor"/>
+
+        <!-- Checkpoint (middle highlight) -->
+        <circle cx="12" cy="6" r="3" stroke="currentColor" stroke-width="1.5"/>
+
+        </svg>
+    </a>
+    {% endif %}
+
+    <!-- ▀▄▀▄ daftar tugas siswa untuk parent -->
+    {% if user.parent %} 
+    <a href="#"
+        class="flex size-11 items-center justify-center rounded-lg {% if request.path == roadmap_list_user_url %} bg-primary/10 text-primary {% else %} text-gray-500 hover:bg-gray-100 {% endif %}"
+        x-tooltip.placement.right="'Tugas Siswa (Submission)'">
+        <svg
+        class="size-7"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor">
+
+        <path stroke-width="1.5" stroke-linecap="round" d="M9 7h9"/>
+        <path stroke-width="1.5" stroke-linecap="round" d="M9 12h9"/>
+        <path stroke-width="1.5" stroke-linecap="round" d="M9 17h9"/>
+
+        <circle cx="5" cy="7" r="1"/>
+        <circle cx="5" cy="12" r="1"/>
+        <circle cx="5" cy="17" r="1"/> 
+        </svg>
+    </a>
+    {% endif %}
+
+    <!-- ▀▄▀▄ evaluasi -->
+    {% evaluation_list_url user as evaluation_list_user_url %}
+    <a
+    href="{{ evaluation_list_user_url }}"
+    class="flex size-11 items-center justify-center rounded-lg {% if request.path == evaluation_list_user_url %} bg-primary/10 text-primary {% else %} text-gray-500 hover:bg-gray-100 {% endif %}"
+    x-tooltip.placement.right="'Evaluasi'">
+    <svg
+        class="size-7"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24">
+
+        <!-- Bars -->
+        <rect x="4" y="10" width="3" height="8" rx="1" fill="currentColor" opacity="0.4"/>
+        <rect x="10" y="6" width="3" height="12" rx="1" fill="currentColor" opacity="0.7"/>
+        <rect x="16" y="3" width="3" height="15" rx="1" fill="currentColor"/>
+
+        <!-- Trend line -->
+        <path
+        d="M4 12l6-4 6-3 3-2"
+        stroke="currentColor"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        />
+
+    </svg>
+    </a>
+
+    <!-- ▀▄▀▄ proyeksi -->
+    <a
+    href="form-input-text.html"
+    class="flex size-11 items-center justify-center rounded-lg outline-hidden transition-colors duration-200 hover:bg-primary/20 focus:bg-primary/20 active:bg-primary/25 dark:hover:bg-navy-300/20 dark:focus:bg-navy-300/20 dark:active:bg-navy-300/25"
+    x-tooltip.placement.right="'Proyeksi'">
+    <svg
+        class="size-7"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24">
+
+        <!-- Target circles -->
+        <circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.5" opacity="0.3"/>
+        <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.5"/>
+        <circle cx="12" cy="12" r="1.5" fill="currentColor"/>
+
+        <!-- Arrow -->
+        <path
+        d="M16 8l4-4M20 4h-4M20 4v4"
+        stroke="currentColor"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        />
+
+    </svg>
+    </a>
+
+    <!-- ▀▄▀▄ akun -->
+    {% if user.admin or user.username == "superadmin" %} 
+        {% url 'admin_user_list' as admin_user_list %}
+        <a
+        href="{{ admin_user_list }}"
+        class="flex size-11 items-center justify-center rounded-lg {% if request.path == admin_user_list %} bg-primary/10 text-primary {% else %} text-gray-500 hover:bg-gray-100 {% endif %}"
+        x-tooltip.placement.right="'Akun'" >
+        <svg
+            class="size-7"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24">
+
+            <!-- Card -->
+            <rect x="3" y="5" width="18" height="14" rx="3" fill="currentColor" opacity="0.2"/>
+
+            <!-- Avatar -->
+            <circle cx="9" cy="11" r="2.5" fill="currentColor"/>
+
+            <!-- Lines -->
+            <path d="M13 10h5M13 13h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+
+        </svg>
+        </a>   
+    {% endif %}
+    
+    <!-- ▀▄▀▄ placement di halaman awal -->
+    {% if user.teacher %}
+    {% placement_question_list_url user as placement_question_list_url %} 
+    <a
+        href="{{ placement_question_list_url }}"
+        class="flex size-11 items-center justify-center rounded-lg {% if request.path == placement_question_list_url %} bg-primary/10 text-primary {% else %} text-gray-500 hover:bg-gray-100 {% endif %}"
+        x-tooltip.placement.right="'Screening'" >
+        <svg
+        class="size-7"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24">
+
+        <!-- Background Document (soft layer) -->
+        <rect
+            x="4"
+            y="3"
+            width="16"
+            height="18"
+            rx="3"
+            fill="currentColor"
+            opacity="0.15" />
+
+        <!-- Outline Document -->
+        <rect
+            x="4"
+            y="3"
+            width="16"
+            height="18"
+            rx="3"
+            stroke="currentColor"
+            stroke-width="1.5" />
+
+        <!-- Text lines -->
+        <path
+            d="M8 8h8M8 12h6"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            opacity="0.9" />
+
+        <!-- Check 1 -->
+        <path
+            d="M8 16l1.2 1.2L11.5 15"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round" />
+
+        <!-- Check 2 -->
+        <path
+            d="M13 16l1.2 1.2L17.5 15"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            opacity="0.85" />
+
+        </svg>
+    </a>  
+    {% endif %}
+
+</div>
