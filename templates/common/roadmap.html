@@ -1,0 +1,347 @@
+{% extends 'dashboard_base.html' %}
+{% load custom_tags %}
+
+
+<!-- ▀▄▀▄ panel sidebar -->
+{% block sidebar_panel %}
+    <div class="flex h-full grow flex-col bg-white pl-[var(--main-sidebar-width)] dark:bg-navy-750">
+        <div class="flex h-18 w-full items-center justify-between pl-4 pr-1" >
+            <p class="text-base tracking-wider text-slate-800 dark:text-navy-100">Roadmap</p>
+            <button
+                @click="$store.global.isSidebarExpanded = false"
+                class="btn size-7 rounded-full p-0 text-primary hover:bg-slate-300/20 focus:bg-slate-300/20 active:bg-slate-300/25 dark:text-accent-light/80 dark:hover:bg-navy-300/20 dark:focus:bg-navy-300/20 dark:active:bg-navy-300/25 xl:hidden">
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="size-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                >
+                    <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M15 19l-7-7 7-7"/>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Sidebar Panel Body -->
+        <div
+            x-data="{expandedItem:null}"
+            class="h-[calc(100%-4.5rem)] overflow-x-hidden pb-6"
+            x-init="$el._x_simplebar = new SimpleBar($el);" >
+            <ul class="flex flex-1 flex-col px-4 font-inter">
+                <li>
+                    <a x-data="navLink"
+                        href="{% url 'admin_setting:setting_content' %}"
+                        :class="isActive ? 'font-medium text-primary dark:text-accent-light' : 'text-slate-400 hover:text-slate-900 dark:text-navy-200 dark:hover:text-navy-50'"
+                        class="flex items-center gap-2 py-2 text-xs-plus tracking-wide outline-hidden transition-colors duration-300 ease-in-out">
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                            class="h-4 w-4 opacity-50 transition-all duration-300 group-hover:translate-x-1 group-hover:opacity-100"
+                            viewBox="0 0 20 20"
+                            fill="currentColor">
+                            <path fill-rule="evenodd"
+                                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                                clip-rule="evenodd" />
+                        </svg> 
+                        <span>Roadmap</span>
+                    </a>
+                </li> 
+                <li>
+                    <a x-data="navLink"
+                        href="{% url 'admin_setting:setting_web' %}"
+                        :class="isActive ? 'font-medium text-primary dark:text-accent-light' : 'text-slate-400 hover:text-slate-900 dark:text-navy-200 dark:hover:text-navy-50'"
+                        class="flex items-center gap-2 py-2 text-xs-plus tracking-wide outline-hidden transition-colors duration-300 ease-in-out">
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                            class="h-4 w-4 opacity-50 transition-all duration-300 group-hover:translate-x-1 group-hover:opacity-100"
+                            viewBox="0 0 20 20"
+                            fill="currentColor">
+                            <path fill-rule="evenodd"
+                                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                                clip-rule="evenodd" />
+                        </svg> 
+                        <span>Mapel</span>
+                    </a>
+                </li>  
+
+                {% if user.admin %}
+                <li>
+                    <a x-data="navLink"
+                        href="{% url 'admin_roadmap:level_list' %}"
+                        :class="isActive ? 'font-medium text-primary dark:text-accent-light' : 'text-slate-400 hover:text-slate-900 dark:text-navy-200 dark:hover:text-navy-50'"
+                        class="flex items-center gap-2 py-2 text-xs-plus tracking-wide outline-hidden transition-colors duration-300 ease-in-out">
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                            class="h-4 w-4 opacity-50 transition-all duration-300 group-hover:translate-x-1 group-hover:opacity-100"
+                            viewBox="0 0 20 20"
+                            fill="currentColor">
+                            <path fill-rule="evenodd"
+                                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                                clip-rule="evenodd" />
+                        </svg> 
+                        <span>Level</span>
+                    </a>
+                </li> 
+                {% endif %}
+            </ul> 
+        </div>
+    </div>
+{% endblock sidebar_panel %}
+
+
+<!-- % content title % -->
+{% block content_title %} 
+    <div class=" items-center space-x-4 py-5 lg:py-6">
+        <h2 class="text-xl font-medium text-slate-800 dark:text-navy-50 lg:text-2xl" >
+            Daftar Roadmap
+        </h2>
+        <div class="hidden h-full py-1 sm:flex"><div class="h-full w-px bg-slate-300 dark:bg-navy-600"></div></div>
+        <div class="pb-4 flex-wrap border-b border-slate-200 dark:border-navy-500">
+            <ul class="hidden flex-wrap items-center space-x-2 sm:flex">
+                <li class="flex items-center space-x-2">
+                    <a class="text-grey transition-colors hover:text-primary-focus dark:text-accent-light dark:hover:text-accent"
+                    href="{% dashboard_url user %}" ><svg xmlns="http://www.w3.org/2000/svg" class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" > <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10.5L12 3l9 7.5V21a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1v-10.5z" /> </svg></a>
+                    <svg x-ignore xmlns="http://www.w3.org/2000/svg" class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </li> 
+                <li class="text-primary"><strong>Daftar Roadmap</strong></li>
+            </ul>
+        </div>
+    </div> 
+{% endblock content_title %}
+
+
+<!-- % content % -->
+{% block content %} 
+
+    <!-- notifikasi -->
+    {% if messages %}
+        <div class="space-y-3 pb-5">
+            {% for message in messages %}
+            <div
+                class="alert flex overflow-hidden rounded-lg
+                {% if message.tags == 'success' %}
+                    bg-success/10 text-success dark:bg-success/15
+                {% elif message.tags == 'error' %}
+                    bg-error/10 text-error dark:bg-error/15
+                {% elif message.tags == 'warning' %}
+                    bg-warning/10 text-warning dark:bg-warning/15
+                {% else %}
+                    bg-slate-200 text-slate-800
+                {% endif %}
+                "
+            >
+                <div class="flex flex-1 items-center space-x-3 p-4">
+
+                <!-- ICON DINAMIS (Font Awesome) -->
+                {% if message.tags == 'success' %}
+                    <i class="fa-solid fa-circle-check text-success"></i>
+                {% elif message.tags == 'error' %}
+                    <i class="fa-solid fa-circle-xmark text-error"></i>
+                {% elif message.tags == 'warning' %}
+                    <i class="fa-solid fa-triangle-exclamation text-warning"></i>
+                {% else %}
+                    <i class="fa-solid fa-circle-info text-primary"></i>
+                {% endif %}
+
+                <!-- TEXT -->
+                <div class="flex-1">
+                    {{ message }}
+                </div>
+                </div>
+
+                <!-- BAR SAMPING -->
+                <div
+                class="w-1.5
+                {% if message.tags == 'success' %} bg-success
+                {% elif message.tags == 'error' %} bg-error
+                {% elif message.tags == 'warning' %} bg-warning
+                {% else %} bg-slate-400
+                {% endif %}
+                "
+                ></div>
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- tabel -->
+    <div class="grid grid-cols-1 gap-4 sm:gap-5 lg:gap-6">  
+        <!-- Table With Filter -->
+        <div x-data="{isFilterExpanded:false}">
+            <div class="flex items-center justify-between">
+                <h2 class="text-base font-medium tracking-wide text-slate-700 line-clamp-1 dark:text-navy-100">
+                    Tabel Daftar Roadmap
+                </h2>
+                <div class="flex"> 
+                    {% if user|has_attr:"teacher" %}  
+                        <a href="{% url 'teacher_roadmap:roadmap_create' %}">
+                    
+                            <button
+                                x-tooltip = "'Buat Roadmap Baru'"
+                                class="btn size-8 rounded-full p-0 bg-primary/10 text-primary hover:bg-primary/20 focus:bg-primary/20 active:bg-primary/25"
+                            >
+                                <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                class="size-4.5"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="1.5"
+                                    d="M12 5v14m7-7H5"
+                                />
+                                </svg>
+                            </button>
+                        </a>
+                    {% endif %} 
+                </div>
+            </div> 
+            <div class="card mt-3">
+                <div class="is-scrollbar-hidden min-w-full overflow-x-auto">
+                    <table class="is-hoverable w-full text-left">
+                    
+                    <thead>
+                        <tr>
+                        <th class="px-4 py-3">#</th>
+                        <th class="px-4 py-3">Cover</th>
+                        <th class="px-4 py-3">Nama Roadmap</th>
+                        {% if user.parent %}
+                            <th class="px-4 py-3">Siswa</th> 
+                        {% endif %}
+                        <th class="px-4 py-3">Deskripsi</th>
+                        <th class="px-4 py-3">Jumlah Node</th>
+                        <th class="px-4 py-3">Status</th>
+                        <th class="px-4 py-3">Info</th>
+                        <th class="px-4 py-3">Aksi</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for roadmap in roadmaps %}
+                        <tr class="border-b border-slate-200 dark:border-navy-500">
+
+                        <!-- No -->
+                        <td class="px-4 py-3">
+                            {{ forloop.counter }}
+                        </td>
+
+                        <!-- COVER -->
+                        <td class="px-4 py-3">
+                            {% if roadmap.cover %}
+                            <img src="{{ roadmap.cover.url }}"
+                                class="h-12 w-12 rounded object-cover" />
+                            {% else %}
+                            <div class="h-12 w-12 bg-slate-200 flex items-center justify-center rounded">
+                                <i class="fa fa-image text-slate-400"></i>
+                            </div>
+                            {% endif %}
+                        </td>
+
+                        <!-- NAMA -->
+                        <td class="px-4 py-3 font-medium text-slate-700 dark:text-navy-100">
+                            {{ roadmap.name }}
+                        </td>
+
+                        {% if user.parent %}  
+                            <td class="px-4 py-3 font-medium text-slate-700 dark:text-navy-100">
+                                {% if roadmap.student %}
+                                    {{ roadmap.student.user.get_full_name|default:roadmap.student.user.email }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                        {% endif %}
+
+                        <!-- DESKRIPSI -->
+                        <td class="px-4 py-3">
+                            {{ roadmap.description|truncatechars:50|default:"-" }}
+                        </td>
+
+                        <!-- NODE COUNT -->
+                        <td class="px-4 py-3">
+                            {{ roadmap.nodes.count }}
+                        </td>
+
+                        <!-- STATUS -->
+                        <td class="px-4 py-3">
+                            {% if roadmap.is_active %}
+                            <span class="badge bg-success text-white">Active</span>
+                            {% else %}
+                            <span class="badge bg-error text-white">Inactive</span>
+                            {% endif %}
+                        </td>
+
+                        <!-- INFO -->
+                        <td class="px-4 py-3 text-xs text-slate-500">
+                            <div>Release: {{ roadmap.release|date:"d M Y"|default:"-" }}</div>
+                            <div>Expired: {{ roadmap.expired|date:"d M Y"|default:"-" }}</div>
+                        </td>
+
+                        <!-- AKSI -->
+                        <td class="px-4 py-3">
+                            <div class="flex space-x-2">
+
+                            <!-- VIEW -->  
+                            <a href="{% roadmap_explore_url user roadmap.id %}">
+                             
+
+                                <button x-tooltip = "'Telusuri Roadmap'" class="btn size-9 rounded-full bg-primary/10 p-0 text-primary hover:bg-primary/20">
+                                
+                                    <!-- eye icon -->
+                                <svg xmlns="http://www.w3.org/2000/svg" class="size-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                </svg>
+                                
+                                </button>
+                            </a>
+
+                            <!-- EDIT -->
+                            {% if user|has_attr:"teacher" %}  
+                                <a href="{% url 'teacher_roadmap:roadmap_update' roadmap.id %}">
+                                    <button
+                                    x-tooltip = "'Perbaharui Roadmap'"
+                                    class="btn size-9 rounded-full bg-primary/10 p-0 text-primary hover:bg-primary/20">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="size-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" > <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5" /> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" /> </svg>
+                                    </button>
+                                </a>
+                            {% endif %}
+
+                            <!-- DELETE -->
+                            {% if user|has_attr:"teacher" or user|has_attr:"admin" %}  
+                                <button
+                                    x-tooltip = "'Hapus Roadmap'"
+                                    @click="openModal({{ roadmap.id }}, '{{ roadmap.name }}', 'admin/roadmap')"
+                                    class="btn size-9 rounded-full bg-error/10 p-0 text-error hover:bg-error/20">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="size-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <!-- TUTUP --> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 7h16" /> <!-- HANDLE --> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 4.5h6a1 1 0 011 1V7H8V5.5a1 1 0 011-1z" /> <!-- BODY --> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6.5 7l1 11a2 2 0 002 2h5a2 2 0 002-2l1-11" /> <!-- GARIS DALAM --> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 11v5" /> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14 11v5" /> </svg>
+                                </button>
+                            {% endif %}
+
+                            </div>
+                        </td>
+
+                        </tr>
+
+                        {% empty %}
+                        <tr>
+                        <td colspan="8" class="text-center py-5 text-slate-500">
+                            Tidak ada data roadmap
+                        </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+
+                    </table>
+                </div>
+                </div>
+        </div>
+    </div> 
+
+{% endblock content %}
