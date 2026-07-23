@@ -90,8 +90,7 @@ class QuestionSetForm(forms.ModelForm):
                 }
             ),
             "is_active": forms.CheckboxInput(
-                attrs={
-                    'style': 'padding-left: 2.5rem;',
+                attrs={ 
                     "class": CHECKBOX_CLASS,
                 }
             ),
