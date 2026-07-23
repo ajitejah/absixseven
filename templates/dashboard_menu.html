@@ -37,12 +37,13 @@
     </a>
     
     <!-- ▀▄▀▄ pretest -->
+    {% if not user.parent %}
     {% pretest_url user as pretest_user_url %}
     <a
-    href="{{ pretest_user_url }}"
-    class="flex size-11 items-center justify-center rounded-lg {% if request.path == roadmap_list_user_url %} bg-primary/10 text-primary {% else %} text-gray-500 hover:bg-gray-100 {% endif %}"
-    x-tooltip.placement.right="'Pretest'">
-    <svg
+        href="{{ pretest_user_url }}"
+        class="flex size-11 items-center justify-center rounded-lg {% if request.path == roadmap_list_user_url %} bg-primary/10 text-primary {% else %} text-gray-500 hover:bg-gray-100 {% endif %}"
+        x-tooltip.placement.right="'Pretest'">
+        <svg
         class="size-7"
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
@@ -101,6 +102,7 @@
 
     </svg>
     </a>
+    {% endif %}
     
     <!-- ▀▄▀▄ roadmap -->
     {% if not user.parent %} 
