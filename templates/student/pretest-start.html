@@ -190,19 +190,9 @@
                 // update progress
                 // ----------------------------------
 
-                if(typeof updateProgress==="function"){
-
-                    updateProgress();
-
-                } 
-
-
-                if(typeof updateAnsweredStatus === "function"){
-
-                    updateAnsweredStatus();
-
-                }
-
+                updateProgress();
+                updateAnsweredStatus();
+                alert('draged');
                 dragged=null;
 
             });
