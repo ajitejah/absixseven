@@ -1,40 +1,80 @@
 <div class="mt-8">
+
     <div class="space-y-5">
+
         {% for pair in question.random_pairs %}
-            <div class="grid grid-cols-12 gap-4">
-                <div class="col-span-5">
-                    <div
-                        class="rounded-lg bg-slate-100 p-3 font-medium">
-                        {{ pair.left_text }}
-                    </div>
-                </div>
-                <div
-                    class="col-span-2 flex items-center justify-center">
 
-                    ⟶
+        <div
+            class="grid grid-cols-12 gap-4 items-center matching-row">
 
-                </div>
-                <div class="col-span-5">
-                    <select
-                        class="form-select w-full rounded-lg"
-                        name="pair_{{ pair.id }}">
-                        <option value="">
-                            Pilih Jawaban
-                        </option>
-                        {% for option in question.pairs.all %}
-                            <option
-                                value="{{ option.id }}">
-                                {{ option.right_text }}
+            <!-- LEFT -->
+            <div class="col-span-5">
 
-                            </option>
+                <div class="rounded-xl border border-slate-300 bg-slate-100 p-4 font-medium">
 
-                        {% endfor %}
-
-                    </select>
+                    {{ pair.left_text }}
 
                 </div>
 
             </div>
+
+            <!-- ARROW -->
+            <div class="col-span-2 flex justify-center">
+
+                ➜
+
+            </div>
+
+            <!-- DROP -->
+            <div class="col-span-5">
+
+                <div
+                    class="drop-zone flex min-h-[60px] items-center rounded-xl border-2 border-dashed border-slate-300 bg-white p-3 transition"
+                    data-left="{{ pair.id }}">
+
+                    <span class="placeholder text-slate-400">
+
+                        Tarik jawaban ke sini
+
+                    </span>
+
+                </div>
+
+                <input
+                    type="hidden"
+                    class="matching-input"
+                    name="pair_{{ pair.id }}">
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    <hr class="my-8">
+
+    <h4 class="mb-4 font-semibold">
+
+        Pilihan Jawaban
+
+    </h4>
+
+    <div
+        id="matching-options"
+        class="flex flex-wrap gap-3">
+
+        {% for option in question.random_options %}
+
+        <div
+            draggable="true"
+            class="drag-item cursor-move rounded-xl border border-primary bg-primary/10 px-4 py-3 transition hover:scale-105"
+            data-id="{{ option.id }}">
+
+            {{ option.right_text }}
+
+        </div>
 
         {% endfor %}
 
