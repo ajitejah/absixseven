@@ -60,8 +60,148 @@
 
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function () { 
+        
+        let dragged=null;
 
+        // ==========================
+        // DRAG START
+        // ==========================
+
+        document.querySelectorAll(".drag-item").forEach(item=>{
+
+            item.addEventListener("dragstart",function(){
+
+                dragged=this;
+
+                setTimeout(()=>{
+
+                    this.style.opacity=".3";
+
+                },0);
+
+            });
+
+            item.addEventListener("dragend",function(){
+
+                this.style.opacity="1";
+
+            });
+
+        });
+
+        // ==========================
+        // DROP ZONE
+        // ==========================
+
+        document.querySelectorAll(".drop-zone").forEach(zone=>{
+
+            zone.addEventListener("dragover",function(e){
+
+                e.preventDefault();
+
+                this.classList.add("border-primary");
+
+            });
+
+            zone.addEventListener("dragleave",function(){
+
+                this.classList.remove("border-primary");
+
+            });
+
+            zone.addEventListener("drop",function(e){
+
+                e.preventDefault();
+
+                this.classList.remove("border-primary");
+
+                if(!dragged)
+                    return;
+
+                // ----------------------------------
+                // jika dropzone sudah ada jawaban
+                // ----------------------------------
+
+                const old=this.querySelector(".drag-item");
+
+                if(old){
+
+                    document
+                    .getElementById("matching-options")
+                    .appendChild(old);
+
+                }
+
+                // ----------------------------------
+                // jika jawaban dipakai di tempat lain
+                // ----------------------------------
+
+                document.querySelectorAll(".drop-zone").forEach(z=>{
+
+                    if(z!==this){
+
+                        const exist=z.querySelector(
+                            `[data-id="${dragged.dataset.id}"]`
+                        );
+
+                        if(exist){
+
+                            document
+                            .getElementById("matching-options")
+                            .appendChild(exist);
+
+                            z.querySelector(".matching-input").value="";
+
+                            const ph=z.querySelector(".placeholder");
+
+                            if(ph)
+                                ph.style.display="block";
+
+                        }
+
+                    }
+
+                });
+
+                // ----------------------------------
+                // pindahkan
+                // ----------------------------------
+
+                const placeholder=this.querySelector(".placeholder");
+
+                if(placeholder){
+
+                    placeholder.style.display="none";
+
+                }
+
+                this.appendChild(dragged);
+
+                // ----------------------------------
+                // simpan hidden input
+                // ----------------------------------
+
+                this.parentElement
+                    .querySelector(".matching-input")
+                    .value=dragged.dataset.id;
+
+                // ----------------------------------
+                // update progress
+                // ----------------------------------
+
+                if(typeof updateProgress==="function"){
+
+                    updateProgress();
+
+                }
+
+                dragged=null;
+
+            });
+
+        });
+        
         //---------------------------------------------------
         // ELEMENT
         //---------------------------------------------------
@@ -331,151 +471,7 @@
 
         //---------------------------------------------------
         // INIT
-        //---------------------------------------------------
-
-        document.addEventListener("DOMContentLoaded",function(){
-
-            let dragged=null;
-
-            // ==========================
-            // DRAG START
-            // ==========================
-
-            document.querySelectorAll(".drag-item").forEach(item=>{
-
-                item.addEventListener("dragstart",function(){
-
-                    dragged=this;
-
-                    setTimeout(()=>{
-
-                        this.style.opacity=".3";
-
-                    },0);
-
-                });
-
-                item.addEventListener("dragend",function(){
-
-                    this.style.opacity="1";
-
-                });
-
-            });
-
-            // ==========================
-            // DROP ZONE
-            // ==========================
-
-            document.querySelectorAll(".drop-zone").forEach(zone=>{
-
-                zone.addEventListener("dragover",function(e){
-
-                    e.preventDefault();
-
-                    this.classList.add("border-primary");
-
-                });
-
-                zone.addEventListener("dragleave",function(){
-
-                    this.classList.remove("border-primary");
-
-                });
-
-                zone.addEventListener("drop",function(e){
-
-                    e.preventDefault();
-
-                    this.classList.remove("border-primary");
-
-                    if(!dragged)
-                        return;
-
-                    // ----------------------------------
-                    // jika dropzone sudah ada jawaban
-                    // ----------------------------------
-
-                    const old=this.querySelector(".drag-item");
-
-                    if(old){
-
-                        document
-                        .getElementById("matching-options")
-                        .appendChild(old);
-
-                    }
-
-                    // ----------------------------------
-                    // jika jawaban dipakai di tempat lain
-                    // ----------------------------------
-
-                    document.querySelectorAll(".drop-zone").forEach(z=>{
-
-                        if(z!==this){
-
-                            const exist=z.querySelector(
-                                `[data-id="${dragged.dataset.id}"]`
-                            );
-
-                            if(exist){
-
-                                document
-                                .getElementById("matching-options")
-                                .appendChild(exist);
-
-                                z.querySelector(".matching-input").value="";
-
-                                const ph=z.querySelector(".placeholder");
-
-                                if(ph)
-                                    ph.style.display="block";
-
-                            }
-
-                        }
-
-                    });
-
-                    // ----------------------------------
-                    // pindahkan
-                    // ----------------------------------
-
-                    const placeholder=this.querySelector(".placeholder");
-
-                    if(placeholder){
-
-                        placeholder.style.display="none";
-
-                    }
-
-                    this.appendChild(dragged);
-
-                    // ----------------------------------
-                    // simpan hidden input
-                    // ----------------------------------
-
-                    this.parentElement
-                        .querySelector(".matching-input")
-                        .value=dragged.dataset.id;
-
-                    // ----------------------------------
-                    // update progress
-                    // ----------------------------------
-
-                    if(typeof updateProgress==="function"){
-
-                        updateProgress();
-
-                    }
-
-                    dragged=null;
-
-                });
-
-            });
-
-        });
+        //--------------------------------------------------- 
 
         showQuestion(0);
         updateProgress();
@@ -483,5 +479,6 @@
         startTimer();
 
     });
+ 
 </script>
 {% endblock %}
