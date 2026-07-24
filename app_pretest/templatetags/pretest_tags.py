@@ -193,3 +193,14 @@ def question_delete_url(user, question):
 
     return "#"
 
+
+@register.simple_tag
+def question_set_info_url(user, question_set_id=0):
+
+    if hasattr(user, "admin"):
+        return f"/admin/pretest/question-set/{question_set_id}/info"
+
+    elif hasattr(user, "teacher"):
+        return f"/teacher/pretest/question-set/{question_set_id}/info"
+
+    return "#"

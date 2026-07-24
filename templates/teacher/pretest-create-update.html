@@ -447,4 +447,90 @@ document.addEventListener("DOMContentLoaded",function(){
 
 </script>
 
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const questionSet = document.getElementById("id_question_set");
+
+    if(questionSet){
+
+        questionSet.addEventListener(
+            "change",
+            loadQuestionSetInfo
+        );
+
+        // jika edit pretest, langsung tampilkan info
+        if(questionSet.value){
+            loadQuestionSetInfo();
+        }
+    }
+
+});
+
+
+async function loadQuestionSetInfo(){
+
+    const questionSetId =
+        document.getElementById("id_question_set").value;
+    const INFO_URL = "{% question_set_info_url user 0 %}";
+ 
+    if(!questionSetId){
+
+        resetQuestionSetInfo();
+        return;
+
+    }
+
+    try{
+
+        const response = await fetch(
+            INFO_URL.replace("/0/", `/${questionSetId}/`)
+        );
+
+        if(!response.ok){
+            throw new Error("Request gagal");
+        }
+
+        const data = await response.json();
+
+        document.getElementById("lesson-name").innerText =
+            data.lesson;
+
+        document.getElementById("total-question").innerText =
+            data.total_question;
+
+        document.getElementById("mcq-count").innerText =
+            data.mcq;
+
+        document.getElementById("essay-count").innerText =
+            data.essay;
+
+        document.getElementById("matching-count").innerText =
+            data.matching;
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        resetQuestionSetInfo();
+
+    }
+
+}
+
+
+function resetQuestionSetInfo(){
+
+    document.getElementById("lesson-name").innerText = "-";
+    document.getElementById("total-question").innerText = "-";
+    document.getElementById("mcq-count").innerText = "-";
+    document.getElementById("essay-count").innerText = "-";
+    document.getElementById("matching-count").innerText = "-";
+
+}
+
+</script>
+
 {% endblock %}

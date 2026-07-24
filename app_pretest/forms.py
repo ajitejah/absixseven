@@ -78,16 +78,16 @@ class PretestForm(forms.ModelForm):
 
             "title": forms.TextInput(
                 attrs={
-                    "class": BASE_INPUT_CLASS,
-                    "style": "padding-left:2.5rem;",
-                    "placeholder": "Masukkan judul pretest",
-                    "maxlength": 255,
+                    "class"         : BASE_INPUT_CLASS,
+                    "style"         : "padding-left:2.5rem;",
+                    "placeholder"   : "Masukkan judul pretest",
+                    "maxlength"     : 255,
                 }
             ),
 
             "description": forms.Textarea(
                 attrs={
-                    "class": BASE_INPUT_CLASS,
+                    "class" : BASE_INPUT_CLASS,
                     "placeholder": "Deskripsi pretest (opsional)",
                     "rows": 4,
                 }

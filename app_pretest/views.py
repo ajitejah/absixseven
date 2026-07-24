@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.db import transaction
 from app_pretest.forms import ChoiceOptionFormSet, LessonForm, MatchingPairFormSet, PretestForm, QuestionForm, QuestionSetForm
@@ -104,6 +105,33 @@ def pretest(request):
         },
     )
 
+# ▀▄▀▄ AJAX informasi Question Set
+def question_set_info(request, question_set_id):
+
+    question_set = get_object_or_404(
+        QuestionSet,
+        pk=question_set_id,
+    )
+
+    questions = question_set.questions.all()
+
+    return JsonResponse({
+
+        "success": True, 
+        "id": question_set.id, 
+        "name": question_set.name, 
+        "lesson": question_set.lesson.name, 
+        "total_question": questions.count(), 
+        "mcq": questions.filter(
+            question_type=Question.Type.MULTIPLE_CHOICE,
+        ).count(), 
+        "essay": questions.filter(
+            question_type=Question.Type.ESSAY,
+        ).count(), 
+        "matching": questions.filter(
+            question_type=Question.Type.MATCHING,
+        ).count(), 
+    })
 
 # ▀▄▀▄ CREATE PRETEST
 def pretest_create(request):
@@ -134,7 +162,6 @@ def pretest_create(request):
             "pretest": None,
         },
     )
-
 
 # ▀▄▀▄ UPDATE PRETEST
 def pretest_update(request, pretest_id):
