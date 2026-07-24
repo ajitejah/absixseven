@@ -191,8 +191,7 @@
                 // ----------------------------------
 
                 updateProgress();
-                updateAnsweredStatus();
-                alert('draged');
+                updateAnsweredStatus(); 
                 dragged=null;
 
             });
@@ -308,40 +307,80 @@
         //---------------------------------------------------
 
         function updateProgress(){
+
             let answered = 0;
+
             slides.forEach(slide=>{
+
                 const radio = slide.querySelector("input[type=radio]:checked");
                 const textarea = slide.querySelector("textarea");
                 const select = slide.querySelector("select");
+                const matching = slide.querySelectorAll(".matching-input");
+
                 let ok = false;
+
+                // =========================
+                // MCQ
+                // =========================
+
                 if(radio){
                     ok = true;
                 }
 
+                // =========================
+                // ESSAY
+                // =========================
+
                 if(textarea){
-                    if(textarea.value.trim()!=""){
+                    if(textarea.value.trim() !== ""){
                         ok = true;
                     }
                 }
 
+                // =========================
+                // SELECT
+                // =========================
+
                 if(select){
-                    const selects = slide.querySelectorAll("select");
+
                     ok = true;
-                    selects.forEach(s=>{
-                        if(s.value==""){
+
+                    slide.querySelectorAll("select").forEach(s=>{
+                        if(s.value === ""){
                             ok = false;
                         }
                     });
+
+                }
+
+                // =========================
+                // MATCHING
+                // Semua hidden input harus terisi
+                // =========================
+
+                if(matching.length){
+
+                    ok = true;
+
+                    matching.forEach(input=>{
+                        if(input.value === ""){
+                            ok = false;
+                        }
+                    });
+
                 }
 
                 if(ok){
                     answered++;
                 }
+
             });
 
             answeredCount.innerHTML = answered;
-            const percent = answered/total*100;
-            progressBar.style.width = percent+"%";
+
+            const percent = answered / total * 100;
+
+            progressBar.style.width = percent + "%";
         }
 
         //---------------------------------------------------
@@ -377,30 +416,71 @@
         //---------------------------------------------------
 
         function updateAnsweredStatus(){
+
             slides.forEach((slide,index)=>{
+
                 const button = questionButtons[index];
+
                 const radio = slide.querySelector("input[type=radio]:checked");
                 const textarea = slide.querySelector("textarea");
                 const select = slide.querySelector("select");
+                const matching = slide.querySelectorAll(".matching-input");
+
                 let answered = false;
-                
+
+                // =========================
+                // MCQ
+                // =========================
+
                 if(radio){
-                    answered=true;
+                    answered = true;
                 }
 
+                // =========================
+                // ESSAY
+                // =========================
+
                 if(textarea){
-                    if(textarea.value.trim()!=""){
-                        answered=true;
+                    if(textarea.value.trim() !== ""){
+                        answered = true;
                     }
                 }
 
+                // =========================
+                // SELECT
+                // =========================
+
                 if(select){
-                    answered=true;
+
+                    answered = true;
+
                     slide.querySelectorAll("select").forEach(s=>{
-                        if(s.value==""){
-                            answered=false;
+
+                        if(s.value === ""){
+                            answered = false;
                         }
+
                     });
+
+                }
+
+                // =========================
+                // MATCHING
+                // Semua pasangan harus sudah terisi
+                // =========================
+
+                if(matching.length){
+
+                    answered = true;
+
+                    matching.forEach(input=>{
+
+                        if(input.value === ""){
+                            answered = false;
+                        }
+
+                    });
+
                 }
 
                 button.classList.remove(
@@ -410,26 +490,34 @@
                     "text-white"
                 );
 
-                if(index===current){
+                if(index === current){
+
                     button.classList.add(
                         "bg-primary",
                         "text-white"
                     );
+
                 }
 
                 else if(answered){
+
                     button.classList.add(
                         "bg-success",
                         "text-white"
                     );
+
                 }
 
                 else{
+
                     button.classList.add(
                         "bg-slate-100"
                     );
+
                 }
+
             });
+
         }
 
         //---------------------------------------------------
