@@ -2,7 +2,7 @@ from django import template
 
 register = template.Library()
 
-
+# ▀▄▀▄ shift url menampilkan LIST lesson
 @register.simple_tag
 def lesson_url(user):
 
@@ -14,7 +14,7 @@ def lesson_url(user):
 
     return "#"
 
-
+# ▀▄▀▄ shift url menampilkan form CREATE lesson
 @register.simple_tag
 def lesson_create_url(user):
 
@@ -26,7 +26,7 @@ def lesson_create_url(user):
 
     return "#"
 
-
+# ▀▄▀▄ shift url menampilkan form UPDATE lesson
 @register.simple_tag
 def lesson_update_url(user, lesson):
 
@@ -38,7 +38,7 @@ def lesson_update_url(user, lesson):
 
     return "#"
 
-
+# ▀▄▀▄ shift url fungsi DELETE lesson
 @register.simple_tag
 def lesson_delete_url(user, lesson):
 
@@ -50,7 +50,6 @@ def lesson_delete_url(user, lesson):
 
     return "#"
 
-
 # ▀▄▀▄ daftar pretest
 @register.simple_tag
 def pretest_url(user):
@@ -59,10 +58,12 @@ def pretest_url(user):
         return "/admin/pretest/"
 
     elif hasattr(user, "teacher"):
-        return "/teacher/pretest/"
+        return "/teacher/pretest/" 
+    
+    elif hasattr(user, "teacher"):
+        return "/student/pretest/"
 
     return "#"
-
 
 # ▀▄▀▄ create pretest
 @register.simple_tag
@@ -76,7 +77,6 @@ def pretest_create_url(user):
 
     return "#"
 
-
 # ▀▄▀▄ update pretest
 @register.simple_tag
 def pretest_update_url(user, pretest):
@@ -88,7 +88,6 @@ def pretest_update_url(user, pretest):
         return f"/teacher/pretest/{pretest.id}/update/"
 
     return "#"
-
 
 # ▀▄▀▄ delete pretest
 @register.simple_tag
@@ -102,6 +101,7 @@ def pretest_delete_url(user, pretest):
 
     return "#"
 
+# ▀▄▀▄ shift url menampilkan LIST pretest
 @register.simple_tag
 def pretest_url(user):
 
@@ -113,6 +113,7 @@ def pretest_url(user):
 
     return "#"
 
+# ▀▄▀▄ shift url menampilkan LIST question set
 @register.simple_tag
 def question_set_url(user):
 
@@ -124,6 +125,7 @@ def question_set_url(user):
 
     return "#"
 
+# ▀▄▀▄ shift url menampilkan form CREATE question set
 @register.simple_tag
 def question_set_create_url(user):
 
@@ -135,6 +137,7 @@ def question_set_create_url(user):
 
     return "#"
 
+# ▀▄▀▄ shift url menampilkan form UPDATE question set
 @register.simple_tag
 def question_set_update_url(user, question_set):
 
@@ -146,6 +149,7 @@ def question_set_update_url(user, question_set):
 
     return "#"
 
+# ▀▄▀▄ shift url menampilkan LIST question
 @register.simple_tag
 def question_url(user, question_set):
 
@@ -157,7 +161,7 @@ def question_url(user, question_set):
 
     return "#"
 
-
+# ▀▄▀▄ shift url menampilkan form CREATE question
 @register.simple_tag
 def question_create_url(user, question_set):
 
@@ -169,7 +173,7 @@ def question_create_url(user, question_set):
 
     return "#"
 
-
+# ▀▄▀▄ shift url menampilkan form UPDATE question
 @register.simple_tag
 def question_update_url(user, question):
 
@@ -181,7 +185,7 @@ def question_update_url(user, question):
 
     return "#"
 
-
+# ▀▄▀▄ shift url fungsi delete question
 @register.simple_tag
 def question_delete_url(user, question):
 
@@ -193,7 +197,7 @@ def question_delete_url(user, question):
 
     return "#"
 
-
+# ▀▄▀▄ shift url untuk info di form CREATE question set
 @register.simple_tag
 def question_set_info_url(user, question_set_id=0):
 

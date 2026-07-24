@@ -8,14 +8,12 @@ urlpatterns = [
     path('lesson/', views.lesson, name='lesson'), 
     path('lesson/create/', views.lesson_create, name='lesson_create'),  
     path('lesson/<int:lesson_id>/update/', views.lesson_update, name='lesson_update'), 
-    path('lesson/<int:lesson_id>/delete/', views.lesson_delete, name='lesson_delete'), 
+    path('lesson/<int:lesson_id>/delete/', views.lesson_delete, name='lesson_delete'),  
 
     path('', views.pretest, name='pretest'), 
-
-    path('', views.pretest, name='lesson'), 
-    path('create/', views.pretest_create, name='lesson_create'),  
-    path('<int:pretest_id>/update/', views.pretest_update, name='lesson_update'), 
-    path('<int:pretest_id>/delete/', views.pretest_delete, name='lesson_delete'), 
+    path('create/', views.pretest_create, name='pretest_create'),  
+    path('<int:pretest_id>/update/', views.pretest_update, name='pretest_update'), 
+    path('<int:pretest_id>/delete/', views.pretest_delete, name='pretest_delete'), 
     path("question-set/<int:question_set_id>/info",views.question_set_info,name="question_set_info",),
     
     path("question-set", views.question_set, name="question_set",),

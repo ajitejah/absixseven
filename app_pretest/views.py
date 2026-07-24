@@ -92,18 +92,29 @@ def lesson_delete(request, lesson_id):
 
     return redirect("app_pretest:lesson")
 
-# ▀▄▀▄ menampilkan seluruh lesson
+# ▀▄▀▄ menampilkan seluruh pretest
 def pretest(request):
+    user = request.user
 
     pretests = Pretest.objects.all().order_by("title")
 
-    return render(
-        request,
-        "teacher/pretest.html",
-        {
-            "pretests": pretests,
-        },
-    )
+    if hasattr(user, 'teacher'):
+        return render(
+            request,
+            "teacher/pretest.html",
+            {
+                "pretests": pretests,
+            },
+        )
+    
+    elif hasattr(user, 'student'):
+        return render(
+            request,
+            "student/pretest.html",
+            {
+                "pretests": pretests,
+            },
+        )
 
 # ▀▄▀▄ AJAX informasi Question Set
 def question_set_info(request, question_set_id):
