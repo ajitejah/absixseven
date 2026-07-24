@@ -1,32 +1,20 @@
-<div class="mt-8">
-
-    <div class="space-y-3">
-
-        {% for choice in question.random_choices %}
-
-            <label
-                class="flex cursor-pointer items-center rounded-xl border border-slate-200 p-4 transition hover:border-primary hover:bg-primary/5">
+<div class="mt-8"> 
+    <div class="space-y-3"> 
+        {% for choice in question.random_choices %} 
+            <label class="flex cursor-pointer items-center rounded-xl border border-slate-200 p-4 transition hover:border-primary hover:bg-primary/5">
 
                 <input
                     type="radio"
                     name="question_{{ question.id }}"
                     value="{{ choice.id }}"
-                    class="form-radio size-5 text-primary">
+                    class="form-checkbox is-outline size-5 rounded-full border-slate-400/70 before:bg-primary checked:border-primary hover:border-primary focus:border-primary dark:border-navy-400 dark:before:bg-accent dark:checked:border-accent dark:hover:border-accent dark:focus:border-accent">
 
-                <div class="ml-4 flex-1">
-
-                    <div class="font-medium">
-
+                <div class="ml-4 flex-1"> 
+                    <div class="font-medium"> 
                         {{ choice.option }}
-
                     </div>
-
                 </div>
-
             </label>
-
         {% endfor %}
-
     </div>
-
 </div>

@@ -1,15 +1,34 @@
-<div class="card p-5">
+<style>
+    .legend-color{
+        display:inline-block;
+        width:16px;
+        height:16px;
+        border-radius:4px;
+        margin-right:10px;
+        flex-shrink:0;
+    }
 
+    .legend-unanswered{
+        background:#e2e8f0;
+    }
+
+    .legend-answered{
+        background:#22c55e;
+    }
+
+    .legend-active{
+        background:#4f46e5;
+    }
+</style>
+
+<div class="card p-5"> 
     <h3 class="font-semibold text-slate-700 dark:text-navy-100">
         Navigasi Soal
     </h3>
 
     <!-- Nomor Soal -->
-    <div
-        class="mt-4 flex flex-wrap justify-center gap-2">
-
-        {% for question in questions %}
-
+    <div class="mt-4 flex flex-wrap justify-center gap-2"> 
+        {% for question in questions %} 
         <button
             type="button"
             class="question-number flex h-10 w-10 items-center justify-center rounded-lg border border-slate-300 bg-slate-100 text-slate-700 transition hover:bg-primary hover:text-white dark:border-navy-450 dark:bg-navy-600 dark:text-navy-100"
@@ -18,7 +37,6 @@
             {{ forloop.counter }}
 
         </button>
-
         {% endfor %}
 
     </div>
@@ -26,44 +44,19 @@
     <hr class="my-5">
 
     <!-- Legend -->
-    <div class="space-y-3 text-sm">
-
+    <div class="space-y-3 text-sm"> 
         <div class="flex items-center">
-
-            <span
-                class="mr-3 inline-block h-4 w-4 rounded bg-slate-200 border border-slate-300">
-            </span>
-
-            <span class="text-slate-600 dark:text-navy-200">
-                Belum Dijawab
-            </span>
-
-        </div>
-
+            <span class="legend-color legend-unanswered"></span>
+            <span>Belum Dijawab</span>
+        </div> 
         <div class="flex items-center">
-
-            <span
-                class="mr-3 inline-block h-4 w-4 rounded bg-success">
-            </span>
-
-            <span class="text-slate-600 dark:text-navy-200">
-                Sudah Dijawab
-            </span>
-
-        </div>
-
+            <span class="legend-color legend-answered"></span>
+            <span>Sudah Dijawab</span>
+        </div> 
         <div class="flex items-center">
-
-            <span
-                class="mr-3 inline-block h-4 w-4 rounded bg-primary">
-            </span>
-
-            <span class="text-slate-600 dark:text-navy-200">
-                Soal Aktif
-            </span>
-
-        </div>
-
+            <span class="legend-color legend-active"></span>
+            <span>Soal Aktif</span>
+        </div> 
     </div>
 
 </div>
