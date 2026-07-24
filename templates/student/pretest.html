@@ -5,78 +5,52 @@
 <!-- CONTENT TITLE -->
 <!-- ================================= -->
 
-{% block content_title %}
+{% block content_title %} 
+    <div class="items-center space-x-4 py-5 lg:py-6"> 
+        <h2 class="text-xl font-medium text-slate-800 dark:text-navy-50 lg:text-2xl"> 
+            Daftar Pretest 
+        </h2> 
+        <div class="hidden h-full py-1 sm:flex"> 
+            <div class="h-full w-px bg-slate-300 dark:bg-navy-600"></div> 
+        </div>
+        <div class="pb-4 flex-wrap border-b border-slate-200 dark:border-navy-500">
+            <ul class="hidden flex-wrap items-center space-x-2 sm:flex">
+                <li class="flex items-center space-x-2">
+                    <a class="text-grey transition-colors hover:text-primary-focus dark:text-accent-light dark:hover:text-accent" href="{% dashboard_url user %}">
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                            class="size-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor">
 
-<div class="items-center space-x-4 py-5 lg:py-6">
-
-    <h2 class="text-xl font-medium text-slate-800 dark:text-navy-50 lg:text-2xl">
-
-        Daftar Pretest
-
-    </h2>
-
-    <div class="hidden h-full py-1 sm:flex">
-
-        <div class="h-full w-px bg-slate-300 dark:bg-navy-600"></div>
-
-    </div>
-
-    <div class="pb-4 flex-wrap border-b border-slate-200 dark:border-navy-500">
-
-        <ul class="hidden flex-wrap items-center space-x-2 sm:flex">
-
-            <li class="flex items-center space-x-2">
-
-                <a
-                    class="text-grey transition-colors hover:text-primary-focus dark:text-accent-light dark:hover:text-accent"
-                    href="{% dashboard_url user %}">
-
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                         class="size-4"
-                         fill="none"
-                         viewBox="0 0 24 24"
-                         stroke="currentColor">
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M3 10.5L12 3l9 7.5V21a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1v-10.5z"/>
+                        </svg>
+                    </a>
+                    <svg
+                        x-ignore
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="size-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor">
 
                         <path
                             stroke-linecap="round"
                             stroke-linejoin="round"
                             stroke-width="2"
-                            d="M3 10.5L12 3l9 7.5V21a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1v-10.5z"/>
-
+                            d="M9 5l7 7-7 7"/>
                     </svg>
-
-                </a>
-
-                <svg
-                    x-ignore
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="size-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor">
-
-                    <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M9 5l7 7-7 7"/>
-
-                </svg>
-
-            </li>
-
-            <li class="text-primary">
-
-                <strong>Daftar Pretest</strong>
-
-            </li>
-
-        </ul>
-
+                </li>
+                <li class="text-primary">
+                    <strong>Daftar Pretest</strong>
+                </li>
+            </ul>
+        </div>
     </div>
-
-</div>
-
 {% endblock content_title %}
 
 <!-- ================================= -->
@@ -89,250 +63,177 @@
 
 {% for pretest in pretests %}
 <div class="card">
-
     <div class="flex items-center justify-between border-b border-slate-200 px-5 py-4 dark:border-navy-500">
-
         <div>
-
             {% if pretest.pretest_type == "PRETEST" %}
-
                 <span class="badge rounded-full bg-primary/10 text-primary">
-
                     PRETEST
-
                 </span>
-
             {% else %}
-
                 <span class="badge rounded-full bg-warning/10 text-warning">
-
                     POSTTEST
-
                 </span>
-
             {% endif %}
-
         </div>
-
         <div>
-
             {% if pretest.is_active %}
-
                 <span class="badge rounded-full bg-success/10 text-success">
-
                     Aktif
-
                 </span>
-
             {% else %}
-
                 <span class="badge rounded-full bg-error/10 text-error">
-
                     Nonaktif
-
                 </span>
-
             {% endif %}
-
         </div>
-
     </div>
-
     <div class="p-5">
-
         <!-- TITLE -->
-
         <h2 class="text-lg font-semibold text-slate-700 dark:text-navy-100">
-
             {{ pretest.title }}
-
         </h2>
-
         <!-- DESCRIPTION -->
-
         <p class="mt-2 line-clamp-3 text-sm text-slate-500 dark:text-navy-300">
-
             {{ pretest.description|default:"Tidak ada deskripsi." }}
-
         </p>
-
         <!-- INFORMATION -->
-
         <div class="mt-5 rounded-xl bg-slate-100 p-4 dark:bg-navy-700">
-
             <div class="grid grid-cols-2 gap-4 text-sm">
-
                 <div>
-
                     <span class="text-slate-500">
-
                         Lesson
-
                     </span>
-
                     <div class="font-medium">
-
                         {{ pretest.question_set.lesson.name }}
-
                     </div>
-
                 </div>
-
                 <div>
-
                     <span class="text-slate-500">
-
                         Question Set
-
                     </span>
-
                     <div class="font-medium">
-
                         {{ pretest.question_set.name }}
-
                     </div>
-
                 </div>
-
                 <div>
-
                     <span class="text-slate-500">
-
                         Jumlah Soal
-
                     </span>
-
                     <div class="font-medium">
-
                         {{ pretest.question_count }}
-
                     </div>
-
                 </div>
-
                 <div>
-
                     <span class="text-slate-500">
-
                         Durasi
-
                     </span>
-
                     <div class="font-medium">
-
                         {{ pretest.duration }} Menit
-
                     </div>
-
                 </div>
-
             </div>
-
         </div>
 
         <!-- RANDOM OPTION -->
-
         <div class="mt-4 flex flex-wrap gap-2">
-
             {% if pretest.random_question %}
+                <span class="inline-flex items-center gap-2 rounded-full bg-warning/10 px-3 py-1 text-xs font-medium text-warning">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="size-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor">
 
-                <span class="badge bg-info/10 text-info">
+                        <!-- Dice -->
+                        <rect
+                            x="5"
+                            y="5"
+                            width="14"
+                            height="14"
+                            rx="2"
+                            stroke-width="1.8"
+                        />
 
-                    🎲 Random Soal
+                        <!-- Dots -->
+                        <circle cx="9" cy="9" r="1" fill="currentColor"/>
+                        <circle cx="15" cy="15" r="1" fill="currentColor"/>
+                        <circle cx="9" cy="15" r="1" fill="currentColor"/>
+                        <circle cx="15" cy="9" r="1" fill="currentColor"/>
+                        <circle cx="12" cy="12" r="1" fill="currentColor"/>
 
+                    </svg>
+                    <span>Random Soal</span>
                 </span>
-
             {% endif %}
-
             {% if pretest.random_option %}
+                <span class="inline-flex items-center gap-2 rounded-full bg-warning/10 px-3 py-1 text-xs font-medium text-warning">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="size-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor">
 
-                <span class="badge bg-warning/10 text-warning">
+                        <!-- List -->
+                        <path
+                            d="M9 7h10M9 12h10M9 17h10"
+                            stroke-width="2"
+                            stroke-linecap="round"/>
 
-                    🔀 Random Pilihan
+                        <!-- Arrow -->
+                        <path
+                            d="M3 7l2-2m0 0l2 2M5 5v14"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"/>
 
+                    </svg> 
+                    <span>Random Pilihan</span> 
                 </span>
-
-            {% endif %}
-
-        </div>
-
-        <!-- RELEASE -->
-
+            {% endif %} 
+        </div> 
+        <!-- RELEASE --> 
         <div class="mt-5 border-t border-slate-200 pt-4 dark:border-navy-600">
-
             <div class="flex items-center justify-between text-sm">
-
                 <span class="text-slate-500">
-
                     Release
-
                 </span>
-
                 <span class="font-medium">
-
                     {{ pretest.release|date:"d M Y H:i" }}
-
                 </span>
-
             </div>
-
             <div class="mt-2 flex items-center justify-between text-sm">
-
                 <span class="text-slate-500">
-
                     Expired
-
                 </span>
-
                 <span class="font-medium">
-
                     {{ pretest.expired|date:"d M Y H:i" }}
-
                 </span>
-
             </div>
-
         </div>
-                <!-- ================================= -->
+        <!-- ================================= -->
         <!-- STATUS -->
         <!-- ================================= -->
 
         <div class="mt-5">
-
             {% if not pretest.is_active %}
-
                 <div class="rounded-lg bg-error/10 px-4 py-3 text-center text-sm font-medium text-error">
-
                     Pretest Tidak Aktif
-
                 </div>
-
             {% elif pretest.release and pretest.release > now %}
-
                 <div class="rounded-lg bg-warning/10 px-4 py-3 text-center text-sm font-medium text-warning">
-
                     Belum Dibuka
-
                 </div>
-
             {% elif pretest.expired and pretest.expired < now %}
-
                 <div class="rounded-lg bg-error/10 px-4 py-3 text-center text-sm font-medium text-error">
-
                     Waktu Pretest Telah Berakhir
-
                 </div>
-
             {% else %}
-
                 <div class="rounded-lg bg-success/10 px-4 py-3 text-center text-sm font-medium text-success">
-
                     Pretest Sedang Berlangsung
-
                 </div>
-
             {% endif %}
-
         </div>
 
         <!-- ================================= -->
@@ -340,97 +241,60 @@
         <!-- ================================= -->
 
         <div class="mt-5">
-
             {% if not pretest.is_active %}
-
                 <button
                     disabled
                     class="btn w-full rounded-lg bg-slate-300 text-slate-600 cursor-not-allowed">
-
                     Tidak Aktif
-
                 </button>
-
             {% elif pretest.release and pretest.release > now %}
-
                 <button
                     disabled
                     class="btn w-full rounded-lg bg-warning text-white cursor-not-allowed">
-
                     Menunggu Release
-
                 </button>
-
             {% elif pretest.expired and pretest.expired < now %}
-
                 <button
                     disabled
                     class="btn w-full rounded-lg bg-error text-white cursor-not-allowed">
-
                     Sudah Berakhir
-
                 </button>
-
             {% else %}
-
                 <a
                     href="#"
                     class="btn w-full rounded-lg bg-primary font-medium text-white hover:bg-primary-focus">
-
                     Mulai Pretest
-
                 </a>
-
             {% endif %}
-
         </div>
-
     </div>
-
 </div>
 {% empty %}
 
 <div class="col-span-full">
-
     <div class="card p-10 text-center">
-
         <div class="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-slate-100 dark:bg-navy-700">
-
             <svg
                 xmlns="http://www.w3.org/2000/svg"
                 class="size-10 text-slate-400"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor">
-
                 <path
                     stroke-linecap="round"
                     stroke-linejoin="round"
                     stroke-width="1.5"
                     d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2V9m-5-4h5m0 0v5m0-5L10 14" />
-
             </svg>
-
         </div>
-
         <h3 class="mt-5 text-lg font-semibold text-slate-700 dark:text-navy-100">
-
             Belum Ada Pretest
-
         </h3>
-
         <p class="mt-2 text-slate-500 dark:text-navy-300">
-
             Saat ini belum tersedia pretest yang dapat diikuti.
-
         </p>
-
     </div>
-
 </div>
-
 {% endfor %}
-
 </div>
-
 {% endblock content %}
