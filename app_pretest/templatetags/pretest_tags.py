@@ -51,6 +51,57 @@ def lesson_delete_url(user, lesson):
     return "#"
 
 
+# ▀▄▀▄ daftar pretest
+@register.simple_tag
+def pretest_url(user):
+
+    if hasattr(user, "admin"):
+        return "/admin/pretest/"
+
+    elif hasattr(user, "teacher"):
+        return "/teacher/pretest/"
+
+    return "#"
+
+
+# ▀▄▀▄ create pretest
+@register.simple_tag
+def pretest_create_url(user):
+
+    if hasattr(user, "admin"):
+        return "/admin/pretest/create/"
+
+    elif hasattr(user, "teacher"):
+        return "/teacher/pretest/create/"
+
+    return "#"
+
+
+# ▀▄▀▄ update pretest
+@register.simple_tag
+def pretest_update_url(user, pretest):
+
+    if hasattr(user, "admin"):
+        return f"/admin/pretest/{pretest.id}/update/"
+
+    elif hasattr(user, "teacher"):
+        return f"/teacher/pretest/{pretest.id}/update/"
+
+    return "#"
+
+
+# ▀▄▀▄ delete pretest
+@register.simple_tag
+def pretest_delete_url(user, pretest):
+
+    if hasattr(user, "admin"):
+        return f"/admin/pretest/{pretest.id}/delete/"
+
+    elif hasattr(user, "teacher"):
+        return f"/teacher/pretest/{pretest.id}/delete/"
+
+    return "#"
+
 @register.simple_tag
 def pretest_url(user):
 

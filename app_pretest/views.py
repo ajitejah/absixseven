@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect, render
 from django.db import transaction
-from app_pretest.forms import ChoiceOptionFormSet, LessonForm, MatchingPairFormSet, QuestionForm, QuestionSetForm
+from app_pretest.forms import ChoiceOptionFormSet, LessonForm, MatchingPairFormSet, PretestForm, QuestionForm, QuestionSetForm
 
 from .models import Lesson, Pretest, Question, QuestionSet
 
@@ -102,6 +102,102 @@ def pretest(request):
         {
             "pretests": pretests,
         },
+    )
+
+
+# ▀▄▀▄ CREATE PRETEST
+def pretest_create(request):
+
+    if request.method == "POST": 
+        form = PretestForm(request.POST) 
+        if form.is_valid(): 
+            pretest = form.save(commit=False) 
+            pretest.save()
+
+            messages.success(
+                request,
+                "Pretest berhasil dibuat."
+            )
+
+            return redirect(
+                "app_pretest:pretest"
+            )
+
+    else: 
+        form = PretestForm()
+
+    return render(
+        request,
+        "common/pretest-create-update.html",
+        {
+            "form": form,
+            "pretest": None,
+        },
+    )
+
+
+# ▀▄▀▄ UPDATE PRETEST
+def pretest_update(request, pretest_id):
+
+    pretest = get_object_or_404(
+        Pretest,
+        pk=pretest_id,
+    )
+
+    if request.method == "POST":
+
+        form = PretestForm(
+            request.POST,
+            instance=pretest,
+        )
+
+        if form.is_valid():
+
+            form.save()
+
+            messages.success(
+                request,
+                "Pretest berhasil diperbarui."
+            )
+
+            return redirect(
+                "app_pretest:pretest"
+            )
+
+    else:
+
+        form = PretestForm(
+            instance=pretest,
+        )
+
+    return render(
+        request,
+        "common/pretest-create-update.html",
+        {
+            "form": form,
+            "pretest": pretest,
+        },
+    )
+
+# ▀▄▀▄ DELETE PRETEST
+def pretest_delete(request, pretest_id):
+
+    pretest = get_object_or_404(
+        Pretest,
+        pk=pretest_id,
+    )
+
+    title = pretest.title
+
+    pretest.delete()
+
+    messages.success(
+        request,
+        f'Pretest "{title}" berhasil dihapus.'
+    )
+
+    return redirect(
+        "app_pretest:pretest"
     )
 
 # ▀▄▀▄ question list

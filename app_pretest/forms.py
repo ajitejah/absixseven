@@ -1,5 +1,5 @@
 from django import forms
-from .models import ChoiceOption, Lesson, MatchingPair, Question, QuestionSet 
+from .models import ChoiceOption, Lesson, MatchingPair, Pretest, Question, QuestionSet 
 from django.forms import inlineformset_factory
 
 
@@ -53,6 +53,172 @@ class LessonForm(forms.ModelForm):
             raise forms.ValidationError("Lesson sudah ada.")
 
         return name
+
+# ▀▄▀▄ form pretest
+class PretestForm(forms.ModelForm):
+
+    class Meta:
+        model = Pretest
+
+        fields = [
+            "title",
+            "description",
+            "pretest_type",
+            "question_set",
+            "question_count",
+            "duration",
+            "release",
+            "expired",
+            "random_question",
+            "random_option",
+            "is_active",
+        ]
+
+        widgets = {
+
+            "title": forms.TextInput(
+                attrs={
+                    "class": BASE_INPUT_CLASS,
+                    "style": "padding-left:2.5rem;",
+                    "placeholder": "Masukkan judul pretest",
+                    "maxlength": 255,
+                }
+            ),
+
+            "description": forms.Textarea(
+                attrs={
+                    "class": BASE_INPUT_CLASS,
+                    "placeholder": "Deskripsi pretest (opsional)",
+                    "rows": 4,
+                }
+            ),
+
+            "pretest_type": forms.Select(
+                attrs={
+                    "class": BASE_INPUT_CLASS,
+                    "style": "padding-left:2.5rem;",
+                }
+            ),
+
+            "question_set": forms.Select(
+                attrs={
+                    "class": BASE_INPUT_CLASS,
+                    "style": "padding-left:2.5rem;",
+                }
+            ),
+
+            "question_count": forms.NumberInput(
+                attrs={
+                    "class": BASE_INPUT_CLASS,
+                    "style": "padding-left:2.5rem;",
+                    "min": 1,
+                }
+            ),
+
+            "duration": forms.NumberInput(
+                attrs={
+                    "class": BASE_INPUT_CLASS,
+                    "style": "padding-left:2.5rem;",
+                    "min": 1,
+                }
+            ),
+
+            "release": forms.DateTimeInput(
+                attrs={
+                    "type": "datetime-local",
+                    "class": BASE_INPUT_CLASS,
+                },
+                format="%Y-%m-%dT%H:%M",
+            ),
+
+            "expired": forms.DateTimeInput(
+                attrs={
+                    "type": "datetime-local",
+                    "class": BASE_INPUT_CLASS,
+                },
+                format="%Y-%m-%dT%H:%M",
+            ),
+
+            "random_question": forms.CheckboxInput(
+                attrs={
+                    "class": BASE_INPUT_CLASS,
+                }
+            ),
+
+            "random_option": forms.CheckboxInput(
+                attrs={
+                    "class": BASE_INPUT_CLASS,
+                }
+            ),
+
+            "is_active": forms.CheckboxInput(
+                attrs={
+                    "class": CHECKBOX_CLASS,
+                }
+            ),
+        }
+
+        labels = {
+            "title": "Judul",
+            "description": "Deskripsi",
+            "pretest_type": "Jenis",
+            "question_set": "Bank Soal",
+            "question_count": "Jumlah Soal",
+            "duration": "Durasi",
+            "release": "Release",
+            "expired": "Expired",
+            "random_question": "Acak Soal",
+            "random_option": "Acak Pilihan",
+            "is_active": "Aktif",
+        }
+
+    def __init__(self, *args, **kwargs):
+
+        super().__init__(*args, **kwargs)
+
+        # agar datetime-local dapat menampilkan value saat update
+        for field in ["release", "expired"]:
+
+            if self.instance.pk:
+
+                value = getattr(self.instance, field)
+
+                if value:
+
+                    self.initial[field] = value.strftime("%Y-%m-%dT%H:%M")
+
+    def clean(self):
+
+        cleaned_data = super().clean()
+
+        release = cleaned_data.get("release")
+        expired = cleaned_data.get("expired")
+
+        if release and expired and expired <= release:
+
+            self.add_error(
+                "expired",
+                "Tanggal expired harus lebih besar dari release."
+            )
+
+        return cleaned_data
+
+    def clean_question_count(self):
+
+        question_set = self.cleaned_data.get("question_set")
+        question_count = self.cleaned_data.get("question_count")
+
+        if question_set:
+
+            total = question_set.questions.count()
+
+            if question_count > total:
+
+                raise forms.ValidationError(
+                    f"Question Set ini hanya memiliki {total} soal."
+                )
+
+        return question_count
     
 # ▀▄▀▄ form question set/paket soal
 class QuestionSetForm(forms.ModelForm):

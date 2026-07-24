@@ -172,7 +172,7 @@
                 </h2>
 
                 <div class="flex">
-                    <a href="#">
+                    <a href="{% pretest_create_url user %}">
                         <button
                             x-tooltip="'Tambah pretest'"
                             class="btn size-8 rounded-full bg-primary/10 p-0 text-primary hover:bg-primary/20">
@@ -260,7 +260,7 @@
                                     <div class="flex space-x-2">
 
                                         <!-- UPDATE -->
-                                        <a href="{% pretest_url user %}">
+                                        <a href="{% pretest_update_url user pretest %}">
 
                                             <button
                                                 x-tooltip="'Perbaharui pretest'"
