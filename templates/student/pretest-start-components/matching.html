@@ -1,0 +1,43 @@
+<div class="mt-8">
+    <div class="space-y-5">
+        {% for pair in question.random_pairs %}
+            <div class="grid grid-cols-12 gap-4">
+                <div class="col-span-5">
+                    <div
+                        class="rounded-lg bg-slate-100 p-3 font-medium">
+                        {{ pair.left_text }}
+                    </div>
+                </div>
+                <div
+                    class="col-span-2 flex items-center justify-center">
+
+                    ⟶
+
+                </div>
+                <div class="col-span-5">
+                    <select
+                        class="form-select w-full rounded-lg"
+                        name="pair_{{ pair.id }}">
+                        <option value="">
+                            Pilih Jawaban
+                        </option>
+                        {% for option in question.pairs.all %}
+                            <option
+                                value="{{ option.id }}">
+                                {{ option.right_text }}
+
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>

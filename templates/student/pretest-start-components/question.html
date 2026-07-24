@@ -1,0 +1,59 @@
+<div class="card p-6">
+
+    <div class="flex items-center justify-between">
+
+        <h3 class="text-lg font-semibold">
+
+            Soal
+
+            <span id="question-number">
+
+                1
+
+            </span>
+
+        </h3>
+
+        <span>
+
+            Nilai
+
+            {{ question.point }}
+
+        </span>
+
+    </div>
+
+    <div class="mt-5">
+
+        {{ question.question|linebreaks }}
+
+    </div>
+
+    {% if question.attachment %}
+
+        <div class="mt-5">
+
+            <img
+                src="{{ question.attachment.url }}"
+                class="rounded-lg">
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% if question.question_type == "MCQ" %}
+
+    {% include "student/pretest-start-components/mcq.html" %}
+
+{% elif question.question_type == "ESSAY" %}
+
+    {% include "student/pretest-start-components/essay.html" %}
+
+{% elif question.question_type == "MATCHING" %}
+
+    {% include "student/pretest-start-components/matching.html" %}
+
+{% endif %}

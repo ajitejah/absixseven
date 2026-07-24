@@ -1,0 +1,23 @@
+<div class="card mt-4 p-5">
+    <div class="flex items-center justify-between">
+        <span class="font-medium">
+            Progress
+        </span>
+        <span>
+            <span id="answered-count">
+                0
+            </span>
+            /
+            {{ questions.count }}
+        </span>
+    </div>
+    <div class="progress mt-3 h-2 bg-slate-200">
+        <div
+            id="progress-bar"
+            class="progress-bar bg-primary"
+            style="width:0%">
+        </div>
+
+    </div>
+
+</div>

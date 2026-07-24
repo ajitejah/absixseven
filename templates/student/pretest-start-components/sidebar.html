@@ -1,0 +1,57 @@
+<div class="card p-5">
+
+    <h3 class="font-semibold">
+
+        Navigasi Soal
+
+    </h3>
+
+    <div
+        class="mt-4 grid grid-cols-5 gap-2">
+
+        {% for question in questions %}
+
+            <button
+                type="button"
+                class="question-number btn h-10 w-10 rounded-lg bg-slate-100"
+                data-question="{{ question.id }}">
+
+                {{ forloop.counter }}
+
+            </button>
+
+        {% endfor %}
+
+    </div>
+
+    <hr class="my-5">
+
+    <div class="space-y-3 text-sm">
+
+        <div class="flex items-center gap-2">
+
+            <span class="h-4 w-4 rounded bg-slate-200"></span>
+
+            Belum Dijawab
+
+        </div>
+
+        <div class="flex items-center gap-2">
+
+            <span class="h-4 w-4 rounded bg-success"></span>
+
+            Sudah Dijawab
+
+        </div>
+
+        <div class="flex items-center gap-2">
+
+            <span class="h-4 w-4 rounded bg-primary"></span>
+
+            Soal Aktif
+
+        </div>
+
+    </div>
+
+</div>

@@ -15,6 +15,8 @@ urlpatterns = [
     path('<int:pretest_id>/update/', views.pretest_update, name='pretest_update'), 
     path('<int:pretest_id>/delete/', views.pretest_delete, name='pretest_delete'), 
     path("question-set/<int:question_set_id>/info",views.question_set_info,name="question_set_info",),
+
+    path('<int:pretest_id>/working/', views.pretest_start, name='pretest_start'), 
     
     path("question-set", views.question_set, name="question_set",),
     path("question-set/create", views.question_set_create, name="question_set_create",),

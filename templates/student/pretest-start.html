@@ -1,0 +1,341 @@
+{% extends "dashboard_base.html" %}
+{% load custom_tags %}
+
+{% block content %}
+
+<form id="pretest-form" method="POST">
+
+{% csrf_token %}
+
+<div class="grid grid-cols-12 gap-5">
+
+    <!-- ========================= -->
+    <!-- SIDEBAR -->
+    <!-- ========================= -->
+
+    <div class="col-span-12 lg:col-span-3">
+
+        {% include "student/pretest-start-components/header.html" %}
+
+        {% include "student/pretest-start-components/progress.html" %}
+
+        {% include "student/pretest-start-components/sidebar.html" %}
+
+    </div>
+
+
+    <!-- ========================= -->
+    <!-- QUESTION -->
+    <!-- ========================= -->
+
+    <div class="col-span-12 lg:col-span-9">
+
+        <div class="card p-6">
+
+            <div id="question-container">
+
+                {% for question in questions %}
+
+                    <div
+                        class="question-slide {% if not forloop.first %}hidden{% endif %}"
+                        data-index="{{ forloop.counter0 }}">
+
+                        {% include "student/pretest-start-components/question.html" %}
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+            {% include "student/pretest-start-components/navigation.html" %}
+
+        </div>
+
+    </div>
+
+</div>
+
+</form>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        //---------------------------------------------------
+        // ELEMENT
+        //---------------------------------------------------
+
+        const slides = document.querySelectorAll(".question-slide");
+        const questionButtons = document.querySelectorAll(".question-number");
+        const nextBtn = document.getElementById("next-question");
+        const prevBtn = document.getElementById("prev-question");
+        const progressBar = document.getElementById("progress-bar");
+        const answeredCount = document.getElementById("answered-count");
+        const timer = document.getElementById("timer");
+
+        //---------------------------------------------------
+        // CONFIG
+        //---------------------------------------------------
+
+        let current = 0;
+
+        const total = slides.length;
+
+        //---------------------------------------------------
+        // SHOW QUESTION
+        //---------------------------------------------------
+
+        function showQuestion(index){
+            slides.forEach(s=>{
+                s.classList.add("hidden");
+            });
+            slides[index].classList.remove("hidden");
+            current = index;
+            updateNavigation();
+            updateSidebar();
+        }
+
+        //---------------------------------------------------
+        // UPDATE SIDEBAR
+        //---------------------------------------------------
+
+        function updateSidebar(){
+            questionButtons.forEach(btn=>{
+                btn.classList.remove(
+                    "bg-primary",
+                    "text-white"
+                );
+                btn.classList.add(
+                    "bg-slate-100"
+                );
+            });
+
+            questionButtons[current].classList.remove(
+                "bg-slate-100"
+            );
+
+            questionButtons[current].classList.add(
+                "bg-primary",
+                "text-white"
+            );
+        }
+
+        //---------------------------------------------------
+        // NEXT
+        //---------------------------------------------------
+
+        nextBtn.addEventListener("click",function(){
+            if(current < total-1){
+                showQuestion(current+1);
+            }
+        });
+
+        //---------------------------------------------------
+        // PREVIOUS
+        //---------------------------------------------------
+
+        prevBtn.addEventListener("click",function(){
+            if(current>0){
+                showQuestion(current-1);
+            }
+        });
+
+        //---------------------------------------------------
+        // CLICK NUMBER
+        //---------------------------------------------------
+
+        questionButtons.forEach(btn=>{
+            btn.addEventListener("click",function(){
+                showQuestion(
+                    parseInt(
+                        this.dataset.index
+                    )
+                );
+            });
+        });
+
+        //---------------------------------------------------
+        // UPDATE BUTTON
+        //---------------------------------------------------
+
+        function updateNavigation(){
+            prevBtn.disabled = current===0;
+            nextBtn.disabled = current===total-1;
+        }
+
+        //---------------------------------------------------
+        // PROGRESS
+        //---------------------------------------------------
+
+        function updateProgress(){
+            let answered = 0;
+            slides.forEach(slide=>{
+                const radio = slide.querySelector("input[type=radio]:checked");
+                const textarea = slide.querySelector("textarea");
+                const select = slide.querySelector("select");
+                let ok = false;
+                if(radio){
+                    ok = true;
+                }
+
+                if(textarea){
+                    if(textarea.value.trim()!=""){
+                        ok = true;
+                    }
+                }
+
+                if(select){
+                    const selects = slide.querySelectorAll("select");
+                    ok = true;
+                    selects.forEach(s=>{
+                        if(s.value==""){
+                            ok = false;
+                        }
+                    });
+                }
+
+                if(ok){
+                    answered++;
+                }
+            });
+
+            answeredCount.innerHTML = answered;
+            const percent = answered/total*100;
+            progressBar.style.width = percent+"%";
+        }
+
+        //---------------------------------------------------
+        // CHANGE EVENT
+        //---------------------------------------------------
+
+        document.addEventListener("change",function(e){
+            if(
+                e.target.matches("input") ||
+                e.target.matches("textarea") ||
+                e.target.matches("select")
+            ){
+                updateProgress();
+                updateAnsweredStatus();
+            }
+        });
+
+        //---------------------------------------------------
+        // KEYUP ESSAY
+        //---------------------------------------------------
+
+        document.addEventListener("keyup",function(e){
+            if(
+                e.target.matches("textarea")
+            ){
+                updateProgress();
+                updateAnsweredStatus();
+            }
+        });
+
+        //---------------------------------------------------
+        // STATUS NOMOR
+        //---------------------------------------------------
+
+        function updateAnsweredStatus(){
+            slides.forEach((slide,index)=>{
+                const button = questionButtons[index];
+                const radio = slide.querySelector("input[type=radio]:checked");
+                const textarea = slide.querySelector("textarea");
+                const select = slide.querySelector("select");
+                let answered = false;
+                
+                if(radio){
+                    answered=true;
+                }
+
+                if(textarea){
+                    if(textarea.value.trim()!=""){
+                        answered=true;
+                    }
+                }
+
+                if(select){
+                    answered=true;
+                    slide.querySelectorAll("select").forEach(s=>{
+                        if(s.value==""){
+                            answered=false;
+                        }
+                    });
+                }
+
+                button.classList.remove(
+                    "bg-success",
+                    "bg-primary",
+                    "bg-slate-100",
+                    "text-white"
+                );
+
+                if(index===current){
+                    button.classList.add(
+                        "bg-primary",
+                        "text-white"
+                    );
+                }
+
+                else if(answered){
+                    button.classList.add(
+                        "bg-success",
+                        "text-white"
+                    );
+                }
+
+                else{
+                    button.classList.add(
+                        "bg-slate-100"
+                    );
+                }
+            });
+        }
+
+        //---------------------------------------------------
+        // TIMER
+        //---------------------------------------------------
+
+        let duration = parseInt(
+            document.body.dataset.duration
+        );
+
+        function startTimer(){
+            if(!timer) return;
+            const interval = setInterval(function(){
+                let m = Math.floor(duration/60);
+                let s = duration%60;
+                timer.innerHTML =
+                    String(m).padStart(2,"0")
+                    +
+                    ":"
+                    +
+                    String(s).padStart(2,"0");
+
+                if(duration<=300){
+                    timer.classList.add(
+                        "text-error"
+                    );
+                }
+
+                if(duration<=0){
+                    clearInterval(interval);
+                    document.getElementById("pretest-form").submit();
+                }
+                duration--;
+            },1000);
+        }
+
+        //---------------------------------------------------
+        // INIT
+        //---------------------------------------------------
+
+        showQuestion(0);
+        updateProgress();
+        updateAnsweredStatus();
+        startTimer();
+
+    });
+</script>
+{% endblock %}
