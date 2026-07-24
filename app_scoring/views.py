@@ -34,9 +34,16 @@ def evaluation_list(request):
 
     # 👨‍🏫 TEACHER → lihat evaluasi berdasarkan roadmap miliknya (opsional)
     else:
-        evaluations = Evaluation.objects.filter(
-            roadmap__owner=user
-        ).select_related('roadmap', 'student')
+        evaluations = (
+            Evaluation.objects.filter(
+                student__parent=request.user
+            )
+            .select_related(
+                "roadmap",
+                "student",
+                "student__user",
+            )
+        )
     
     evaluations = evaluations.order_by('confirmed', '-id')
 
