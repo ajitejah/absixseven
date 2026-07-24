@@ -185,18 +185,38 @@ def pretest_start(request, pretest_id):
 
         question.random_choices = choices
 
-        # ---------- MATCHING ----------
+        # ---------- MATCHING ---------- 
 
         pairs = list(
             question.pairs.all()
         )
 
+        # pasangan untuk sisi kiri
         if pretest.random_option:
             random.shuffle(pairs)
         else:
             pairs.sort(key=lambda p: p.order)
 
+
         question.random_pairs = pairs
+
+
+        # ==============================
+        # OPTIONS DRAG DROP
+        # ==============================
+
+        options = list(
+            question.pairs.all()
+        )
+
+
+        if pretest.random_option:
+            random.shuffle(options)
+        else:
+            options.sort(key=lambda p: p.order)
+
+
+        question.random_options = options
 
     context = {
         "pretest": pretest,
