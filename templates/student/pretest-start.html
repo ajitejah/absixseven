@@ -61,7 +61,7 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () { 
-        
+
         let dragged=null;
 
         // ==========================
@@ -193,6 +193,13 @@
                 if(typeof updateProgress==="function"){
 
                     updateProgress();
+
+                } 
+
+
+                if(typeof updateAnsweredStatus === "function"){
+
+                    updateAnsweredStatus();
 
                 }
 
