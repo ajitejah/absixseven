@@ -169,80 +169,40 @@
         //---------------------------------------------------
 
         function updateProgress(){
-
             let answered = 0;
-
-            slides.forEach((slide,index)=>{
-
+            slides.forEach(slide=>{
                 const radio = slide.querySelector("input[type=radio]:checked");
                 const textarea = slide.querySelector("textarea");
                 const select = slide.querySelector("select");
-
                 let ok = false;
-
                 if(radio){
                     ok = true;
                 }
 
-                if(textarea && textarea.value.trim()!=""){
-                    ok = true;
+                if(textarea){
+                    if(textarea.value.trim()!=""){
+                        ok = true;
+                    }
                 }
 
                 if(select){
-
+                    const selects = slide.querySelectorAll("select");
                     ok = true;
-
-                    slide.querySelectorAll("select").forEach(s=>{
-
+                    selects.forEach(s=>{
                         if(s.value==""){
                             ok = false;
                         }
-
                     });
-
                 }
-
-                // ==========================
-                // UPDATE WARNA NAVIGASI
-                // ==========================
-
-                const nav = document.querySelectorAll(".question-number")[index];
-
-                nav.classList.remove(
-                    "bg-primary",
-                    "bg-success",
-                    "bg-slate-100",
-                    "text-white"
-                );
-
-                if(index === current){
-
-                    nav.classList.add("bg-primary","text-white");
-
-                }else if(ok){
-
-                    nav.classList.add("bg-success","text-white");
-
-                }else{
-
-                    nav.classList.add("bg-slate-100");
-
-                }
-
-                // ==========================
 
                 if(ok){
                     answered++;
                 }
-
             });
 
             answeredCount.innerHTML = answered;
-
-            const percent = answered / total * 100;
-
-            progressBar.style.width = percent + "%";
-
+            const percent = answered/total*100;
+            progressBar.style.width = percent+"%";
         }
 
         //---------------------------------------------------
