@@ -1,56 +1,30 @@
 <div class="card p-5">
-
     <h3 class="font-semibold">
-
         Navigasi Soal
-
     </h3>
-
     <div class="mt-4" style="display:grid;grid-template-columns:repeat(5,40px);gap:8px;justify-content:center;">
-
         {% for question in questions %}
-
         <button
             type="button"
             class="question-number flex h-10 w-10 items-center justify-center rounded-lg border border-slate-300 bg-slate-100 hover:bg-primary hover:text-white transition"
             data-index="{{ forloop.counter0 }}">
-
             {{ forloop.counter }}
-
         </button>
-
         {% endfor %}
-
     </div>
-
     <hr class="my-5">
-
     <div class="space-y-3 text-sm">
-
         <div class="flex items-center gap-2">
-
             <span class="h-4 w-4 rounded bg-slate-200"></span>
-
             Belum Dijawab
-
         </div>
-
         <div class="flex items-center gap-2">
-
             <span class="h-4 w-4 rounded bg-success"></span>
-
             Sudah Dijawab
-
         </div>
-
         <div class="flex items-center gap-2">
-
             <span class="h-4 w-4 rounded bg-primary"></span>
-
             Soal Aktif
-
         </div>
-
     </div>
-
 </div>
