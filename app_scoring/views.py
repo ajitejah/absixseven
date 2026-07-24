@@ -36,12 +36,14 @@ def evaluation_list(request):
     else:
         evaluations = (
             Evaluation.objects.filter(
-                student__parent=request.user
+                student__parent__user=request.user
             )
             .select_related(
                 "roadmap",
                 "student",
                 "student__user",
+                "student__parent",
+                "student__parent__user",
             )
         )
     
