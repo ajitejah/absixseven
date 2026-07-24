@@ -60,7 +60,7 @@ def pretest_url(user):
     elif hasattr(user, "teacher"):
         return "/teacher/pretest/" 
     
-    elif hasattr(user, "teacher"):
+    elif hasattr(user, "student"):
         return "/student/pretest/"
 
     return "#"
