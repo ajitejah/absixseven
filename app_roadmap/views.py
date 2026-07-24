@@ -649,15 +649,11 @@ def submission_reaction_update(request):
     print("BODY :", request.body)
 
     try:
-        data = json.loads(request.body)
-
-        print("DATA :", data)
+        data = json.loads(request.body) 
 
         submission_id = data.get("submission")
         emoji = data.get("reaction")
-
-        print("SUBMISSION :", submission_id)
-        print("EMOJI :", emoji)
+ 
 
         submission = Submission.objects.get(id=submission_id)
 
