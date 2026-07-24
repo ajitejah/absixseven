@@ -682,7 +682,8 @@ def submission_reaction_update(request):
 
         return JsonResponse({
             "success": False,
-            "message": str(e)
+            "message": str(e),
+            "traceback": traceback.format_exc(),
         }, status=400)
     
 # ▀▄▀▄ fungsi create SUBMISSION
