@@ -261,7 +261,7 @@
                 </button>
             {% else %}
                 <a
-                    href="{% url 'student_pretest:pretest_start' %}"
+                    href="{% url 'student_pretest:pretest_start' pretest.id %}"
                     class="btn w-full rounded-lg bg-primary font-medium text-white hover:bg-primary-focus">
                     Mulai Pretest
                 </a>
