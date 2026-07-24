@@ -128,7 +128,7 @@ def pretest_create(request):
 
     return render(
         request,
-        "common/pretest-create-update.html",
+        "teacher/pretest-create-update.html",
         {
             "form": form,
             "pretest": None,
@@ -172,7 +172,7 @@ def pretest_update(request, pretest_id):
 
     return render(
         request,
-        "common/pretest-create-update.html",
+        "teacher/pretest-create-update.html",
         {
             "form": form,
             "pretest": pretest,
