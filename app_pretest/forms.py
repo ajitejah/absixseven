@@ -141,13 +141,13 @@ class PretestForm(forms.ModelForm):
 
             "random_question": forms.CheckboxInput(
                 attrs={
-                    "class": BASE_INPUT_CLASS,
+                    "class": CHECKBOX_CLASS,
                 }
             ),
 
             "random_option": forms.CheckboxInput(
                 attrs={
-                    "class": BASE_INPUT_CLASS,
+                    "class": CHECKBOX_CLASS,
                 }
             ),
 
