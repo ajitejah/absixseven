@@ -98,7 +98,7 @@ def pretest(request):
 
     pretests = Pretest.objects.all().order_by("title")
 
-    if hasattr(user, 'teacher'):
+    if hasattr(user, 'teacher') or hasattr(user, 'admin') :
         return render(
             request,
             "teacher/pretest.html",
