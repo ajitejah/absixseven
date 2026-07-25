@@ -5,7 +5,10 @@ from django.db import transaction
 from app_pretest.forms import ChoiceOptionFormSet, LessonForm, MatchingPairFormSet, PretestForm, QuestionForm, QuestionSetForm
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404
-from .models import Lesson, Pretest, Question, QuestionSet
+from .models import Answer, Attempt, Lesson, Pretest, Question, QuestionSet
+from django.db import transaction
+from django.utils import timezone
+
 from app_pretest.models import ( 
     Question,
     ChoiceOption,
@@ -125,6 +128,114 @@ def pretest(request):
 
 @login_required
 def pretest_start(request, pretest_id):
+
+    # ===========================================
+    # SUBMIT PRETEST
+    # ===========================================
+
+    if request.method == "POST":
+
+        student = request.user.student
+
+        with transaction.atomic():
+
+            attempt, created = Attempt.objects.get_or_create(
+                pretest=pretest,
+                student=student,
+            )
+
+            # jika submit ulang
+            attempt.answers.all().delete()
+
+            total_question = 0
+            blank_answer = 0
+
+            questions = Question.objects.filter(
+                question_set=pretest.question_set
+            ).prefetch_related(
+                "pairs"
+            )
+
+            for question in questions:
+
+                total_question += 1
+
+                # ==================================
+                # MULTIPLE CHOICE
+                # ==================================
+
+                if question.question_type == Question.Type.MULTIPLE_CHOICE:
+
+                    option_id = request.POST.get(
+                        f"question_{question.id}"
+                    )
+
+                    Answer.objects.create(
+                        attempt=attempt,
+                        question=question,
+                        selected_option_id=option_id if option_id else None,
+                    )
+
+                    if not option_id:
+                        blank_answer += 1
+
+                # ==================================
+                # ESSAY
+                # ==================================
+
+                elif question.question_type == Question.Type.ESSAY:
+
+                    essay = request.POST.get(
+                        f"question_{question.id}",
+                        ""
+                    ).strip()
+
+                    Answer.objects.create(
+                        attempt=attempt,
+                        question=question,
+                        essay_answer=essay,
+                    )
+
+                    if essay == "":
+                        blank_answer += 1
+
+                # ==================================
+                # MATCHING
+                # ==================================
+
+                elif question.question_type == Question.Type.MATCHING:
+
+                    matching = {}
+
+                    for pair in question.pairs.all():
+
+                        value = request.POST.get(
+                            f"question_{question.id}_pair_{pair.id}"
+                        )
+
+                        if value:
+                            matching[str(pair.id)] = value
+
+                    Answer.objects.create(
+                        attempt=attempt,
+                        question=question,
+                        matching_answer=matching,
+                    )
+
+                    if len(matching) == 0:
+                        blank_answer += 1
+
+            attempt.total_question = total_question
+            attempt.blank_answer = blank_answer
+            attempt.status = Attempt.Status.SUBMITTED
+            attempt.submitted_at = timezone.now()
+
+            attempt.save()
+
+        return redirect(
+            "student:pretest",
+            attempt.pk,
+        )
 
     pretest = get_object_or_404(
         Pretest.objects.select_related(

@@ -64,10 +64,7 @@
 
         let dragged=null;
 
-        // ==========================
-        // DRAG START
-        // ==========================
-
+        // ▀▄▀▄ start drag
         document.querySelectorAll(".drag-item").forEach(item=>{
 
             item.addEventListener("dragstart",function(){
@@ -90,10 +87,7 @@
 
         });
 
-        // ==========================
-        // DROP ZONE
-        // ==========================
-
+        // ▀▄▀▄ drop zone
         document.querySelectorAll(".drop-zone").forEach(zone=>{
 
             zone.addEventListener("dragover",function(e){
@@ -198,10 +192,7 @@
 
         });
         
-        //---------------------------------------------------
-        // ELEMENT
-        //---------------------------------------------------
-
+        // ▀▄▀▄ get element
         const slides    = document.querySelectorAll(".question-slide");
         const questionButtons = document.querySelectorAll(".question-number");
         const nextBtn = document.getElementById("next-question");
@@ -209,19 +200,12 @@
         const progressBar = document.getElementById("progress-bar");
         const answeredCount = document.getElementById("answered-count");
         const timer = document.getElementById("timer");
-
-        //---------------------------------------------------
-        // CONFIG
-        //---------------------------------------------------
-
-        let current = 0;
-
+ 
+        // ▀▄▀▄ configuration 
+        let current = 0; 
         const total = slides.length;
-
-        //---------------------------------------------------
-        // SHOW QUESTION
-        //---------------------------------------------------
-
+ 
+        // ▀▄▀▄ tampilkan question  
         function showQuestion(index){
             slides.forEach(s=>{
                 s.classList.add("hidden");
@@ -231,11 +215,8 @@
             updateNavigation();
             updateSidebar();
         }
-
-        //---------------------------------------------------
-        // UPDATE SIDEBAR
-        //---------------------------------------------------
-
+ 
+        // ▀▄▀▄ update sidebar (tombol soal-soal) 
         function updateSidebar(){
             questionButtons.forEach(btn=>{
                 btn.classList.remove(
@@ -258,31 +239,35 @@
 
             updateAnsweredStatus();
         }
+ 
+        // ▀▄▀▄ tombol next 
+        nextBtn.addEventListener("click", function(){
 
-        //---------------------------------------------------
-        // NEXT
-        //---------------------------------------------------
+            // Jika belum soal terakhir
+            if(current < total - 1){
 
-        nextBtn.addEventListener("click",function(){
-            if(current < total-1){
-                showQuestion(current+1);
+                showQuestion(current + 1);
+                return;
+
             }
+
+            // Soal terakhir
+            if(confirm("Semua jawaban akan dikumpulkan. Lanjutkan?")){
+
+                document.getElementById("pretest-form").submit();
+
+            }
+
         });
 
-        //---------------------------------------------------
-        // PREVIOUS
-        //---------------------------------------------------
-
+        // ▀▄▀▄ tombol previous/sebelumnya
         prevBtn.addEventListener("click",function(){
             if(current>0){
                 showQuestion(current-1);
             }
         });
 
-        //---------------------------------------------------
-        // CLICK NUMBER
-        //---------------------------------------------------
-
+        // ▀▄▀▄ tombol click number
         questionButtons.forEach(btn=>{
             btn.addEventListener("click",function(){
                 showQuestion(
@@ -293,19 +278,34 @@
             });
         });
 
-        //---------------------------------------------------
-        // UPDATE BUTTON
-        //---------------------------------------------------
-
+        // ▀▄▀▄ tombol update button next dan preveous
         function updateNavigation(){
-            prevBtn.disabled = current===0;
-            nextBtn.disabled = current===total-1;
+
+            prevBtn.disabled = (current === 0);
+
+            // Tombol Next selalu aktif
+            nextBtn.disabled = false;
+
+            if(current === total - 1){
+
+                nextBtn.innerHTML = `
+                    <i class="fa-solid fa-paper-plane mr-2"></i>
+                    Kumpulkan
+                `;
+
+            }
+            else{
+
+                nextBtn.innerHTML = `
+                    Selanjutnya
+                    <i class="fa-solid fa-arrow-right ml-2"></i>
+                `;
+
+            }
+
         }
 
-        //---------------------------------------------------
-        // PROGRESS
-        //---------------------------------------------------
-
+        // ▀▄▀▄ update progress bar
         function updateProgress(){
 
             let answered = 0;
@@ -383,10 +383,7 @@
             progressBar.style.width = percent + "%";
         }
 
-        //---------------------------------------------------
-        // CHANGE EVENT
-        //---------------------------------------------------
-
+        // ▀▄▀▄ change event
         document.addEventListener("change",function(e){
             if(
                 e.target.matches("input") ||
@@ -398,10 +395,7 @@
             }
         });
 
-        //---------------------------------------------------
-        // KEYUP ESSAY
-        //---------------------------------------------------
-
+        // ▀▄▀▄ keyup essay
         document.addEventListener("keyup",function(e){
             if(
                 e.target.matches("textarea")
@@ -411,10 +405,7 @@
             }
         });
 
-        //---------------------------------------------------
-        // STATUS NOMOR
-        //---------------------------------------------------
-
+        // ▀▄▀▄ status nomor
         function updateAnsweredStatus(){
 
             slides.forEach((slide,index)=>{
@@ -520,10 +511,7 @@
 
         }
 
-        //---------------------------------------------------
-        // TIMER
-        //---------------------------------------------------
-
+        // ▀▄▀▄ timer
         let duration = parseInt(
             document.body.dataset.duration
         );
@@ -554,10 +542,7 @@
             },1000);
         }
 
-        //---------------------------------------------------
-        // INIT
-        //--------------------------------------------------- 
-
+        // ▀▄▀▄ init
         showQuestion(0);
         updateProgress();
         updateAnsweredStatus();
