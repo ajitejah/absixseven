@@ -127,7 +127,99 @@ def pretest(request):
 
 
 @login_required
-def pretest_start(request, pretest_id):
+def pretest_start(request, pretest_id): 
+
+    pretest = get_object_or_404(
+        Pretest.objects.select_related(
+            "question_set",
+            "question_set__lesson",
+        ),
+        pk=pretest_id,
+        is_active=True,
+    )
+
+    # ===========================================
+    # AMBIL SOAL
+    # ===========================================
+
+    questions = list(
+        Question.objects.filter(
+            question_set=pretest.question_set
+        ).prefetch_related(
+            "choices",
+            "pairs",
+        )
+    )
+
+    # ===========================================
+    # RANDOM SOAL
+    # ===========================================
+
+    if pretest.random_question:
+        import random
+        random.shuffle(questions)
+    else:
+        questions.sort(key=lambda q: (q.order, q.id))
+
+    # ===========================================
+    # BATASI JUMLAH SOAL
+    # ===========================================
+
+    questions = questions[:pretest.question_count]
+
+    # ===========================================
+    # RANDOM PILIHAN
+    # ===========================================
+
+    import random
+
+    for question in questions:
+
+        # ---------- MCQ ----------
+
+        choices = list(
+            question.choices.all()
+        )
+
+        if pretest.random_option:
+            random.shuffle(choices)
+        else:
+            choices.sort(key=lambda c: c.order)
+
+        question.random_choices = choices
+
+        # ---------- MATCHING ---------- 
+
+        pairs = list(
+            question.pairs.all()
+        )
+
+        # pasangan untuk sisi kiri
+        if pretest.random_option:
+            random.shuffle(pairs)
+        else:
+            pairs.sort(key=lambda p: p.order)
+
+
+        question.random_pairs = pairs
+
+
+        # ==============================
+        # OPTIONS DRAG DROP
+        # ==============================
+
+        options = list(
+            question.pairs.all()
+        )
+
+
+        if pretest.random_option:
+            random.shuffle(options)
+        else:
+            options.sort(key=lambda p: p.order)
+
+
+        question.random_options = options
 
     # ===========================================
     # SUBMIT PRETEST
@@ -236,98 +328,6 @@ def pretest_start(request, pretest_id):
             "student:pretest",
             attempt.pk,
         )
-
-    pretest = get_object_or_404(
-        Pretest.objects.select_related(
-            "question_set",
-            "question_set__lesson",
-        ),
-        pk=pretest_id,
-        is_active=True,
-    )
-
-    # ===========================================
-    # AMBIL SOAL
-    # ===========================================
-
-    questions = list(
-        Question.objects.filter(
-            question_set=pretest.question_set
-        ).prefetch_related(
-            "choices",
-            "pairs",
-        )
-    )
-
-    # ===========================================
-    # RANDOM SOAL
-    # ===========================================
-
-    if pretest.random_question:
-        import random
-        random.shuffle(questions)
-    else:
-        questions.sort(key=lambda q: (q.order, q.id))
-
-    # ===========================================
-    # BATASI JUMLAH SOAL
-    # ===========================================
-
-    questions = questions[:pretest.question_count]
-
-    # ===========================================
-    # RANDOM PILIHAN
-    # ===========================================
-
-    import random
-
-    for question in questions:
-
-        # ---------- MCQ ----------
-
-        choices = list(
-            question.choices.all()
-        )
-
-        if pretest.random_option:
-            random.shuffle(choices)
-        else:
-            choices.sort(key=lambda c: c.order)
-
-        question.random_choices = choices
-
-        # ---------- MATCHING ---------- 
-
-        pairs = list(
-            question.pairs.all()
-        )
-
-        # pasangan untuk sisi kiri
-        if pretest.random_option:
-            random.shuffle(pairs)
-        else:
-            pairs.sort(key=lambda p: p.order)
-
-
-        question.random_pairs = pairs
-
-
-        # ==============================
-        # OPTIONS DRAG DROP
-        # ==============================
-
-        options = list(
-            question.pairs.all()
-        )
-
-
-        if pretest.random_option:
-            random.shuffle(options)
-        else:
-            options.sort(key=lambda p: p.order)
-
-
-        question.random_options = options
 
     context = {
         "pretest": pretest,
