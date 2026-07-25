@@ -115,8 +115,7 @@ def pretest(request):
             {
                 "pretests": pretests,
             },
-        )
-    
+        ) 
     elif hasattr(user, 'student'):
 
         pretests = (
@@ -142,7 +141,7 @@ def pretest(request):
             },
         )
 
-
+# ▀▄▀▄ preent start
 @login_required
 def pretest_start(request, pretest_id): 
 
