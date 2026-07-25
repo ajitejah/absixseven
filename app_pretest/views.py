@@ -325,7 +325,7 @@ def pretest_start(request, pretest_id):
             attempt.save()
 
         return redirect(
-            "student:pretest",
+            "student_pretest:pretest",
             attempt.pk,
         )
 
