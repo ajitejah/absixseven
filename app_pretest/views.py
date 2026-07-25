@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.db.models import Prefetch
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.db import transaction
@@ -117,6 +118,22 @@ def pretest(request):
         )
     
     elif hasattr(user, 'student'):
+
+        pretests = (
+            Pretest.objects
+            .select_related("question_set", "question_set__lesson")
+            .prefetch_related(
+                Prefetch(
+                    "attempts",
+                    queryset=Attempt.objects.filter(
+                        student=user.student
+                    ),
+                    to_attr="student_attempts",
+                )
+            )
+            .order_by("title")
+        )
+        
         return render(
             request,
             "student/pretest.html",
