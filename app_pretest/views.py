@@ -175,7 +175,8 @@ def pretest_start(request, pretest_id):
         )
 
     # ▀▄ ambil soal
-    questions = (Question.objects.filter(
+    questions = list(
+        Question.objects.filter(
             question_set=pretest.question_set
         ).prefetch_related(
             "choices",
