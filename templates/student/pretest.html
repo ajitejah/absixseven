@@ -89,21 +89,23 @@
         </div>
     </div>
     <div class="p-5">
-        <!-- TITLE -->
+
+        <!-- ▀▄ title -->
         <h2 class="text-lg font-semibold text-slate-700 dark:text-navy-100">
             {{ pretest.title }}
         </h2>
-        <!-- DESCRIPTION -->
+
+        <!-- ▀▄ deskripsi -->
         <p class="mt-2 line-clamp-3 text-sm text-slate-500 dark:text-navy-300">
             {{ pretest.description|default:"Tidak ada deskripsi." }}
         </p>
 
-        <!-- INFORMATION -->
+        <!-- ▀▄ informasi -->
         <div class="mt-5 rounded-xl bg-slate-100 p-4 dark:bg-navy-700">
 
             <div class="grid grid-cols-2 gap-4 text-sm">
 
-                <!-- LESSON -->
+                <!-- ▀▄ lesson -->
                 <div>
                     <span class="text-slate-500">
                         Lesson
@@ -113,7 +115,7 @@
                     </div>
                 </div>
 
-                <!-- QUESTION SET -->
+                <!-- ▀▄ question list -->
                 <div>
                     <span class="text-slate-500">
                         Question Set
@@ -123,7 +125,7 @@
                     </div>
                 </div>
 
-                <!-- JUMLAH SOAL -->
+                <!-- ▀▄ jumlah soal -->
                 <div>
                     <span class="text-slate-500">
                         Jumlah Soal
@@ -133,7 +135,7 @@
                     </div>
                 </div>
 
-                <!-- DURASI -->
+                <!-- ▀▄ durasi -->
                 <div>
                     <span class="text-slate-500">
                         Durasi
@@ -143,7 +145,7 @@
                     </div>
                 </div>
 
-                <!-- NILAI -->
+                <!-- ▀▄ nilai -->
                 {% if attempt %}
                     <div class="col-span-2 border-t border-slate-200 pt-4 dark:border-navy-500">
                         <div class="flex items-center justify-between">
@@ -171,10 +173,9 @@
                 {% endif %}
 
             </div>
-
         </div>
 
-        <!-- RANDOM OPTION -->
+        <!-- ▀▄ random option -->
         <div class="mt-4 flex flex-wrap gap-2">
             {% if pretest.random_question %}
                 <span class="inline-flex items-center gap-2 rounded-full bg-warning/10 px-3 py-1 text-xs font-medium text-warning">
@@ -233,7 +234,8 @@
                 </span>
             {% endif %} 
         </div> 
-        <!-- RELEASE --> 
+        
+        <!-- ▀▄ release -->
         <div class="mt-5 border-t border-slate-200 pt-4 dark:border-navy-600">
             <div class="flex items-center justify-between text-sm">
                 <span class="text-slate-500">
@@ -252,10 +254,8 @@
                 </span>
             </div>
         </div>
-        <!-- ================================= -->
-        <!-- STATUS -->
-        <!-- ================================= -->
 
+        <!-- ▀▄ status -->
         <div class="mt-5">
             {% if not pretest.is_active %}
                 <div class="rounded-lg bg-error/10 px-4 py-3 text-center text-sm font-medium text-error">
@@ -276,10 +276,7 @@
             {% endif %}
         </div>
 
-        <!-- ================================= -->
-        <!-- BUTTON -->
-        <!-- ================================= -->
-
+        <!-- ▀▄ button -->
         <div class="mt-5">
             {% if not pretest.is_active %}
                 <button
