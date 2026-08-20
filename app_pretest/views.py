@@ -107,35 +107,47 @@ def lesson_delete(request, lesson_id):
 
 # ▀▄▀▄ menampilkan seluruh pretest
 def pretest(request):
+
     user = request.user
 
-    pretests = Pretest.objects.all().order_by("title")
+    # ▀▄ TEACHER / ADMIN 
+    if hasattr(user, 'teacher') or hasattr(user, 'admin'):
 
-    if hasattr(user, 'teacher') or hasattr(user, 'admin') :
+        pretests = (
+            Pretest.objects
+            .all()
+            .order_by("title")
+        )
+
         return render(
             request,
             "teacher/pretest.html",
             {
                 "pretests": pretests,
             },
-        ) 
+        )
+
+    # ▀▄ STUDENT 
     elif hasattr(user, 'student'):
 
         pretests = (
             Pretest.objects
-            .select_related("question_set", "question_set__lesson")
+            .select_related(
+                "question_set",
+                "question_set__lesson",
+            )
             .prefetch_related(
                 Prefetch(
                     "attempts",
                     queryset=Attempt.objects.filter(
-                        student=user.student
+                        student=user.student,
                     ),
                     to_attr="student_attempts",
                 )
             )
             .order_by("title")
         )
-        
+
         return render(
             request,
             "student/pretest.html",
