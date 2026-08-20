@@ -1,14 +1,17 @@
 from django.contrib import messages
 from django.db.models import Prefetch
+import json
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.db import transaction
 from app_pretest.forms import ChoiceOptionFormSet, LessonForm, MatchingPairFormSet, PretestForm, QuestionForm, QuestionSetForm
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 from django.shortcuts import render, get_object_or_404
 from .models import Answer, Attempt, Lesson, Pretest, Question, QuestionSet
 from django.db import transaction
-from django.utils import timezone
+from django.utils import timezone  
+import random
 
 from app_pretest.models import ( 
     Question,
@@ -154,10 +157,7 @@ def pretest_start(request, pretest_id):
         is_active=True,
     )
 
-    # ===========================================
-    # AMBIL SOAL
-    # ===========================================
-
+    # ▀▄ ambil soal
     questions = list(
         Question.objects.filter(
             question_set=pretest.question_set
@@ -167,32 +167,19 @@ def pretest_start(request, pretest_id):
         )
     )
 
-    # ===========================================
-    # RANDOM SOAL
-    # ===========================================
-
-    if pretest.random_question:
-        import random
+    # ▀▄ RANDOM SOAL 
+    if pretest.random_question: 
         random.shuffle(questions)
     else:
         questions.sort(key=lambda q: (q.order, q.id))
 
-    # ===========================================
-    # BATASI JUMLAH SOAL
-    # ===========================================
-
+    # ▀▄ BATASI JUMLAH SOAL 
     questions = questions[:pretest.question_count]
 
-    # ===========================================
-    # RANDOM PILIHAN
-    # ===========================================
-
-    import random
-
+    # ▀▄ RANDOM PILIHAN   
     for question in questions:
 
-        # ---------- MCQ ----------
-
+        # ▀▄ ---------- MCQ ---------- 
         choices = list(
             question.choices.all()
         )
@@ -204,43 +191,32 @@ def pretest_start(request, pretest_id):
 
         question.random_choices = choices
 
-        # ---------- MATCHING ---------- 
-
+        # ▀▄ ---------- MATCHING ---------- 
         pairs = list(
             question.pairs.all()
         )
 
-        # pasangan untuk sisi kiri
+        # ▀▄ pasangan untuk sisi kiri
         if pretest.random_option:
             random.shuffle(pairs)
         else:
             pairs.sort(key=lambda p: p.order)
 
-
         question.random_pairs = pairs
 
-
-        # ==============================
-        # OPTIONS DRAG DROP
-        # ==============================
-
+        # ▀▄ OPTIONS DRAG DROP  
         options = list(
             question.pairs.all()
         )
-
 
         if pretest.random_option:
             random.shuffle(options)
         else:
             options.sort(key=lambda p: p.order)
 
-
         question.random_options = options
 
-    # ===========================================
-    # SUBMIT PRETEST
-    # ===========================================
-
+    # ▀▄ SUBMIT PRETEST 
     if request.method == "POST":
 
         student = request.user.student
@@ -252,7 +228,7 @@ def pretest_start(request, pretest_id):
                 student=student,
             )
 
-            # jika submit ulang
+            # ▀▄ jika submit ulang
             attempt.answers.all().delete()
 
             total_question = 0
@@ -268,10 +244,7 @@ def pretest_start(request, pretest_id):
 
                 total_question += 1
 
-                # ==================================
-                # MULTIPLE CHOICE
-                # ==================================
-
+                # ▀▄ MULTIPLE CHOICE 
                 if question.question_type == Question.Type.MULTIPLE_CHOICE:
 
                     option_id = request.POST.get(
@@ -287,10 +260,7 @@ def pretest_start(request, pretest_id):
                     if not option_id:
                         blank_answer += 1
 
-                # ==================================
-                # ESSAY
-                # ==================================
-
+                # ▀▄ ESSAY 
                 elif question.question_type == Question.Type.ESSAY:
 
                     essay = request.POST.get(
@@ -307,16 +277,12 @@ def pretest_start(request, pretest_id):
                     if essay == "":
                         blank_answer += 1
 
-                # ==================================
-                # MATCHING
-                # ==================================
-
+                # ▀▄ MATCHING 
                 elif question.question_type == Question.Type.MATCHING:
 
                     matching = {}
 
                     for pair in question.pairs.all():
-
                         value = request.POST.get(
                             f"question_{question.id}_pair_{pair.id}"
                         )
@@ -341,8 +307,7 @@ def pretest_start(request, pretest_id):
             attempt.save()
 
         return redirect(
-            "student_pretest:pretest",
-            attempt.pk,
+            "student_pretest:pretest"
         )
 
     context = {
@@ -354,6 +319,151 @@ def pretest_start(request, pretest_id):
         request,
         "student/pretest-start.html",
         context,
+    )
+
+# ▀▄▀▄ answer save 
+@login_required
+@require_POST
+def answer_save(request, attempt_id):
+
+    student = request.user.student
+
+    # ==========================================
+    # AMBIL ATTEMPT
+    # ==========================================
+    attempt = get_object_or_404(
+        Attempt,
+        pk=attempt_id,
+        student=student,
+        status=Attempt.Status.DRAFT,
+    )
+
+    # ==========================================
+    # AMBIL QUESTION
+    # ==========================================
+    question_id = request.POST.get("question_id")
+
+    if not question_id:
+        return JsonResponse(
+            {
+                "success": False,
+                "message": "Question ID tidak ditemukan.",
+            },
+            status=400,
+        )
+
+    question = get_object_or_404(
+        Question,
+        pk=question_id,
+    )
+
+    # ==========================================
+    # VALIDASI QUESTION
+    # HARUS MILIK PRETEST ATTEMPT
+    # ==========================================
+    if question.question_set_id != attempt.pretest.question_set_id:
+        return JsonResponse(
+            {
+                "success": False,
+                "message": "Question tidak termasuk dalam pretest.",
+            },
+            status=400,
+        )
+
+    # ==========================================
+    # DEFAULT ANSWER
+    # ==========================================
+    defaults = {
+        "selected_option_id": None,
+        "essay_answer": "",
+        "matching_answer": {},
+    }
+
+    # ==========================================
+    # MULTIPLE CHOICE
+    # ==========================================
+    if question.question_type == Question.Type.MULTIPLE_CHOICE:
+
+        option_id = request.POST.get("option_id")
+
+        if option_id:
+            defaults["selected_option_id"] = option_id
+
+    # ==========================================
+    # ESSAY
+    # ==========================================
+    elif question.question_type == Question.Type.ESSAY:
+
+        defaults["essay_answer"] = request.POST.get(
+            "essay_answer",
+            "",
+        ).strip()
+
+    # ==========================================
+    # MATCHING
+    # ==========================================
+    elif question.question_type == Question.Type.MATCHING:
+
+        matching_raw = request.POST.get(
+            "matching_answer",
+            "{}",
+        )
+
+        try:
+            matching_answer = json.loads(matching_raw)
+
+        except (json.JSONDecodeError, TypeError):
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": "Format matching answer tidak valid.",
+                },
+                status=400,
+            )
+
+        if not isinstance(matching_answer, dict):
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": "Matching answer harus berupa object.",
+                },
+                status=400,
+            )
+
+        defaults["matching_answer"] = matching_answer
+
+    # ==========================================
+    # TIPE QUESTION TIDAK DIKENAL
+    # ==========================================
+    else:
+        return JsonResponse(
+            {
+                "success": False,
+                "message": "Tipe question tidak didukung.",
+            },
+            status=400,
+        )
+
+    # ==========================================
+    # SAVE / UPDATE ANSWER
+    # ==========================================
+    answer, created = Answer.objects.update_or_create(
+        attempt=attempt,
+        question=question,
+        defaults=defaults,
+    )
+
+    # ==========================================
+    # RESPONSE
+    # ==========================================
+    return JsonResponse(
+        {
+            "success": True,
+            "created": created,
+            "answer_id": answer.id,
+            "attempt_id": attempt.id,
+            "question_id": question.id,
+        }
     )
 
 # ▀▄▀▄ AJAX informasi Question Set

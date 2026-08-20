@@ -36,9 +36,9 @@
 
                 {% for question in questions %}
 
-                    <div
-                        class="question-slide {% if not forloop.first %}hidden{% endif %}"
-                        data-index="{{ forloop.counter0 }}">
+                    <div class="question-slide {% if not forloop.first %}hidden{% endif %}"
+                        data-index="{{ forloop.counter0 }}"
+                        data-question-id="{{ question.id }}">
 
                         {% include "student/pretest-start-components/question.html" %}
 
@@ -62,6 +62,7 @@
 <script>
     document.addEventListener("DOMContentLoaded", function () { 
 
+        const ANSWER_SAVE_URL = "{% url 'student_pretest:answer_save' attempt.id %}";
         let dragged=null;
 
         // ▀▄▀▄ start drag
@@ -186,7 +187,13 @@
 
                 updateProgress();
                 updateAnsweredStatus(); 
-                dragged=null;
+
+                // AJAX SAVE
+                saveAnswer(
+                    this.closest(".question-slide")
+                );
+
+                dragged = null;
 
             });
 
@@ -204,6 +211,149 @@
         // ▀▄▀▄ configuration 
         let current = 0; 
         const total = slides.length;
+
+        // ▀▄▀▄ AJAX SAVE ANSWER 
+        let saveRequests = new Set();
+
+        async function saveAnswer(slide) {
+
+            const questionId = slide.dataset.questionId;
+
+            if (!questionId) {
+                console.error("Question ID tidak ditemukan.");
+                return;
+            }
+
+            const formData = new FormData();
+
+            formData.append("question_id", questionId);
+
+            // ▀▄▀▄ multiple choice
+            const radio = slide.querySelector(
+                'input[type="radio"]:checked'
+            );
+
+            if (radio) {
+
+                formData.append(
+                    "option_id",
+                    radio.value
+                );
+            }
+
+            // ▀▄▀▄ essay
+            const textarea = slide.querySelector("textarea");
+
+            if (textarea) {
+
+                formData.append(
+                    "essay_answer",
+                    textarea.value
+                );
+            }
+
+            // ▀▄▀▄ matching
+            const matchingInputs = slide.querySelectorAll(".matching-input");
+
+            if (matchingInputs.length) { 
+                const matchingAnswer = {}; 
+                matchingInputs.forEach(input => { 
+                    const pairId = input.dataset.pairId; 
+                    if (pairId) {
+                        matchingAnswer[pairId] =
+                            input.value || "";
+                    }
+                });
+
+                formData.append(
+                    "matching_answer",
+                    JSON.stringify(matchingAnswer)
+                );
+            }
+
+            // ▀▄▀▄ select
+            const selects =
+                slide.querySelectorAll("select");
+
+            if (selects.length && !radio && !textarea && !matchingInputs.length) {
+
+                const selected = {};
+
+                selects.forEach(select => {
+
+                    const pairId = select.dataset.pairId;
+
+                    if (pairId) {
+
+                        selected[pairId] =
+                            select.value || "";
+                    }
+                });
+
+                formData.append(
+                    "matching_answer",
+                    JSON.stringify(selected)
+                );
+            }
+
+            // ▀▄▀▄ csrf
+            const csrfToken =
+                document.querySelector(
+                    "[name=csrfmiddlewaretoken]"
+                ).value;
+
+            // ▀▄▀▄ request ID
+            const requestKey =
+                `${questionId}`;
+
+            saveRequests.add(requestKey);
+
+            try {
+
+                const response = await fetch(
+                    ANSWER_SAVE_URL,
+                    {
+                        method: "POST",
+                        headers: {
+                            "X-CSRFToken": csrfToken,
+                        },
+                        body: formData,
+                    }
+                );
+
+                const data = await response.json();
+
+                if (!response.ok || !data.success) {
+
+                    throw new Error(
+                        data.message ||
+                        "Gagal menyimpan jawaban."
+                    );
+                }
+
+                console.log(
+                    `Jawaban soal ${questionId} tersimpan.`,
+                    data
+                );
+
+                return data;
+
+            }
+            catch (error) {
+
+                console.error(
+                    `Gagal menyimpan soal ${questionId}:`,
+                    error
+                );
+
+                return null;
+
+            }
+            finally {
+
+                saveRequests.delete(requestKey);
+            }
+        }
  
         // ▀▄▀▄ tampilkan question  
         function showQuestion(index){
@@ -384,25 +534,62 @@
         }
 
         // ▀▄▀▄ change event
-        document.addEventListener("change",function(e){
+        document.addEventListener("change", function(e){ 
             if(
                 e.target.matches("input") ||
                 e.target.matches("textarea") ||
                 e.target.matches("select")
             ){
+
+                const slide =
+                    e.target.closest(".question-slide");
+
                 updateProgress();
                 updateAnsweredStatus();
+
+                if (slide) {
+                    saveAnswer(slide);
+                }
             }
         });
 
-        // ▀▄▀▄ keyup essay
-        document.addEventListener("keyup",function(e){
-            if(
-                e.target.matches("textarea")
-            ){
-                updateProgress();
-                updateAnsweredStatus();
+        // ▀▄▀▄ keyup essay 
+        const essayTimers = new Map(); 
+        document.addEventListener("input", function(e){
+
+            if (!e.target.matches("textarea")) {
+                return;
             }
+
+            const textarea = e.target;
+
+            const slide =
+                textarea.closest(".question-slide");
+
+            if (!slide) {
+                return;
+            }
+
+            updateProgress();
+            updateAnsweredStatus();
+
+            const questionId =
+                slide.dataset.questionId;
+
+            clearTimeout(
+                essayTimers.get(questionId)
+            );
+
+            const timer = setTimeout(() => {
+
+                saveAnswer(slide);
+
+            }, 800);
+
+            essayTimers.set(
+                questionId,
+                timer
+            );
         });
 
         // ▀▄▀▄ status nomor
