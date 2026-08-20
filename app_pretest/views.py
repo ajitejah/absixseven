@@ -157,13 +157,30 @@ def pretest_start(request, pretest_id):
         is_active=True,
     )
 
+    attempt, created = Attempt.objects.get_or_create(
+        student=student,
+        pretest=pretest,
+        defaults={
+            "status": Attempt.Status.DRAFT,
+            "started_at": timezone.now(),
+        },
+    )
+
+    if attempt.status == Attempt.Status.SUBMITTED:
+        return redirect(
+            "student_pretest:pretest_result",
+            attempt.pk,
+        )
+
     # ▀▄ ambil soal
-    questions = list(
-        Question.objects.filter(
+    questions = (Question.objects.filter(
             question_set=pretest.question_set
         ).prefetch_related(
             "choices",
             "pairs",
+        ).order_by(
+            "order",
+            "id",
         )
     )
 
@@ -307,12 +324,13 @@ def pretest_start(request, pretest_id):
             attempt.save()
 
         return redirect(
-            "student_pretest:pretest"
+            "student_pretest:pretest", 
         )
 
     context = {
         "pretest": pretest,
         "questions": questions,
+        "attempt": attempt,
     }
 
     return render(
