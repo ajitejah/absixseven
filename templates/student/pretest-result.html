@@ -1,5 +1,6 @@
 {% extends "dashboard_base.html" %}
 {% load custom_tags %} 
+
 {% block content_title %} 
     <div class="items-center space-x-4 py-5 lg:py-6">
 
@@ -796,11 +797,10 @@
 
         {% endif %}
 
-
         <!-- ▀▄▀▄ menunggu penilaian --> 
         <div class="card p-5">
 
-            <a href="{% url 'student_pretest:pretest' attempt.id %}" class="btn w-full rounded-lg bg-primary font-medium text-white hover:bg-primary-focus" >
+            <a href="{% url 'student_pretest:pretest' %}" class="btn w-full rounded-lg bg-primary font-medium text-white hover:bg-primary-focus" >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     class="mr-2 size-5"
