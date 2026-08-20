@@ -153,6 +153,7 @@ def pretest(request):
             "student/pretest.html",
             {
                 "pretests": pretests,
+                "now" : timezone.now(),
             },
         )
 
