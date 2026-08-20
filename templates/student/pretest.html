@@ -262,7 +262,7 @@
             {% else %}  
                 {% if pretest.student_attempts %}
                     <a
-                        href="#" 
+                        href="{% url 'student_pretest:pretest_result' attempt.id %}"
                         class="btn w-full rounded-lg bg-success font-medium text-white hover:bg-success-focus">
 
                         <svg
