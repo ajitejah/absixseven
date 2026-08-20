@@ -148,6 +148,8 @@ def pretest(request):
 @login_required
 def pretest_start(request, pretest_id): 
 
+    user = request.user
+
     pretest = get_object_or_404(
         Pretest.objects.select_related(
             "question_set",
@@ -158,7 +160,7 @@ def pretest_start(request, pretest_id):
     )
 
     attempt, created = Attempt.objects.get_or_create(
-        student=student,
+        student=user.student,
         pretest=pretest,
         defaults={
             "status": Attempt.Status.DRAFT,
