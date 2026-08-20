@@ -1,0 +1,1112 @@
+{% extends "dashboard_base.html" %}
+
+{% load custom_tags %} 
+
+{% block content_title %}
+
+<div class="items-center space-x-4 py-5 lg:py-6">
+
+    <h2 class="text-xl font-medium text-slate-800 dark:text-navy-50 lg:text-2xl">
+        Hasil Pretest
+    </h2>
+
+    <div class="hidden h-full py-1 sm:flex">
+        <div class="h-full w-px bg-slate-300 dark:bg-navy-600"></div>
+    </div>
+
+    <div class="pb-4 flex-wrap border-b border-slate-200 dark:border-navy-500">
+
+        <ul class="hidden flex-wrap items-center space-x-2 sm:flex">
+
+            <!-- Dashboard -->
+            <li class="flex items-center space-x-2">
+
+                <a
+                    class="text-grey transition-colors hover:text-primary-focus dark:text-accent-light dark:hover:text-accent"
+                    href="{% dashboard_url user %}"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="size-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M3 10.5L12 3l9 7.5V21a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1v-10.5z"
+                        />
+                    </svg>
+                </a>
+
+                <svg
+                    x-ignore
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="size-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M9 5l7 7-7 7"
+                    />
+                </svg>
+
+            </li>
+
+            <!-- Pretest -->
+            <li class="flex items-center space-x-2">
+
+                <span class="text-grey dark:text-navy-300">
+                    Daftar Pretest
+                </span>
+
+                <svg
+                    x-ignore
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="size-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M9 5l7 7-7 7"
+                    />
+                </svg>
+
+            </li>
+
+            <!-- Current -->
+            <li class="text-primary">
+                <strong>Hasil Pretest</strong>
+            </li>
+
+        </ul>
+
+    </div>
+
+</div>
+
+{% endblock content_title %}
+
+
+<!-- ================================= -->
+<!-- CONTENT -->
+<!-- ================================= -->
+
+{% block content %}
+
+<div class="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-6">
+
+    <!-- ================================= -->
+    <!-- LEFT / MAIN -->
+    <!-- ================================= -->
+
+    <div class="lg:col-span-2 space-y-4 lg:space-y-6">
+
+        <!-- ================================= -->
+        <!-- RESULT HEADER -->
+        <!-- ================================= -->
+
+        <div class="card">
+
+            <div class="border-b border-slate-200 px-5 py-4 dark:border-navy-500">
+
+                <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+
+                    <div>
+
+                        <div class="flex flex-wrap items-center gap-2">
+
+                            {% if pretest.pretest_type == "PRETEST" %}
+
+                                <span class="badge rounded-full bg-primary/10 text-primary">
+                                    PRETEST
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge rounded-full bg-warning/10 text-warning">
+                                    POSTTEST
+                                </span>
+
+                            {% endif %}
+
+                            {% if attempt.status == "SCORED" %}
+
+                                <span class="badge rounded-full bg-success/10 text-success">
+                                    Selesai Dinilai
+                                </span>
+
+                            {% elif attempt.status == "SUBMITTED" %}
+
+                                <span class="badge rounded-full bg-warning/10 text-warning">
+                                    Menunggu Penilaian
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge rounded-full bg-slate-100 text-slate-500">
+                                    {{ attempt.get_status_display }}
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+                        <h2 class="mt-3 text-xl font-semibold text-slate-700 dark:text-navy-100 lg:text-2xl">
+                            {{ pretest.title }}
+                        </h2>
+
+                        <p class="mt-1 text-sm text-slate-500 dark:text-navy-300">
+                            {{ pretest.question_set.lesson.name }}
+                            <span class="mx-1">•</span>
+                            {{ pretest.question_set.name }}
+                        </p>
+
+                    </div>
+
+                    <div class="text-left sm:text-right">
+
+                        <p class="text-xs font-medium uppercase tracking-wide text-slate-400">
+                            Peserta
+                        </p>
+
+                        <p class="mt-1 font-medium text-slate-700 dark:text-navy-100">
+                            {{ attempt.student.user.first_name }}
+                            {{ attempt.student.user.last_name }}
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================================= -->
+            <!-- SCORE -->
+            <!-- ================================= -->
+
+            <div class="p-5">
+
+                {% if attempt.status == "SCORED" %}
+
+                    <div class="rounded-2xl bg-primary/5 p-6 dark:bg-primary/10">
+
+                        <div class="flex flex-col items-center justify-center">
+
+                            <!-- SCORE CIRCLE -->
+
+                            <div class="flex h-36 w-36 items-center justify-center rounded-full border-8 border-primary/20">
+
+                                <div class="text-center">
+
+                                    <div class="text-4xl font-bold text-primary">
+                                        {{ attempt.score|floatformat:2 }}
+                                    </div>
+
+                                    <div class="mt-1 text-xs font-medium uppercase tracking-wide text-slate-500">
+                                        Nilai
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- SCORE MESSAGE -->
+
+                            {% if attempt.score >= 90 %}
+
+                                <div class="mt-5 text-center">
+
+                                    <h3 class="text-lg font-semibold text-success">
+                                        Sangat Baik!
+                                    </h3>
+
+                                    <p class="mt-1 text-sm text-slate-500 dark:text-navy-300">
+                                        Pertahankan hasil belajar yang sangat baik.
+                                    </p>
+
+                                </div>
+
+                            {% elif attempt.score >= 80 %}
+
+                                <div class="mt-5 text-center">
+
+                                    <h3 class="text-lg font-semibold text-success">
+                                        Baik Sekali!
+                                    </h3>
+
+                                    <p class="mt-1 text-sm text-slate-500 dark:text-navy-300">
+                                        Hasil pengerjaan kamu sudah sangat baik.
+                                    </p>
+
+                                </div>
+
+                            {% elif attempt.score >= 70 %}
+
+                                <div class="mt-5 text-center">
+
+                                    <h3 class="text-lg font-semibold text-warning">
+                                        Cukup Baik
+                                    </h3>
+
+                                    <p class="mt-1 text-sm text-slate-500 dark:text-navy-300">
+                                        Tetap belajar dan tingkatkan hasil berikutnya.
+                                    </p>
+
+                                </div>
+
+                            {% else %}
+
+                                <div class="mt-5 text-center">
+
+                                    <h3 class="text-lg font-semibold text-error">
+                                        Perlu Ditingkatkan
+                                    </h3>
+
+                                    <p class="mt-1 text-sm text-slate-500 dark:text-navy-300">
+                                        Jangan menyerah. Pelajari kembali materi dan coba lagi.
+                                    </p>
+
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                {% else %}
+
+                    <!-- WAITING SCORE -->
+
+                    <div class="rounded-2xl bg-warning/10 p-8 text-center">
+
+                        <div class="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-warning/10 text-warning">
+
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                class="size-10"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="1.8"
+                                    d="M12 8v4l3 2m6-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                                />
+                            </svg>
+
+                        </div>
+
+                        <h3 class="mt-5 text-lg font-semibold text-warning">
+                            Menunggu Penilaian
+                        </h3>
+
+                        <p class="mx-auto mt-2 max-w-lg text-sm text-slate-500 dark:text-navy-300">
+                            Jawaban kamu sudah berhasil dikirim.
+                            Nilai akan ditampilkan setelah seluruh jawaban selesai dinilai.
+                        </p>
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+        <!-- ================================= -->
+        <!-- ANSWER SUMMARY -->
+        <!-- ================================= -->
+
+        <div class="card">
+
+            <div class="border-b border-slate-200 px-5 py-4 dark:border-navy-500">
+
+                <h3 class="font-semibold text-slate-700 dark:text-navy-100">
+                    Ringkasan Jawaban
+                </h3>
+
+                <p class="mt-1 text-sm text-slate-500 dark:text-navy-300">
+                    Rekap hasil pengerjaan kamu.
+                </p>
+
+            </div>
+
+            <div class="p-5">
+
+                <div class="grid grid-cols-2 gap-3 sm:grid-cols-4">
+
+                    <!-- TOTAL -->
+
+                    <div class="rounded-xl bg-slate-100 p-4 dark:bg-navy-700">
+
+                        <div class="flex items-center gap-3">
+
+                            <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
+
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="size-5"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m0 6h3m-3 4h3m-3 4h3"
+                                    />
+                                </svg>
+
+                            </div>
+
+                            <div>
+
+                                <p class="text-xs text-slate-500">
+                                    Total
+                                </p>
+
+                                <p class="text-xl font-semibold text-slate-700 dark:text-navy-100">
+                                    {{ attempt.total_question }}
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- CORRECT -->
+
+                    <div class="rounded-xl bg-success/10 p-4">
+
+                        <div class="flex items-center gap-3">
+
+                            <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-success/10 text-success">
+
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="size-5"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M5 13l4 4L19 7"
+                                    />
+                                </svg>
+
+                            </div>
+
+                            <div>
+
+                                <p class="text-xs text-success/70">
+                                    Benar
+                                </p>
+
+                                <p class="text-xl font-semibold text-success">
+                                    {{ attempt.correct_answer }}
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- WRONG -->
+
+                    <div class="rounded-xl bg-error/10 p-4">
+
+                        <div class="flex items-center gap-3">
+
+                            <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-error/10 text-error">
+
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="size-5"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M6 18L18 6M6 6l12 12"
+                                    />
+                                </svg>
+
+                            </div>
+
+                            <div>
+
+                                <p class="text-xs text-error/70">
+                                    Salah
+                                </p>
+
+                                <p class="text-xl font-semibold text-error">
+                                    {{ attempt.wrong_answer }}
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- BLANK -->
+
+                    <div class="rounded-xl bg-warning/10 p-4">
+
+                        <div class="flex items-center gap-3">
+
+                            <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-warning/10 text-warning">
+
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="size-5"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M12 9v2m0 4h.01M5.07 19h13.86a2 2 0 001.73-3L13.73 4a2 2 0 00-3.46 0L3.34 16a2 2 0 001.73 3z"
+                                    />
+                                </svg>
+
+                            </div>
+
+                            <div>
+
+                                <p class="text-xs text-warning/70">
+                                    Kosong
+                                </p>
+
+                                <p class="text-xl font-semibold text-warning">
+                                    {{ attempt.blank_answer }}
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================================= -->
+        <!-- ANSWER DETAILS -->
+        <!-- ================================= -->
+
+        <div class="card">
+
+            <div class="border-b border-slate-200 px-5 py-4 dark:border-navy-500">
+
+                <h3 class="font-semibold text-slate-700 dark:text-navy-100">
+                    Detail Pengerjaan
+                </h3>
+
+                <p class="mt-1 text-sm text-slate-500 dark:text-navy-300">
+                    Rincian hasil jawaban untuk setiap soal.
+                </p>
+
+            </div>
+
+            <div class="divide-y divide-slate-200 dark:divide-navy-500">
+
+                {% for answer in attempt.answers.all %}
+
+                    <div class="p-5">
+
+                        <div class="flex gap-4">
+
+                            <!-- NUMBER -->
+
+                            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-slate-100 font-semibold text-slate-600 dark:bg-navy-700 dark:text-navy-100">
+                                {{ forloop.counter }}
+                            </div>
+
+
+                            <!-- QUESTION -->
+
+                            <div class="min-w-0 flex-1">
+
+                                <div class="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+
+                                    <div>
+
+                                        <span class="badge rounded-full bg-slate-100 text-xs text-slate-500 dark:bg-navy-700 dark:text-navy-200">
+                                            {{ answer.question.get_question_type_display }}
+                                        </span>
+
+                                        <div class="mt-2 text-sm font-medium leading-relaxed text-slate-700 dark:text-navy-100">
+                                            {{ answer.question.question }}
+                                        </div>
+
+                                    </div>
+
+
+                                    <!-- RESULT -->
+
+                                    <div class="shrink-0">
+
+                                        {% if answer.is_correct %}
+
+                                            <span class="inline-flex items-center gap-1 rounded-full bg-success/10 px-3 py-1 text-xs font-medium text-success">
+
+                                                <svg
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    class="size-4"
+                                                    fill="none"
+                                                    viewBox="0 0 24 24"
+                                                    stroke="currentColor"
+                                                >
+                                                    <path
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M5 13l4 4L19 7"
+                                                    />
+                                                </svg>
+
+                                                Benar
+
+                                            </span>
+
+                                        {% elif answer.essay_answer and answer.question.question_type == "ESSAY" and attempt.status != "SCORED" %}
+
+                                            <span class="inline-flex items-center gap-1 rounded-full bg-warning/10 px-3 py-1 text-xs font-medium text-warning">
+
+                                                <svg
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    class="size-4"
+                                                    fill="none"
+                                                    viewBox="0 0 24 24"
+                                                    stroke="currentColor"
+                                                >
+                                                    <path
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M12 8v4l3 2"
+                                                    />
+                                                </svg>
+
+                                                Menunggu Nilai
+
+                                            </span>
+
+                                        {% else %}
+
+                                            <span class="inline-flex items-center gap-1 rounded-full bg-error/10 px-3 py-1 text-xs font-medium text-error">
+
+                                                <svg
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    class="size-4"
+                                                    fill="none"
+                                                    viewBox="0 0 24 24"
+                                                    stroke="currentColor"
+                                                >
+                                                    <path
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M6 18L18 6M6 6l12 12"
+                                                    />
+                                                </svg>
+
+                                                Salah
+
+                                            </span>
+
+                                        {% endif %}
+
+                                    </div>
+
+                                </div>
+
+
+                                <!-- SCORE -->
+
+                                <div class="mt-4 flex items-center justify-between rounded-lg bg-slate-100 px-4 py-3 dark:bg-navy-700">
+
+                                    <span class="text-sm text-slate-500 dark:text-navy-300">
+                                        Nilai Soal
+                                    </span>
+
+                                    <span class="font-semibold text-slate-700 dark:text-navy-100">
+
+                                        {{ answer.score|floatformat:2 }}
+
+                                        <span class="font-normal text-slate-400">
+                                            / {{ answer.question.point|floatformat:2 }}
+                                        </span>
+
+                                    </span>
+
+                                </div>
+
+
+                                <!-- ESSAY ANSWER -->
+
+                                {% if answer.question.question_type == "ESSAY" %}
+
+                                    <div class="mt-4">
+
+                                        <p class="mb-2 text-xs font-medium uppercase tracking-wide text-slate-400">
+                                            Jawaban Kamu
+                                        </p>
+
+                                        <div class="rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm leading-relaxed text-slate-600 dark:border-navy-500 dark:bg-navy-700 dark:text-navy-200">
+
+                                            {% if answer.essay_answer %}
+
+                                                {{ answer.essay_answer|linebreaksbr }}
+
+                                            {% else %}
+
+                                                <span class="italic text-slate-400">
+                                                    Tidak dijawab
+                                                </span>
+
+                                            {% endif %}
+
+                                        </div>
+
+                                    </div>
+
+                                {% endif %}
+
+
+                                <!-- MCQ ANSWER -->
+
+                                {% if answer.question.question_type == "MCQ" %}
+
+                                    <div class="mt-4">
+
+                                        <p class="mb-2 text-xs font-medium uppercase tracking-wide text-slate-400">
+                                            Jawaban Kamu
+                                        </p>
+
+                                        <div class="rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm dark:border-navy-500 dark:bg-navy-700">
+
+                                            {% if answer.selected_option %}
+
+                                                <span class="font-medium text-slate-700 dark:text-navy-100">
+                                                    {{ answer.selected_option.option }}
+                                                </span>
+
+                                            {% else %}
+
+                                                <span class="italic text-slate-400">
+                                                    Tidak dijawab
+                                                </span>
+
+                                            {% endif %}
+
+                                        </div>
+
+                                    </div>
+
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                {% empty %}
+
+                    <div class="p-10 text-center">
+
+                        <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-slate-100 text-slate-400 dark:bg-navy-700">
+
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                class="size-8"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="1.5"
+                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5l5 5v11a2 2 0 01-2 2z"
+                                />
+                            </svg>
+
+                        </div>
+
+                        <h3 class="mt-4 font-semibold text-slate-700 dark:text-navy-100">
+                            Belum Ada Jawaban
+                        </h3>
+
+                        <p class="mt-1 text-sm text-slate-500 dark:text-navy-300">
+                            Belum ditemukan data jawaban pada pengerjaan ini.
+                        </p>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================================= -->
+    <!-- RIGHT / SUMMARY -->
+    <!-- ================================= -->
+
+    <div class="space-y-4 lg:space-y-6">
+
+        <!-- ================================= -->
+        <!-- PRETEST INFORMATION -->
+        <!-- ================================= -->
+
+        <div class="card">
+
+            <div class="border-b border-slate-200 px-5 py-4 dark:border-navy-500">
+
+                <h3 class="font-semibold text-slate-700 dark:text-navy-100">
+                    Informasi Pretest
+                </h3>
+
+            </div>
+
+            <div class="space-y-4 p-5">
+
+                <!-- LESSON -->
+
+                <div>
+
+                    <p class="text-xs text-slate-400">
+                        Lesson
+                    </p>
+
+                    <p class="mt-1 font-medium text-slate-700 dark:text-navy-100">
+                        {{ pretest.question_set.lesson.name }}
+                    </p>
+
+                </div>
+
+
+                <!-- QUESTION SET -->
+
+                <div>
+
+                    <p class="text-xs text-slate-400">
+                        Question Set
+                    </p>
+
+                    <p class="mt-1 font-medium text-slate-700 dark:text-navy-100">
+                        {{ pretest.question_set.name }}
+                    </p>
+
+                </div>
+
+
+                <!-- TOTAL -->
+
+                <div>
+
+                    <p class="text-xs text-slate-400">
+                        Jumlah Soal
+                    </p>
+
+                    <p class="mt-1 font-medium text-slate-700 dark:text-navy-100">
+                        {{ attempt.total_question }} soal
+                    </p>
+
+                </div>
+
+
+                <!-- DURATION -->
+
+                <div>
+
+                    <p class="text-xs text-slate-400">
+                        Durasi Pengerjaan
+                    </p>
+
+                    <p class="mt-1 font-medium text-slate-700 dark:text-navy-100">
+                        {{ attempt.duration }} menit
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================================= -->
+        <!-- TIME -->
+        <!-- ================================= -->
+
+        <div class="card">
+
+            <div class="border-b border-slate-200 px-5 py-4 dark:border-navy-500">
+
+                <h3 class="font-semibold text-slate-700 dark:text-navy-100">
+                    Waktu Pengerjaan
+                </h3>
+
+            </div>
+
+            <div class="p-5">
+
+                <div class="space-y-4">
+
+                    <!-- START -->
+
+                    <div class="flex items-start gap-3">
+
+                        <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                class="size-5"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M12 8v4l3 2m6-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                                />
+                            </svg>
+
+                        </div>
+
+                        <div>
+
+                            <p class="text-xs text-slate-400">
+                                Mulai
+                            </p>
+
+                            <p class="mt-1 text-sm font-medium text-slate-700 dark:text-navy-100">
+                                {{ attempt.started_at|date:"d M Y H:i" }}
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- SUBMITTED -->
+
+                    <div class="flex items-start gap-3">
+
+                        <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-success/10 text-success">
+
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                class="size-5"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M5 13l4 4L19 7"
+                                />
+                            </svg>
+
+                        </div>
+
+                        <div>
+
+                            <p class="text-xs text-slate-400">
+                                Dikumpulkan
+                            </p>
+
+                            <p class="mt-1 text-sm font-medium text-slate-700 dark:text-navy-100">
+
+                                {% if attempt.submitted_at %}
+
+                                    {{ attempt.submitted_at|date:"d M Y H:i" }}
+
+                                {% else %}
+
+                                    -
+
+                                {% endif %}
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================================= -->
+        <!-- SCORE CALCULATION -->
+        <!-- ================================= -->
+
+        {% if attempt.status == "SCORED" %}
+
+            <div class="card">
+
+                <div class="border-b border-slate-200 px-5 py-4 dark:border-navy-500">
+
+                    <h3 class="font-semibold text-slate-700 dark:text-navy-100">
+                        Kalkulasi Nilai
+                    </h3>
+
+                </div>
+
+                <div class="p-5">
+
+                    <div class="rounded-xl bg-slate-100 p-4 dark:bg-navy-700">
+
+                        <div class="flex items-center justify-between">
+
+                            <span class="text-sm text-slate-500">
+                                Jawaban Benar
+                            </span>
+
+                            <span class="font-semibold text-success">
+                                {{ attempt.correct_answer }}
+                            </span>
+
+                        </div>
+
+                        <div class="my-3 h-px bg-slate-200 dark:bg-navy-600"></div>
+
+                        <div class="flex items-center justify-between">
+
+                            <span class="text-sm text-slate-500">
+                                Jawaban Salah
+                            </span>
+
+                            <span class="font-semibold text-error">
+                                {{ attempt.wrong_answer }}
+                            </span>
+
+                        </div>
+
+                        <div class="my-3 h-px bg-slate-200 dark:bg-navy-600"></div>
+
+                        <div class="flex items-center justify-between">
+
+                            <span class="text-sm text-slate-500">
+                                Tidak Dijawab
+                            </span>
+
+                            <span class="font-semibold text-warning">
+                                {{ attempt.blank_answer }}
+                            </span>
+
+                        </div>
+
+                        <div class="my-3 h-px bg-slate-200 dark:bg-navy-600"></div>
+
+                        <div class="flex items-center justify-between">
+
+                            <span class="text-sm font-medium text-slate-600 dark:text-navy-200">
+                                Nilai Akhir
+                            </span>
+
+                            <span class="text-xl font-bold text-primary">
+                                {{ attempt.score|floatformat:2 }}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <p class="mt-3 text-xs leading-relaxed text-slate-400">
+                        Nilai dihitung berdasarkan perolehan poin dari seluruh soal.
+                    </p>
+
+                </div>
+
+            </div>
+
+        {% endif %}
+
+
+        <!-- ================================= -->
+        <!-- ACTION -->
+        <!-- ================================= -->
+
+        <div class="card p-5">
+
+            <a
+                href="javascript:history.back()"
+                class="btn w-full rounded-lg bg-primary font-medium text-white hover:bg-primary-focus"
+            >
+
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="mr-2 size-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                    />
+                </svg>
+
+                Kembali
+
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock content %}

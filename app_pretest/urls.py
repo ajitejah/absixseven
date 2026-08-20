@@ -17,6 +17,7 @@ urlpatterns = [
     path("question-set/<int:question_set_id>/info",views.question_set_info,name="question_set_info",),
 
     path('<int:pretest_id>/working/', views.pretest_start, name='pretest_start'), 
+    path('<int:pretest_id>/result/',views.pretest_result,name='pretest_result',),
     path("ajax/attempt/<int:attempt_id>/answer/save/", views.answer_save, name="answer_save",),
     
     path("question-set", views.question_set, name="question_set",),

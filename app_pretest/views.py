@@ -326,8 +326,10 @@ def pretest_start(request, pretest_id):
 
             attempt.save()
 
+        # ▀▄ redirect ke halaman pretest result
         return redirect(
-            "student_pretest:pretest", 
+            "student_pretest:pretest_result",
+            attempt.pk,
         )
 
     context = {
@@ -340,6 +342,43 @@ def pretest_start(request, pretest_id):
         request,
         "student/pretest-start.html",
         context,
+    )
+
+# ▀▄▀▄ pretest result
+@login_required
+def pretest_result(request, pretest_id):
+    pretest = get_object_or_404(
+        Pretest.objects.select_related(
+            "question_set",
+            "question_set__lesson",
+        ),
+        pk=pretest_id,
+        is_active=True,
+    )
+
+    attempt = get_object_or_404(
+        Attempt.objects.select_related(
+            "student",
+            "student__user",
+            "pretest",
+            "pretest__question_set",
+            "pretest__question_set__lesson",
+        ).prefetch_related(
+            "answers",
+            "answers__question",
+            "answers__selected_option",
+        ),
+        pretest=pretest,
+        student=request.user.student,
+    )
+
+    return render(
+        request,
+        "app_pretest/pretest_result.html",
+        {
+            "pretest": pretest,
+            "attempt": attempt,
+        },
     )
 
 # ▀▄▀▄ answer save 
