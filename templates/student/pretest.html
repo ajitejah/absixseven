@@ -262,7 +262,7 @@
                 </button>
             {% else %}   
                 {% if attempt and attempt.status == "SUBMITTED" %}
-                    <a href="{% url 'student_pretest:pretest_result' attempt.id %}"
+                    <a href="{% url 'student_pretest:pretest_result' pretest.id %}"
                         class="btn w-full rounded-lg bg-success font-medium text-white hover:bg-success-focus">
 
                         <svg
