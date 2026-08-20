@@ -374,7 +374,7 @@ def pretest_result(request, pretest_id):
 
     return render(
         request,
-        "student/pretest_result.html",
+        "student/pretest-result.html",
         {
             "pretest": pretest,
             "attempt": attempt,
