@@ -161,75 +161,84 @@
  
                     <!-- ▀▄▀▄ multiple choice --> 
                     <div id="mcq-area" class="hidden">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-base font-semibold">
+                                Pilihan Jawaban
+                            </h3>
+                            <button type="button"
+                                onclick="addChoice()"
+                                class="btn bg-primary text-white">
+                                <i class="fa fa-plus mr-1"></i>
+                                Tambah Pilihan
+                            </button>
+                        </div>
+                        {{ choice_formset.management_form }}
+                        <div id="choice-container">
 
-    <div class="flex items-center justify-between">
+                            {% for form in choice_formset %}
 
-        <h3 class="text-base font-semibold">
-            Pilihan Jawaban
-        </h3>
+                            <div class="choice-form mt-4 rounded-lg border p-4">
 
-        <button
-            type="button"
-            onclick="addChoice()"
-            class="btn bg-primary text-white">
+                                {{ form.id }}
 
-            <i class="fa fa-plus mr-1"></i>
-            Tambah Pilihan
+                                <div
+                                    style="
+                                        display:grid;
+                                        grid-template-columns:minmax(0,1fr) 180px 120px;
+                                        gap:16px;
+                                        align-items:end;
+                                    ">
 
-        </button>
+                                    <!-- PILIHAN -->
+                                    <label style="display:block; min-width:0;">
 
-    </div>
+                                        <span class="block mb-1">
+                                            Pilihan
+                                        </span>
 
-    {{ choice_formset.management_form }}
+                                        {{ form.option }}
 
-    <div id="choice-container">
+                                    </label>
 
-        {% for form in choice_formset %}
 
-        <div class="choice-form mt-4 rounded-lg border p-4">
+                                    <!-- JAWABAN BENAR -->
+                                    <label
+                                        style="
+                                            display:flex;
+                                            align-items:center;
+                                            gap:8px;
+                                            padding-bottom:10px;
+                                            white-space:nowrap;
+                                        ">
 
-            {{ form.id }}
+                                        {{ form.is_correct }}
 
-            <div class="grid grid-cols-12 gap-4 items-end">
+                                        <span>
+                                            Jawaban Benar
+                                        </span>
 
-                <!-- PILIHAN -->
-                <label class="col-span-8 block">
+                                    </label>
 
-                    <span>Pilihan</span>
 
-                    {{ form.option }}
+                                    <!-- URUTAN -->
+                                    <label style="display:block;">
 
-                </label>
+                                        <span class="block mb-1">
+                                            Urutan
+                                        </span>
 
-                <!-- JAWABAN BENAR -->
-                <label class="col-span-2 flex items-center gap-2 pb-2">
+                                        {{ form.order }}
 
-                    {{ form.is_correct }}
+                                    </label>
 
-                    <span>
-                        Jawaban Benar
-                    </span>
+                                </div>
 
-                </label>
+                            </div>
 
-                <!-- URUTAN -->
-                <label class="col-span-2 block">
+                            {% endfor %}
 
-                    <span>Urutan</span>
-
-                    {{ form.order }}
-
-                </label>
-
-            </div>
-
-        </div>
-
-        {% endfor %}
-
-    </div>
-
-</div>
+                        </div>
+                    </div>
 
                     <!-- ▀▄▀▄ matching --> 
                     <div id="matching-area" class="hidden">
