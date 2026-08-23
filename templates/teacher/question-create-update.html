@@ -175,21 +175,34 @@
                         {{ choice_formset.management_form }}
                         <div id="choice-container">
                             {% for form in choice_formset %}
-                            <div class="choice-form mt-4 rounded-lg border p-4">
-                                {{ form.id }}
-                                <div class="space-y-3">
-                                    <label class="block">
-                                        <span>Pilihan</span>
-                                        {{ form.option }}
-                                    </label>
-                                    <label class="flex items-center gap-2">
-                                        {{ form.is_correct }}
-                                        <span>Jawaban Benar</span>
-                                    </label>
-                                    {{ form.order }}
+                                <div class="choice-form mt-4 rounded-lg border p-4">
+                                    {{ form.id }}
+                                    
+                                    <div class="grid grid-cols-12 gap-4 items-end">
+
+                                        <!-- PILIHAN -->
+                                        <label class="col-span-7 block">
+                                            <span>Pilihan</span>
+                                            {{ form.option }}
+                                        </label>
+
+                                        <!-- JAWABAN BENAR -->
+                                        <label class="col-span-3 flex items-center gap-2 pb-2">
+                                            {{ form.is_correct }}
+                                            <span>Jawaban Benar</span>
+                                        </label>
+
+                                        <!-- URUTAN -->
+                                        <label class="col-span-2 block">
+                                            <span>Urutan</span>
+                                            {{ form.order }}
+                                        </label>
+
+                                    </div>
+
                                 </div>
-                            </div>
                             {% endfor %}
+
                         </div>
                     </div>
 
@@ -367,26 +380,16 @@ function addChoice(){
             <div class="space-y-3">
                 <label>
                     <span>Pilihan</span>
-
-                    <input
-                        type="text"
-                        name="choice-${index}-option"
+                    <input type="text" name="choice-${index}-option"
                         class="form-input w-full">
-
                 </label>
-
                 <label class="flex items-center gap-2">
                     <input type="checkbox"
                         name="choice-${index}-is_correct"
                         class="form-checkbox is-outline size-5 rounded-full border-slate-400/70 before:bg-primary checked:border-primary hover:border-primary focus:border-primary dark:border-navy-400 dark:before:bg-accent dark:checked:border-accent dark:hover:border-accent dark:focus:border-accent">
                     <span>Jawaban Benar</span>
                 </label>
-
-                <input type="number"
-                    name="choice-${index}-order"
-                    value="${index+1}"
-                    class="form-input w-24">
-
+                <input type="number" name="choice-${index}-order" value="${index+1}" class="form-input w-24">
             </div>
         </div>
     `;
