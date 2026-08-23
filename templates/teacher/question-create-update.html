@@ -161,50 +161,75 @@
  
                     <!-- ▀▄▀▄ multiple choice --> 
                     <div id="mcq-area" class="hidden">
-                        <div class="flex items-center justify-between">
-                            <h3 class="text-base font-semibold">
-                                Pilihan Jawaban
-                            </h3>
-                            <button type="button"
-                                onclick="addChoice()"
-                                class="btn bg-primary text-white">
-                                <i class="fa fa-plus mr-1"></i>
-                                Tambah Pilihan
-                            </button>
-                        </div>
-                        {{ choice_formset.management_form }}
-                        <div id="choice-container">
-                            {% for form in choice_formset %}
-                                <div class="choice-form mt-4 rounded-lg border p-4">
-                                    {{ form.id }}
-                                    
-                                    <div class="grid grid-cols-12 gap-4 items-end">
 
-                                        <!-- PILIHAN -->
-                                        <label class="col-span-7 block">
-                                            <span>Pilihan</span>
-                                            {{ form.option }}
-                                        </label>
+    <div class="flex items-center justify-between">
 
-                                        <!-- JAWABAN BENAR -->
-                                        <label class="col-span-3 flex items-center gap-2 pb-2">
-                                            {{ form.is_correct }}
-                                            <span>Jawaban Benar</span>
-                                        </label>
+        <h3 class="text-base font-semibold">
+            Pilihan Jawaban
+        </h3>
 
-                                        <!-- URUTAN -->
-                                        <label class="col-span-2 block">
-                                            <span>Urutan</span>
-                                            {{ form.order }}
-                                        </label>
+        <button
+            type="button"
+            onclick="addChoice()"
+            class="btn bg-primary text-white">
 
-                                    </div>
+            <i class="fa fa-plus mr-1"></i>
+            Tambah Pilihan
 
-                                </div>
-                            {% endfor %}
+        </button>
 
-                        </div>
-                    </div>
+    </div>
+
+    {{ choice_formset.management_form }}
+
+    <div id="choice-container">
+
+        {% for form in choice_formset %}
+
+        <div class="choice-form mt-4 rounded-lg border p-4">
+
+            {{ form.id }}
+
+            <div class="grid grid-cols-12 gap-4 items-end">
+
+                <!-- PILIHAN -->
+                <label class="col-span-8 block">
+
+                    <span>Pilihan</span>
+
+                    {{ form.option }}
+
+                </label>
+
+                <!-- JAWABAN BENAR -->
+                <label class="col-span-2 flex items-center gap-2 pb-2">
+
+                    {{ form.is_correct }}
+
+                    <span>
+                        Jawaban Benar
+                    </span>
+
+                </label>
+
+                <!-- URUTAN -->
+                <label class="col-span-2 block">
+
+                    <span>Urutan</span>
+
+                    {{ form.order }}
+
+                </label>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
 
                     <!-- ▀▄▀▄ matching --> 
                     <div id="matching-area" class="hidden">
