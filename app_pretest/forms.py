@@ -375,7 +375,7 @@ class ChoiceOptionForm(forms.ModelForm):
             "option": forms.TextInput(
                 attrs={
                     "class": BASE_INPUT_CLASS,
-                    "placeholder": "Pilihan jawaban",
+                    "placeholder": "Input pilihan...",
                 }
             ),
 
