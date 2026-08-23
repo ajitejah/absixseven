@@ -381,7 +381,7 @@ class ChoiceOptionForm(forms.ModelForm):
 
             "is_correct": forms.CheckboxInput(
                 attrs={
-                    "class": BASE_INPUT_CLASS,
+                    "class": CHECKBOX_CLASS,
                 }
             ),
 
