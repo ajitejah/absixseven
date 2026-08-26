@@ -1097,29 +1097,53 @@
 
 @layer components {
     .card {
-        --tw-shadow: 0 3px 10px 0 var(--tw-shadow-color, #302e380f);
-        background-color: var(--color-white);
-        border-radius: var(--radius-lg);
-        box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
-        color: var(--color-slate-500);
+        background-color: transparent;
+        border-radius: 14px;
+        color: var(--color-slate-700);
         display: flex;
         flex-direction: column;
         min-width: 1px;
         overflow-wrap: break-word;
-        position: relative
+        position: relative;
+    }
+
+    /* ✎ Border coretan spidol */
+    .card::before {
+        content: "";
+        position: absolute;
+        inset: -2px;
+        border-radius: 16px;
+        pointer-events: none;
+        background:
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25' viewBox='0 0 400 200' preserveAspectRatio='none'%3E%3Cpath d='M12 14 C90 9 175 17 260 12 S350 10 388 15 C394 48 386 80 391 105 S394 165 386 186 C300 181 220 188 140 184 S45 190 12 183 C17 145 8 110 13 75 S8 35 12 14' fill='none' stroke='%232596be' stroke-width='3' stroke-linecap='round' stroke-linejoin='round' stroke-opacity='.65'/%3E%3C/svg%3E")
+            center / 100% 100% no-repeat;
+    }
+
+    /* ✎ Goresan kedua, sedikit bergeser */
+    .card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: 16px;
+        pointer-events: none;
+        background:
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25' viewBox='0 0 400 200' preserveAspectRatio='none'%3E%3Cpath d='M10 16 C95 12 170 19 255 14 S345 13 390 18 C388 52 392 84 388 108 S390 160 383 184 C305 179 225 186 145 182 S48 188 15 180 C18 142 11 112 15 78 S9 38 10 16' fill='none' stroke='%232596be' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round' stroke-opacity='.30'/%3E%3C/svg%3E")
+            center / 100% 100% no-repeat;
     }
 
     .card:where(.dark, .dark *) {
-        --tw-shadow: 0 0 #0000;
-        background-color: var(--color-navy-700);
-        box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
-        color: var(--color-navy-200)
+        background-color: transparent;
+        color: var(--color-navy-100);
     }
 
     @media print {
         .card {
-            border-style: var(--tw-border-style);
-            border-width: 1px
+            border: none;
+        }
+
+        .card::before,
+        .card::after {
+            border-color: #000;
         }
     }
 
