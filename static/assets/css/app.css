@@ -1115,16 +1115,14 @@
         background-color: transparent;
         border-radius: 14px;
         color: var(--color-slate-700);
-
         display: flex;
         flex-direction: column;
-
         min-width: 1px;
         overflow-wrap: break-word;
         position: relative;
 
-        /* Ruang isi agar tidak terlalu dekat dengan border */
-        padding: 2rem;
+        /* Ruang isi */
+        padding: 2rem 4rem;
     }
 
 
