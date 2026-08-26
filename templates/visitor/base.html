@@ -47,8 +47,8 @@
     <!-- Page Wrapper -->
     <div
       id="root"
-      class="min-h-100vh flex grow bg-slate-50 dark:bg-navy-900"
-      x-cloak
+      class="min-h-100vh flex grow bg-slate-50 dark:bg-navy-900 paper-texture"
+      x-cloak 
     >
       <!-- Sidebar -->
       <div class="sidebar print:hidden sm:hidden">
@@ -2282,8 +2282,8 @@
         x-transition:leave="easy-in transition-all"
         x-transition:leave-start="opacity-100 scale-100"
         x-transition:leave-end="opacity-0 scale-95"
-        class="fixed inset-0 z-[100] flex flex-col bg-white dark:bg-navy-700 sm:hidden"
-      >
+        class="fixed inset-0 z-[100] flex flex-col bg-white dark:bg-navy-700 sm:hidden">
+
         <div
           class="flex items-center space-x-2 bg-slate-100 px-3 pt-2 dark:bg-navy-800"
           >
@@ -2787,7 +2787,7 @@
  
 
       <!-- Main Content Wrapper -->
-      <main class="main-content w-full px-[var(--margin-x)] pb-8 paper-texture">
+      <main class="main-content w-full px-[var(--margin-x)] pb-8">
         <div class="flex items-center space-x-4 py-5 lg:py-6">  
           {% block content %}{% endblock content %} 
         </div>
