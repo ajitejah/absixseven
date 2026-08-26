@@ -870,7 +870,7 @@
     h1,
     h2,
     h3 {
-        font-family: "Kalam", cursive;
+        font-family: "Kalam", cursive !important;
         font-size: inherit;
         font-weight: inherit;
     }
