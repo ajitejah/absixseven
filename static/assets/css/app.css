@@ -202,7 +202,7 @@
         --color-navy-800: #202b40;
         --color-navy-900: #192132;
         --color-slate-150: #e9eef5;
-        --color-primary: #4f46e5;
+        --color-primary: #437d9c;
         --color-primary-focus: #4338ca;
         --color-secondary-light: #ff57d8;
         --color-secondary: #f000b9;
@@ -1141,7 +1141,7 @@
         pointer-events: none;
 
         background:
-            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25' viewBox='0 0 400 200' preserveAspectRatio='none'%3E%3Cpath d='M12 14 C90 9 175 17 260 12 S350 10 388 15 C394 48 386 80 391 105 S394 165 386 186 C300 181 220 188 140 184 S45 190 12 183 C17 145 8 110 13 75 S8 35 12 14' fill='none' stroke='%232596be' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25' viewBox='0 0 400 200' preserveAspectRatio='none'%3E%3Cpath d='M12 14 C90 9 175 17 260 12 S350 10 388 15 C394 48 386 80 391 105 S394 165 386 186 C300 181 220 188 140 184 S45 190 12 183 C17 145 8 110 13 75 S8 35 12 14' fill='none' stroke='%23437d9c' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
             center / 100% 100% no-repeat;
     }
 
@@ -1161,7 +1161,7 @@
         pointer-events: none;
 
         background:
-            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25' viewBox='0 0 400 200' preserveAspectRatio='none'%3E%3Cpath d='M10 16 C95 12 170 19 255 14 S345 13 390 18 C388 52 392 84 388 108 S390 160 383 184 C305 179 225 186 145 182 S48 188 15 180 C18 142 11 112 15 78 S9 38 10 16' fill='none' stroke='%232596be' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25' viewBox='0 0 400 200' preserveAspectRatio='none'%3E%3Cpath d='M10 16 C95 12 170 19 255 14 S345 13 390 18 C388 52 392 84 388 108 S390 160 383 184 C305 179 225 186 145 182 S48 188 15 180 C18 142 11 112 15 78 S9 38 10 16' fill='none' stroke='%23437d9c' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
             center / 100% 100% no-repeat;
     }
 
