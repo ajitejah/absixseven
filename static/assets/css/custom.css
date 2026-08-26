@@ -1,29 +1,37 @@
 .paper-texture {
-    background-color: #faf9f6 !important;
+    background-color: #ffffff !important;
 
     background-image:
+        /* Titik biru */
         radial-gradient(
             circle at center,
             rgba(37, 150, 190, 0.50) 0.8px,
             transparent 1px
         ),
+
+        /* Garis horizontal sangat tipis */
         linear-gradient(
-            rgba(37, 150, 190, 0.035) 1px,
+            rgba(37, 150, 190, 0.025) 1px,
             transparent 1px
         ),
+
+        /* Garis vertikal sangat tipis */
         linear-gradient(
             90deg,
-            rgba(37, 150, 190, 0.035) 1px,
+            rgba(37, 150, 190, 0.025) 1px,
             transparent 1px
         ),
+
+        /* Serat kertas halus */
         radial-gradient(
             circle at 15% 20%,
-            rgba(80, 70, 50, 0.035) 0 1px,
+            rgba(80, 70, 50, 0.025) 0 1px,
             transparent 1.5px
         ),
+
         radial-gradient(
             circle at 70% 80%,
-            rgba(80, 70, 50, 0.03) 0 1px,
+            rgba(80, 70, 50, 0.02) 0 1px,
             transparent 1.5px
         );
 
