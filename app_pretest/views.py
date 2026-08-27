@@ -157,6 +157,38 @@ def pretest(request):
             },
         )
 
+# ▀▄▀▄ student yang mengikuti pretest
+
+@login_required
+def pretest_student_list(request, pretest_id):
+    pretest = get_object_or_404(
+        Pretest,
+        id=pretest_id,
+        owner=request.user,
+    )
+
+    attempts = (
+        Attempt.objects
+        .filter(pretest=pretest)
+        .select_related(
+            "student",
+            "student__user",
+            "student__level",
+        )
+        .order_by("-started_at")
+    )
+
+    context = {
+        "pretest": pretest,
+        "attempts": attempts,
+    }
+
+    return render(
+        request,
+        "teacher/pretest-student-list",
+        context,
+    )
+
 # ▀▄▀▄ preent start
 @login_required
 def pretest_start(request, pretest_id): 
