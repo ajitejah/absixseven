@@ -194,7 +194,7 @@ def pretest_student_list(request, pretest_id):
     )
 
 @login_required
-def pretest_student_result(request, attempt_id):
+def pretest_student_result(request, pretest_id, attempt_id):
 
     attempt = get_object_or_404(
         Attempt.objects.select_related(
