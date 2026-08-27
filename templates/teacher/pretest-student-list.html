@@ -15,7 +15,7 @@
     <div class="flex items-center gap-3">
 
         <!-- BACK -->
-        <a href="{% url 'pretest_student_list' %}"
+        <a href="{% pretest_student_list_url user pretest %}"
             class="text-slate-500 transition-colors hover:text-primary dark:text-navy-200 dark:hover:text-accent"
             x-tooltip="'Kembali'" >
             <svg
@@ -94,7 +94,7 @@
             <li class="flex items-center space-x-2">
 
                 <a
-                    href="{% url 'pretest_list' %}"
+                    href="{% pretest_student_list_url user pretest %}"
                     class="text-slate-500 transition-colors hover:text-primary dark:text-slate-300"
                 >
                     Daftar Paket Pretest
