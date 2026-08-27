@@ -100,6 +100,18 @@ def pretest_student_list_url(user, pretest):
 
     return "#"
 
+
+@register.simple_tag
+def pretest_student_result_url(user, pretest, attempt):
+
+    if hasattr(user, "admin"):
+        return f"/admin/pretest/{pretest.id}/student-list/{attempt.id}/student-result/"
+
+    elif hasattr(user, "teacher"):
+        return f"/teacher/pretest/{pretest.id}/student-list/{attempt.id}/student-result/"
+
+    return "#"
+
 # ▀▄▀▄ delete pretest
 @register.simple_tag
 def pretest_delete_url(user, pretest):

@@ -193,6 +193,188 @@ def pretest_student_list(request, pretest_id):
         context,
     )
 
+@login_required
+def pretest_student_result(request, attempt_id):
+
+    attempt = get_object_or_404(
+        Attempt.objects.select_related(
+            "pretest",
+            "pretest__question_set",
+            "pretest__question_set__lesson",
+            "student",
+            "student__user",
+        ),
+        id=attempt_id,
+        pretest__question_set__owner=request.user,
+    )
+
+    answers = (
+        attempt.answers
+        .select_related(
+            "question",
+            "selected_option",
+        )
+        .prefetch_related(
+            "question__choices",
+            "question__pairs",
+        )
+        .order_by(
+            "question__order",
+            "question__id",
+        )
+    )
+
+    if request.method == "POST":
+
+        with transaction.atomic():
+
+            for answer in answers:
+
+                # Hanya Essay yang dinilai manual
+                if answer.question.question_type != "ESSAY":
+                    continue
+
+                score_key = f"score_{answer.id}"
+                score_value = request.POST.get(score_key)
+
+                if score_value in (None, ""):
+                    continue
+
+                try:
+                    score = float(score_value)
+                except (TypeError, ValueError):
+                    continue
+
+                # Batasi nilai 0 sampai point soal
+                score = max(
+                    0,
+                    min(score, answer.question.point)
+                )
+
+                answer.score = score
+                answer.is_correct = score > 0
+                answer.save(
+                    update_fields=[
+                        "score",
+                        "is_correct",
+                    ]
+                )
+
+            # ==========================================
+            # HITUNG ULANG ATTEMPT
+            # ==========================================
+
+            all_answers = attempt.answers.select_related("question")
+
+            total_question = all_answers.count()
+
+            correct_answer = 0
+            wrong_answer = 0
+            blank_answer = 0
+            total_score = 0
+            total_point = 0
+
+            essay_ungraded = False
+
+            for answer in all_answers:
+
+                question = answer.question
+
+                total_point += question.point
+                total_score += answer.score
+
+                # ESSAY
+                if question.question_type == "ESSAY":
+
+                    if (
+                        answer.essay_answer
+                        and answer.score == 0
+                        and not answer.is_correct
+                    ):
+                        essay_ungraded = True
+
+                    if answer.score > 0:
+                        correct_answer += 1
+                    elif not answer.essay_answer:
+                        blank_answer += 1
+                    else:
+                        wrong_answer += 1
+
+                # MCQ / MATCHING
+                else:
+
+                    if answer.is_correct:
+                        correct_answer += 1
+                    elif (
+                        not answer.selected_option
+                        and not answer.matching_answer
+                    ):
+                        blank_answer += 1
+                    else:
+                        wrong_answer += 1
+
+            # ==========================================
+            # NILAI AKHIR
+            # ==========================================
+
+            if total_point > 0:
+                final_score = (
+                    total_score / total_point
+                ) * 100
+            else:
+                final_score = 0
+
+            # Cek apakah masih ada essay yang belum dinilai
+            ungraded_essay = all_answers.filter(
+                question__question_type="ESSAY",
+                essay_answer__isnull=False,
+            ).exclude(
+                essay_answer=""
+            ).filter(
+                score=0,
+                is_correct=False,
+            ).exists()
+
+            if ungraded_essay:
+                status = Attempt.Status.SUBMITTED
+            else:
+                status = Attempt.Status.SCORED
+
+            attempt.total_question = total_question
+            attempt.correct_answer = correct_answer
+            attempt.wrong_answer = wrong_answer
+            attempt.blank_answer = blank_answer
+            attempt.score = final_score
+            attempt.status = status
+
+            attempt.save(
+                update_fields=[
+                    "total_question",
+                    "correct_answer",
+                    "wrong_answer",
+                    "blank_answer",
+                    "score",
+                    "status",
+                ]
+            )
+
+        return redirect(
+            "teacher_pretest:pretest_student_result",
+            attempt_id=attempt.id,
+        )
+
+    context = {
+        "pretest": attempt.pretest,
+        "attempt": attempt,
+        "answers": answers,
+    }
+
+    return render(
+        request,
+        "teacher/pretest-student-result.html",
+        context,
+    )
+
 # ▀▄▀▄ preent start
 @login_required
 def pretest_start(request, pretest_id): 
