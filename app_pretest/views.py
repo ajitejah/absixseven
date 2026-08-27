@@ -50,7 +50,7 @@ def lesson_create(request):
         form = LessonForm()
     return render(
         request,
-        "common/lesson-create.html",
+        "common/lesson-create-update.html",
         {
             "form": form,
         },
@@ -84,7 +84,7 @@ def lesson_update(request, lesson_id):
 
     return render(
         request,
-        "common/lesson-update.html",
+        "common/lesson-create-update.html",
         {
             "lesson": lesson,
             "form": form,
