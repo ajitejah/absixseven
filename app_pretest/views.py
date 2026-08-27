@@ -359,7 +359,8 @@ def pretest_student_result(request, pretest_id, attempt_id):
             )
 
         return redirect(
-            "teacher_pretest:pretest_student_result",
+            "pretest_student_result",
+            pretest_id=pretest.id,
             attempt_id=attempt.id,
         )
 
