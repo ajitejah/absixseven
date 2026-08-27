@@ -1,15 +1,8 @@
 .paper-texture {
+    position: relative;
+
     background-color: #ffffff !important;
-
     background-image:
-        /* Lubang binder di sisi kiri */
-        radial-gradient(
-            circle at 18px 10px,
-            #ffffff 0 5px,
-            rgba(0, 0, 0, 0.12) 5.5px,
-            transparent 6.5px
-        ),
-
         /* Titik biru */
         radial-gradient(
             circle at center,
@@ -44,7 +37,6 @@
         );
 
     background-size:
-        36px 36px,
         20px 20px,
         20px 20px,
         20px 20px,
@@ -55,7 +47,31 @@
         0 0,
         0 0,
         0 0,
-        0 0,
         2px 4px,
         5px 2px;
+}
+
+
+/* Lubang binder — HANYA di sisi kiri */
+.paper-texture::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 38px;
+    height: 100%;
+
+    pointer-events: none;
+
+    background-image: radial-gradient(
+        circle at 18px 10px,
+        #ffffff 0 5px,
+        rgba(0, 0, 0, 0.12) 5.5px,
+        transparent 6.5px
+    );
+
+    background-size: 36px 36px;
+    background-position: 0 0;
+    background-repeat: repeat-y;
 }
