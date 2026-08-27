@@ -135,45 +135,102 @@
 
     <div class="grid grid-cols-1 gap-4 sm:gap-5 lg:gap-6">
 
-        <!-- ═══════════════════════════════════════════════
-            PRETEST INFORMATION
-            ═══════════════════════════════════════════════ -->
-
+        <!-- ▀▄▀▄ pretest information -->
         <div class="card p-4 sm:p-5">
 
-            <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div class="flex flex-col gap-5">
 
-                <div>
+                <!-- HEADER -->
+                <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 
-                    <p class="text-xs font-medium uppercase tracking-wide text-slate-400">
-                        Pretest
-                    </p>
-
-                    <h2 class="mt-1 text-xl font-semibold text-slate-800 dark:text-navy-50">
-                        {{ pretest.title }}
-                    </h2>
-
-                    {% if pretest.description %}
-                        <p class="mt-1 text-sm text-slate-500 dark:text-navy-200">
-                            {{ pretest.description }}
+                    <div>
+                        <p class="text-xs font-medium uppercase tracking-wide text-slate-400">
+                            Pretest
                         </p>
-                    {% endif %}
 
-                </div>
+                        <h2 class="mt-1 text-xl font-semibold text-slate-800 dark:text-navy-50">
+                            {{ pretest.title }}
+                        </h2>
 
-                <div class="flex items-center gap-3">
+                        {% if pretest.description %}
+                            <p class="mt-1 text-sm text-slate-500 dark:text-navy-200">
+                                {{ pretest.description }}
+                            </p>
+                        {% endif %}
+                    </div>
 
                     <!-- TOTAL STUDENT -->
-                    <div class="rounded-lg bg-primary/10 px-4 py-3 text-center">
-
+                    <div class="rounded-lg bg-primary/10 px-5 py-3 text-center">
                         <div class="text-xl font-semibold text-primary">
                             {{ attempts|length }}
                         </div>
-
                         <div class="text-xs text-slate-500">
                             Student
                         </div>
+                    </div>
 
+                </div>
+
+                <!-- INFORMATION -->
+                <div class="grid grid-cols-1 gap-3 border-t border-slate-200 pt-4 dark:border-navy-500 sm:grid-cols-3">
+
+                    <!-- BANK SOAL -->
+                    <div class="flex items-center gap-3">
+                        <div class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-info/10 text-info">
+                            <i class="fa-solid fa-book-open"></i>
+                        </div>
+
+                        <div class="min-w-0">
+                            <p class="text-xs text-slate-400">
+                                Bank Soal
+                            </p>
+
+                            <p class="truncate font-medium text-slate-700 dark:text-navy-100">
+                                {{ pretest.question_set.name }}
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- START -->
+                    <div class="flex items-center gap-3">
+                        <div class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-success/10 text-success">
+                            <i class="fa-solid fa-calendar-check"></i>
+                        </div>
+
+                        <div>
+                            <p class="text-xs text-slate-400">
+                                Mulai
+                            </p>
+
+                            <p class="font-medium text-slate-700 dark:text-navy-100">
+                                {% if pretest.release %}
+                                    {{ pretest.release|date:"d M Y, H:i" }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- EXPIRED -->
+                    <div class="flex items-center gap-3">
+                        <div class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-error/10 text-error">
+                            <i class="fa-solid fa-calendar-xmark"></i>
+                        </div>
+
+                        <div>
+                            <p class="text-xs text-slate-400">
+                                Berakhir
+                            </p>
+
+                            <p class="font-medium text-slate-700 dark:text-navy-100">
+                                {% if pretest.expired %}
+                                    {{ pretest.expired|date:"d M Y, H:i" }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </p>
+                        </div>
                     </div>
 
                 </div>
@@ -183,72 +240,33 @@
         </div>
 
 
-        <!-- ═══════════════════════════════════════════════
-            STUDENT TABLE
-            ═══════════════════════════════════════════════ -->
-
+        <!-- ▀▄▀▄ student tabel -->
         <div>
-
             <div class="flex items-center justify-between">
-
                 <h2 class="text-base font-medium tracking-wide text-slate-700 dark:text-navy-100">
                     Student yang Mengikuti Pretest
                 </h2>
-
             </div>
 
-
             <div class="card mt-3">
-
                 <div class="is-scrollbar-hidden min-w-full overflow-x-auto">
-
                     <table class="is-hoverable w-full text-left">
-
                         <thead>
-
                             <tr>
-
-                                <th class="px-4 py-3">
-                                    #
-                                </th>
-
-                                <th class="px-4 py-3">
-                                    Student
-                                </th>
-
-                                <th class="px-4 py-3">
-                                    Grade
-                                </th>
-
-                                <th class="px-4 py-3">
-                                    Mulai
-                                </th>
-
-                                <th class="px-4 py-3">
-                                    Submit
-                                </th>
-
-                                <th class="px-4 py-3">
-                                    Status
-                                </th>
-
-                                <th class="px-4 py-3">
-                                    Score
-                                </th>
-
-                                <th class="px-4 py-3">
-                                    Aksi
-                                </th>
-
+                                <th class="px-4 py-3">#</th>
+                                <th class="px-4 py-3">Student</th>
+                                <th class="px-4 py-3">Grade</th>
+                                <th class="px-4 py-3">Mulai </th>
+                                <th class="px-4 py-3">Submit</th>
+                                <th class="px-4 py-3">Status</th>
+                                <th class="px-4 py-3">Score</th>
+                                <th class="px-4 py-3">Aksi</th> 
                             </tr>
-
                         </thead>
 
 
                         <tbody>
-
                             {% for attempt in attempts %}
-
                             <tr class="border-b border-slate-200 dark:border-navy-500">
 
                                 <!-- NO -->
@@ -256,32 +274,24 @@
                                     {{ forloop.counter }}
                                 </td>
 
-
                                 <!-- STUDENT -->
                                 <td class="px-4 py-3">
-
                                     <div class="flex items-center space-x-3">
-
                                         <!-- PHOTO -->
                                         {% if attempt.student.user.photo %}
-
                                             <img
                                                 src="{{ attempt.student.user.photo.url }}"
                                                 alt="{{ attempt.student.user.first_name }}"
                                                 class="size-9 rounded-full object-cover"
                                             >
-
                                         {% else %}
-
                                             <div class="flex size-9 items-center justify-center rounded-full bg-primary/10 text-primary">
-
                                                 <svg
                                                     xmlns="http://www.w3.org/2000/svg"
                                                     class="size-5"
                                                     fill="none"
                                                     viewBox="0 0 24 24"
                                                     stroke="currentColor">
-
                                                     <path
                                                         stroke-linecap="round"
                                                         stroke-linejoin="round"
@@ -295,123 +305,80 @@
                                                         stroke-width="1.5"
                                                         d="M19 21a7 7 0 00-14 0"
                                                     />
-
                                                 </svg>
-
                                             </div>
-
                                         {% endif %}
-
 
                                         <!-- NAME -->
                                         <div>
-
                                             <p class="font-medium text-slate-700 dark:text-navy-100">
-
                                                 {{ attempt.student.user.first_name }}
-
                                                 {{ attempt.student.user.last_name }}
-
                                             </p>
-
                                             <p class="text-xs text-slate-400">
-
                                                 {{ attempt.student.user.email }}
-
                                             </p>
-
                                         </div>
-
                                     </div>
-
                                 </td>
-
 
                                 <!-- GRADE -->
                                 <td class="px-4 py-3">
-
                                     {{ attempt.student.grade|default:"-" }}
-
                                 </td>
-
 
                                 <!-- STARTED -->
                                 <td class="px-4 py-3 text-sm">
-
                                     {% if attempt.started_at %}
                                         {{ attempt.started_at|date:"d M Y H:i" }}
                                     {% else %}
                                         -
                                     {% endif %}
-
                                 </td>
-
 
                                 <!-- SUBMITTED -->
                                 <td class="px-4 py-3 text-sm">
-
                                     {% if attempt.submitted_at %}
                                         {{ attempt.submitted_at|date:"d M Y H:i" }}
                                     {% else %}
                                         -
                                     {% endif %}
-
                                 </td>
-
 
                                 <!-- STATUS -->
                                 <td class="px-4 py-3">
-
                                     {% if attempt.status == "SCORED" %}
-
                                         <span class="badge rounded-full bg-success/10 text-success">
                                             Scored
                                         </span>
-
                                     {% elif attempt.status == "SUBMITTED" %}
-
                                         <span class="badge rounded-full bg-warning/10 text-warning">
                                             Submitted
                                         </span>
-
                                     {% else %}
-
                                         <span class="badge rounded-full bg-slate-200 text-slate-600 dark:bg-navy-500 dark:text-navy-100">
                                             Draft
                                         </span>
-
                                     {% endif %}
-
                                 </td>
-
 
                                 <!-- SCORE -->
                                 <td class="px-4 py-3">
-
                                     {% if attempt.status == "SCORED" %}
-
                                         <span class="font-semibold text-slate-700 dark:text-navy-100">
                                             {{ attempt.score|floatformat:0 }}
                                         </span>
-
                                     {% else %}
-
                                         <span class="text-slate-400">
                                             -
                                         </span>
-
                                     {% endif %}
-
                                 </td>
-
 
                                 <!-- ACTION -->
                                 <td class="px-4 py-3">
-
                                     <div class="flex space-x-2">
-
                                         {% if attempt.status == "SUBMITTED" or attempt.status == "SCORED" %}
-
                                             <!-- LOOKING ANSWER -->
                                             <a href="#">
 
@@ -445,14 +412,10 @@
                                                 </button>
 
                                             </a>
-
                                         {% else %}
-
-                                            <span
-                                                x-tooltip="'Belum selesai'"
+                                            <span x-tooltip="'Belum selesai'"
                                                 class="flex size-9 items-center justify-center rounded-full bg-slate-100 text-slate-400 dark:bg-navy-500"
                                             >
-
                                                 <svg
                                                     xmlns="http://www.w3.org/2000/svg"
                                                     class="size-4"
@@ -473,28 +436,16 @@
                                                         r="9"
                                                         stroke-width="1.5"
                                                     />
-
                                                 </svg>
-
                                             </span>
-
                                         {% endif %}
-
                                     </div>
-
                                 </td>
-
                             </tr>
-
                             {% empty %}
-
                             <tr>
-
-                                <td
-                                    colspan="8"
-                                    class="py-10 text-center"
-                                >
-
+                                <td colspan="8"
+                                    class="py-10 text-center" >
                                     <div class="flex flex-col items-center justify-center">
 
                                         <svg
@@ -541,19 +492,11 @@
                                 </td>
 
                             </tr>
-
                             {% endfor %}
-
                         </tbody>
-
                     </table>
-
                 </div>
-
             </div>
-
         </div>
-
     </div>
-
 {% endblock content %}
