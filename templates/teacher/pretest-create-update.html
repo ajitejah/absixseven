@@ -51,22 +51,21 @@
         {% csrf_token %} 
         <div class="grid grid-cols-12 gap-4 sm:gap-5 lg:gap-6">
 
-            <!-- ================= LEFT ================= --> 
+            <!-- ▀▄▀▄ left --> 
             <div class="col-span-12 sm:col-span-8"> 
                 <div class="card p-4 sm:p-5">
                     <p class="text-base font-medium text-slate-700 dark:text-navy-100">
                         {% if pretest %}
-                            Perbarui Pretest
+                            Pretest Update
                         {% else %}
-                            Buat Pretest Baru
+                            Create New Pretest
                         {% endif %}
                     </p>
                     <div class="mt-4 space-y-4">
-                        <!-- ================================= -->
-                        <!-- TITLE -->
-                        <!-- ================================= -->
+                        
+                        <!-- ▀▄▀▄ title -->
                         <label class="block">
-                            <span>Judul Pretest</span>
+                            <span>Title</span>
                             <span class="relative mt-1.5 flex">
                                 {{ form.title }}
                                 <span class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400 peer-focus:text-primary dark:text-navy-300 dark:peer-focus:text-accent">
@@ -74,20 +73,16 @@
                                 </span>
                             </span>
                         </label>
-                        <!-- ================================= -->
-                        <!-- DESCRIPTION -->
-                        <!-- ================================= -->
+
+                        <!-- ▀▄▀▄ description -->
                         <label class="block">
-                            <span>Deskripsi</span>
+                            <span>Description</span>
                             {{ form.description }}
                         </label>
 
-                        <!-- ================================= -->
-                        <!-- TYPE -->
-                        <!-- ================================= -->
-
+                        <!-- ▀▄▀▄ type -->
                         <label class="block">
-                            <span>Jenis</span>
+                            <span>Type</span>
                             <span class="relative mt-1.5 flex">
                                 {{ form.pretest_type }}
                                 <span class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400">
@@ -96,12 +91,9 @@
                             </span>
                         </label>
 
-                        <!-- ================================= -->
-                        <!-- QUESTION SET -->
-                        <!-- ================================= -->
-
+                        <!-- ▀▄▀▄ question set -->
                         <label class="block">
-                            <span>Bank Soal (Question Set)</span>
+                            <span>Question Set</span>
                             <span class="relative mt-1.5 flex">
                                 {{ form.question_set }}
                                 <span class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400">
@@ -110,13 +102,10 @@
                             </span>
                         </label>
 
-                        <!-- ================================= -->
-                        <!-- QUESTION COUNT + DURATION -->
-                        <!-- ================================= -->
-
+                        <!-- ▀▄▀▄ question count -->
                         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                             <label class="block">
-                                <span>Jumlah Soal</span>
+                                <span>Question Count</span>
                                 <span class="relative mt-1.5 flex">
                                     {{ form.question_count }}
                                     <span class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400">
@@ -125,7 +114,7 @@
                                 </span>
                             </label>
                             <label class="block">
-                                <span>Durasi (Menit)</span>
+                                <span>Duration</span>
                                 <span class="relative mt-1.5 flex">
                                     {{ form.duration }}
                                     <span class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400">
@@ -134,9 +123,8 @@
                                 </span>
                             </label>
                         </div>
-                        <!-- ================================= -->
-                        <!-- RELEASE & EXPIRED -->
-                        <!-- ================================ -->
+
+                        <!-- ▀▄▀▄ release & expired -->
                         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                             <!-- RELEASE -->
                             <label class="block">
@@ -171,9 +159,8 @@
                             </label>
                         </div>
                         <hr class="border-slate-200 dark:border-navy-500">
-                        <!-- ================================= -->
-                        <!-- OPTIONS -->
-                        <!-- ================================= -->
+
+                        <!-- ▀▄▀▄ option -->
                         <div class="space-y-3">
                             <label class="flex items-center gap-2">
                                 {{ form.random_question }}
@@ -189,18 +176,17 @@
                             </label>
                         </div>
                         <hr class="border-slate-200 dark:border-navy-500">
-                        <!-- ================================= -->
-                        <!-- INFO QUESTION SET -->
-                        <!-- ================================= -->
+
+                        <!-- ▀▄▀▄ info question -->
                         <div id="question-set-info"
                             class="rounded-lg bg-gradient-to-r from-slate-100 to-slate-200 dark:from-navy-700 dark:to-navy-600 p-4">
                             <h3 class="font-semibold text-slate-700 dark:text-white">
-                                Informasi Bank Soal
+                                Question Set Information
                             </h3>
                             <div class="mt-3 grid grid-cols-2 gap-3 text-sm">
                                 <div>
                                     <span class="text-slate-500">
-                                        Mata Pelajaran
+                                        Lesson
                                     </span>
                                     <div id="lesson-name"
                                         class="font-medium">
@@ -209,7 +195,7 @@
                                 </div>
                                 <div>
                                     <span class="text-slate-500">
-                                        Total Soal
+                                        Total of Question
                                     </span>
                                     <div id="total-question"
                                         class="font-medium">
@@ -218,7 +204,7 @@
                                 </div>
                                 <div>
                                     <span class="text-slate-500">
-                                        Pilihan Ganda
+                                        Multiple Choice Question (MCQ)
                                     </span>
                                     <div id="mcq-count"
                                         class="font-medium">
@@ -252,15 +238,15 @@
                         <div class="flex justify-end space-x-2 pt-2">
                             <a href="{% pretest_url user %}"
                             class="btn space-x-2 bg-slate-150 font-medium text-slate-800 hover:bg-slate-200 focus:bg-slate-200 active:bg-slate-200/80 dark:bg-navy-500 dark:text-navy-50 dark:hover:bg-navy-450">
-                                <span>Batal</span>
+                                <span>Cancel</span>
                             </a>
                             <button
                                 type="submit"
                                 class="btn space-x-2 bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus">
                                 {% if pretest %}
-                                    <span>Perbarui</span>
+                                    <span>Update</span>
                                 {% else %}
-                                    <span>Simpan</span>
+                                    <span>Save</span>
                                 {% endif %}
                             </button>
                         </div>
@@ -268,10 +254,7 @@
                 </div>
             </div>
 
-            <!-- ================================= -->
-            <!-- RIGHT -->
-            <!-- ================================= -->
-
+            <!-- ▀▄▀▄ right -->
             <div class="hidden sm:col-span-4 sm:block">
                 <div class="sticky top-24 mt-3">
                     <ol class="steps is-vertical line-space">
@@ -280,7 +263,7 @@
                                 1
                             </div>
                             <h3 class="ml-4 text-slate-700 dark:text-navy-100">
-                                Isi Data Pretest
+                                Fill Pretest Data
                             </h3>
                         </li>
                         <li class="step pb-8 before:bg-primary dark:before:bg-accent">
@@ -288,7 +271,7 @@
                                 2
                             </div>
                             <h3 class="ml-4 text-slate-700 dark:text-navy-100">
-                                Pilih Bank Soal
+                                Choice Question Set
                             </h3>
                         </li>
                         <li class="step before:bg-slate-200 dark:before:bg-navy-500">
@@ -296,7 +279,11 @@
                                 3
                             </div>
                             <h3 class="ml-4 text-slate-700 dark:text-navy-100">
-                                Simpan Pretest
+                                {% if pretest %}
+                                    <span>Update</span>
+                                {% else %}
+                                    <span>Save</span>
+                                {% endif %}
                             </h3>
                         </li>
                     </ol>
