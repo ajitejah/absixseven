@@ -1123,9 +1123,6 @@
 
         position: relative;
 
-        /* Ruang isi */
-        padding: 6rem 4rem !important;
-
         /* Hilangkan shadow bawaan */
         box-shadow: none;
     }
