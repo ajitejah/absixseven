@@ -126,11 +126,10 @@
                             <tr>
                                 <th class="px-4 py-3">#</th>
                                 <th class="px-4 py-3">Title</th>
-                                <th class="px-4 py-3">Description</th>
                                 <th class="px-4 py-3">Question Set</th>
-                                <th class="px-4 py-3">Number of Questions</th>
-                                <th class="px-4 py-3">Release</th>
-                                <th class="px-4 py-3">Duration</th>
+                                <th class="px-4 py-3">No. of Questions</th>
+                                <th class="px-4 py-3">Status</th> 
+                                <th class="px-4 py-3">No. of Student</th>
                                 <th class="px-4 py-3">Actions</th>
                             </tr>
                         </thead>
@@ -149,12 +148,7 @@
                                 <!-- NAME -->
                                 <td class="px-4 py-3 font-medium text-slate-700 dark:text-navy-100">
                                     {{ pretest.title }}
-                                </td>
-
-                                <!-- DESCRIPTION -->
-                                <td class="px-4 py-3">
-                                    {{ pretest.description|default:"-"|truncatechars:120 }}
-                                </td>
+                                </td> 
 
                                 <!-- NAME -->
                                 <td class="px-4 py-3 font-medium text-slate-700 dark:text-navy-100">
@@ -168,12 +162,28 @@
 
                                 <!-- NAME -->
                                 <td class="px-4 py-3 font-medium text-slate-700 dark:text-navy-100">
-                                    {{ pretest.release }}
+                                    {% if not pretest.is_active %}
+                                        <span class="badge rounded-full bg-error/10 text-error">
+                                            Pretest Tidak Aktif
+                                        </span>
+                                    {% elif pretest.release and pretest.release > now %}
+                                        <span class="badge rounded-full bg-warning/10 text-warning">
+                                            Belum Dibuka
+                                        </span>
+                                    {% elif pretest.expired and pretest.expired < now %}
+                                        <span class="badge rounded-full bg-error/10 text-error">
+                                            Waktu Pretest Telah Berakhir
+                                        </span>
+                                    {% else %}
+                                        <span class="badge rounded-full bg-success/10 text-success">
+                                            Pretest Sedang Berlangsung
+                                        </span>
+                                    {% endif %}
                                 </td>
 
                                 <!-- ▀▄▀▄ name -->
                                 <td class="px-4 py-3 font-medium text-slate-700 dark:text-navy-100">
-                                    -
+                                    {{ pretest.attempts.count }}
                                 </td>
 
                                 <!-- ▀▄▀▄ action -->
@@ -303,6 +313,7 @@
 
                         </tbody>
                     </table>
+
                 </div>
             </div>
         </div>
