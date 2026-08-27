@@ -151,37 +151,122 @@
 
     {% endif %}
     <div class="grid grid-cols-1 gap-4">  
-        <div class="card p-4">  
-            <div class="mt-3 grid gap-4 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 px-4 py-4 text-white sm:grid-cols-3">
-                <div>
-                    <div class="text-xs uppercase tracking-wide text-slate-300">
-                        Mata Pelajaran
-                    </div>
-                    <div class="mt-1 text-lg font-semibold">
-                        {{ question_set.lesson.name }}
-                    </div>
-                </div>
+        
+        <!-- ▀▄▀▄ QUESTION SET INFORMATION -->
+        <div class="card">
+            <div class="p-5">
 
-                <div>
-                    <div class="text-xs uppercase tracking-wide text-slate-300">
-                        Paket Soal
-                    </div>
-                    <div class="mt-1 text-lg font-semibold">
-                        {{ question_set.name }}
-                    </div>
-                </div>
+                <div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
 
-                <div>
-                    <div class="text-xs uppercase tracking-wide text-slate-300">
-                        Jumlah Pertanyaan
+                    <!-- ▀▄▀▄ LESSON -->
+                    <div class="rounded-xl bg-slate-100 p-4 dark:bg-navy-700">
+                        <div class="flex items-center gap-3">
+
+                            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="size-5"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                                    />
+                                </svg>
+                            </div>
+
+                            <div class="min-w-0">
+                                <p class="text-xs text-slate-500">
+                                    Mata Pelajaran
+                                </p>
+
+                                <p class="mt-1 truncate text-base font-semibold text-slate-700 dark:text-navy-100">
+                                    {{ question_set.lesson.name }}
+                                </p>
+                            </div>
+
+                        </div>
                     </div>
-                    <div class="mt-1 text-lg font-semibold">
-                        {{ questions.count }}
+
+
+                    <!-- ▀▄▀▄ QUESTION SET -->
+                    <div class="rounded-xl bg-slate-100 p-4 dark:bg-navy-700">
+                        <div class="flex items-center gap-3">
+
+                            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="size-5"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M4 6h16M4 12h16M4 18h16"
+                                    />
+                                </svg>
+                            </div>
+
+                            <div class="min-w-0">
+                                <p class="text-xs text-slate-500">
+                                    Paket Soal
+                                </p>
+
+                                <p class="mt-1 truncate text-base font-semibold text-slate-700 dark:text-navy-100">
+                                    {{ question_set.name }}
+                                </p>
+                            </div>
+
+                        </div>
                     </div>
+
+
+                    <!-- ▀▄▀▄ TOTAL QUESTION -->
+                    <div class="rounded-xl bg-slate-100 p-4 dark:bg-navy-700">
+                        <div class="flex items-center gap-3">
+
+                            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="size-5"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m0 6h3m-3 4h3m-3 4h3"
+                                    />
+                                </svg>
+                            </div>
+
+                            <div>
+                                <p class="text-xs text-slate-500">
+                                    Jumlah Pertanyaan
+                                </p>
+
+                                <p class="mt-1 text-xl font-semibold text-primary">
+                                    {{ questions.count }}
+                                </p>
+                            </div>
+
+                        </div>
+                    </div>
+
                 </div>
 
             </div>
         </div>
+
 
         <div>
             <div class="flex items-center justify-between">
