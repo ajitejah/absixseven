@@ -11,7 +11,7 @@
 {% block content_title %} 
     <div class=" items-center space-x-4 py-5 lg:py-6">
         <h2 class="text-xl font-medium text-slate-800 dark:text-navy-50 lg:text-2xl" >
-            Daftar Paket Pretest
+            Pretest List
         </h2>
         <div class="hidden h-full py-1 sm:flex"><div class="h-full w-px bg-slate-300 dark:bg-navy-600"></div></div>
         <div class="pb-4 flex-wrap border-b border-slate-200 dark:border-navy-500">
@@ -23,7 +23,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                     </svg>
                 </li> 
-                <li class="text-primary"><strong>Daftar Paket Pretest</strong></li>
+                <li class="text-primary"><strong>Pretest List</strong></li>
             </ul>
         </div>
     </div> 
@@ -90,7 +90,7 @@
             <div class="flex items-center justify-between">
 
                 <h2 class="text-base font-medium tracking-wide text-slate-700 dark:text-navy-100">
-                    Tabel Daftar Paket Pretest
+                    Pretest List Table
                 </h2>
 
                 <div class="flex">
@@ -125,13 +125,13 @@
                         <thead>
                             <tr>
                                 <th class="px-4 py-3">#</th>
-                                <th class="px-4 py-3">Judul</th>
-                                <th class="px-4 py-3">Deskripsi</th> 
+                                <th class="px-4 py-3">Title</th>
+                                <th class="px-4 py-3">Description</th>
                                 <th class="px-4 py-3">Question Set</th>
-                                <th class="px-4 py-3">Jumlah Question</th>
+                                <th class="px-4 py-3">Number of Questions</th>
                                 <th class="px-4 py-3">Release</th>
-                                <th class="px-4 py-3">Berlaku selama</th>
-                                <th class="px-4 py-3">Aksi</th>
+                                <th class="px-4 py-3">Duration</th>
+                                <th class="px-4 py-3">Actions</th>
                             </tr>
                         </thead>
 
@@ -184,7 +184,7 @@
                                         <!-- ▀▄▀▄ list student yang join -->
                                         <a href="{% pretest_student_list_url user pretest %}">
                                             <button
-                                                x-tooltip="'Student yang mengikuti pretest'"
+                                                x-tooltip="'Student Who Joined This Pretest'"
                                                 class="btn size-9 rounded-full bg-info/10 p-0 text-info hover:bg-info/20">
 
                                                 <svg
@@ -219,7 +219,7 @@
                                         <a href="{% pretest_update_url user pretest %}">
 
                                             <button
-                                                x-tooltip="'Perbaharui pretest'"
+                                                x-tooltip="'Update Pretest'"
                                                 class="btn size-9 rounded-full bg-primary/10 p-0 text-primary hover:bg-primary/20">
 
                                                 <svg xmlns="http://www.w3.org/2000/svg"
@@ -246,7 +246,7 @@
 
                                         <!-- ▀▄▀▄ delete -->
                                         <button
-                                            x-tooltip="'Hapus pretest'"
+                                            x-tooltip="'Delete Pretest'"
                                             @click="openModal({{ pretest.id }}, '{{ pretest.name }}', 'admin/setting/pretest')"
                                             class="btn size-9 rounded-full bg-error/10 p-0 text-error hover:bg-error/20">
 
@@ -302,15 +302,9 @@
                             {% endfor %}
 
                         </tbody>
-
                     </table>
-
                 </div>
-
             </div>
-
         </div>
-
     </div>
-
 {% endblock content %}
