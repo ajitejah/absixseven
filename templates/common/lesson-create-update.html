@@ -64,9 +64,11 @@
                 </label> 
                 <label class="block">
                     <span>Description</span>
-                    {{ form.description }}
-                    <span class="pointer-events-none absolute left-0 top-0 flex h-10 w-10 items-center justify-center text-slate-400 peer-focus:text-primary dark:text-navy-300 dark:peer-focus:text-accent">
-                        <i class="fa-solid fa-align-left"></i>
+                    <span class="relative mt-1.5 flex"> 
+                        {{ form.description }} 
+                        <span class="pointer-events-none absolute left-0 top-0 flex h-10 w-10 items-center justify-center text-slate-400 peer-focus:text-primary dark:text-navy-300 dark:peer-focus:text-accent">
+                            <i class="fa-solid fa-align-left"></i>
+                        </span> 
                     </span>
                 </label>
 
