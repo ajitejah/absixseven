@@ -135,104 +135,87 @@
 
     <div class="grid grid-cols-1 gap-4 sm:gap-5 lg:gap-6">
 
-        <!-- ▀▄▀▄ pretest information -->
+        <!-- ▀▄▀▄ PRETEST INFORMATION -->
         <div class="card p-4 sm:p-5">
 
-            <div class="flex flex-col gap-5">
+            <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
 
-                <!-- HEADER -->
-                <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <!-- PRETEST NAME -->
+                <div class="flex items-start gap-3">
+                    <div class="mt-1 flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                        <i class="fa-solid fa-file-lines"></i>
+                    </div>
 
-                    <div>
+                    <div class="min-w-0">
                         <p class="text-xs font-medium uppercase tracking-wide text-slate-400">
-                            Pretest
+                            Pretest Name
                         </p>
-
-                        <h2 class="mt-1 text-xl font-semibold text-slate-800 dark:text-navy-50">
+                        <p class="mt-1 text-base font-semibold text-slate-800 dark:text-navy-50">
                             {{ pretest.title }}
-                        </h2>
-
-                        {% if pretest.description %}
-                            <p class="mt-1 text-sm text-slate-500 dark:text-navy-200">
-                                {{ pretest.description }}
-                            </p>
-                        {% endif %}
+                        </p>
                     </div>
-
-                    <!-- TOTAL STUDENT -->
-                    <div class="rounded-lg bg-primary/10 px-5 py-3 text-center">
-                        <div class="text-xl font-semibold text-primary">
-                            {{ attempts|length }}
-                        </div>
-                        <div class="text-xs text-slate-500">
-                            Student
-                        </div>
-                    </div>
-
                 </div>
 
-                <!-- INFORMATION -->
-                <div class="grid grid-cols-1 gap-3 border-t border-slate-200 pt-4 dark:border-navy-500 sm:grid-cols-3">
-
-                    <!-- BANK SOAL -->
-                    <div class="flex items-center gap-3">
-                        <div class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-info/10 text-info">
-                            <i class="fa-solid fa-book-open"></i>
-                        </div>
-
-                        <div class="min-w-0">
-                            <p class="text-xs text-slate-400">
-                                Bank Soal
-                            </p>
-
-                            <p class="truncate font-medium text-slate-700 dark:text-navy-100">
-                                {{ pretest.question_set.name }}
-                            </p>
-                        </div>
+                <!-- QUESTION SET -->
+                <div class="flex items-start gap-3">
+                    <div class="mt-1 flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                        <i class="fa-solid fa-layer-group"></i>
                     </div>
 
-                    <!-- START -->
-                    <div class="flex items-center gap-3">
-                        <div class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-success/10 text-success">
-                            <i class="fa-solid fa-calendar-check"></i>
-                        </div>
+                    <div class="min-w-0">
+                        <p class="text-xs font-medium uppercase tracking-wide text-slate-400">
+                            Question Set
+                        </p>
+                        <p class="mt-1 text-base font-semibold text-slate-800 dark:text-navy-50">
+                            {{ pretest.question_set }}
+                        </p>
+                    </div>
+                </div>
 
-                        <div>
-                            <p class="text-xs text-slate-400">
-                                Mulai
-                            </p>
-
-                            <p class="font-medium text-slate-700 dark:text-navy-100">
-                                {% if pretest.release %}
-                                    {{ pretest.release|date:"d M Y, H:i" }}
-                                {% else %}
-                                    -
-                                {% endif %}
-                            </p>
-                        </div>
+                <!-- ACTIVE TIME -->
+                <div class="flex items-start gap-3">
+                    <div class="mt-1 flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                        <i class="fa-regular fa-calendar"></i>
                     </div>
 
-                    <!-- EXPIRED -->
-                    <div class="flex items-center gap-3">
-                        <div class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-error/10 text-error">
-                            <i class="fa-solid fa-calendar-xmark"></i>
-                        </div>
+                    <div class="min-w-0">
+                        <p class="text-xs font-medium uppercase tracking-wide text-slate-400">
+                            Active Time
+                        </p>
 
-                        <div>
-                            <p class="text-xs text-slate-400">
-                                Berakhir
-                            </p>
+                        <p class="mt-1 text-sm font-semibold text-slate-800 dark:text-navy-50">
+                            {% if pretest.release %}
+                                {{ pretest.release|date:"d M Y, H:i" }}
+                            {% else %}
+                                -
+                            {% endif %}
 
-                            <p class="font-medium text-slate-700 dark:text-navy-100">
-                                {% if pretest.expired %}
-                                    {{ pretest.expired|date:"d M Y, H:i" }}
-                                {% else %}
-                                    -
-                                {% endif %}
-                            </p>
-                        </div>
+                            <span class="text-slate-400">—</span>
+
+                            {% if pretest.expired %}
+                                {{ pretest.expired|date:"d M Y, H:i" }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+
+                <!-- NUMBER OF STUDENT -->
+                <div class="flex items-start gap-3">
+                    <div class="mt-1 flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                        <i class="fa-solid fa-users"></i>
                     </div>
 
+                    <div class="min-w-0">
+                        <p class="text-xs font-medium uppercase tracking-wide text-slate-400">
+                            Number of Student
+                        </p>
+
+                        <p class="mt-1 text-base font-semibold text-primary">
+                            {{ attempts|length }}
+                        </p>
+                    </div>
                 </div>
 
             </div>
