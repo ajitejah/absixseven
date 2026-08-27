@@ -161,12 +161,16 @@ def pretest(request):
 
 @login_required
 def pretest_student_list(request, pretest_id):
+
+    # Pastikan pretest memang milik teacher yang sedang login
+    # melalui QuestionSet.owner
     pretest = get_object_or_404(
         Pretest,
         id=pretest_id,
-        owner=request.user,
+        question_set__owner=request.user,
     )
 
+    # Daftar student yang memiliki Attempt pada pretest ini
     attempts = (
         Attempt.objects
         .filter(pretest=pretest)
@@ -185,7 +189,7 @@ def pretest_student_list(request, pretest_id):
 
     return render(
         request,
-        "teacher/pretest-student-list",
+        "teacher/pretest-student-list.html",
         context,
     )
 
