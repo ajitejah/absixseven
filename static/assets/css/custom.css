@@ -2,8 +2,15 @@
     background-color: #ffffff !important;
 
     background-image:
+        /* Lubang binder di sisi kiri */
+        radial-gradient(
+            circle at 18px 10px,
+            #ffffff 0 5px,
+            rgba(0, 0, 0, 0.12) 5.5px,
+            transparent 6.5px
+        ),
+
         /* Titik biru */
-        
         radial-gradient(
             circle at center,
             rgba(67, 125, 156, 0.50) 0.8px,
@@ -37,6 +44,7 @@
         );
 
     background-size:
+        36px 36px,
         20px 20px,
         20px 20px,
         20px 20px,
@@ -44,6 +52,7 @@
         11px 13px;
 
     background-position:
+        0 0,
         0 0,
         0 0,
         0 0,
