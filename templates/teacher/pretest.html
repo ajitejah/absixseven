@@ -164,19 +164,19 @@
                                 <td class="px-4 py-3 font-medium text-slate-700 dark:text-navy-100">
                                     {% if not pretest.is_active %}
                                         <span class="badge rounded-full bg-error/10 text-error">
-                                            Pretest Tidak Aktif
+                                            Inactive
                                         </span>
                                     {% elif pretest.release and pretest.release > now %}
                                         <span class="badge rounded-full bg-warning/10 text-warning">
-                                            Belum Dibuka
+                                            Upcoming
                                         </span>
                                     {% elif pretest.expired and pretest.expired < now %}
                                         <span class="badge rounded-full bg-error/10 text-error">
-                                            Waktu Pretest Telah Berakhir
+                                            Expired
                                         </span>
                                     {% else %}
                                         <span class="badge rounded-full bg-success/10 text-success">
-                                            Pretest Sedang Berlangsung
+                                            Running
                                         </span>
                                     {% endif %}
                                 </td>
