@@ -360,7 +360,7 @@ def pretest_student_result(request, pretest_id, attempt_id):
 
         return redirect(
             "pretest_student_result",
-            pretest_id=pretest.id,
+            pretest_id=pretest_id,
             attempt_id=attempt.id,
         )
 
