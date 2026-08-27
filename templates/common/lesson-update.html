@@ -2,6 +2,11 @@
 {% load custom_tags %}
 {% load pretest_tags %}
 
+<!-- ▀▄▀▄ panel sidebar -->
+{% block sidebar_panel %}
+{% include "panel-sidebar/pretest.html" %}
+{% endblock sidebar_panel %}
+
 {% block content %}
 
 <form method="POST">
