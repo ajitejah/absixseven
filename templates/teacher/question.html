@@ -8,121 +8,54 @@
 {% endblock sidebar_panel %}
 
 <!-- ▀▄▀▄ content title % -->
-{% block content_title %} 
+
+<!-- ▀▄▀▄ content title & breadcumb --> 
     <div class=" items-center space-x-4 py-5 lg:py-6">
+        
+        <!-- ▀▄▀▄ title -->
         <h2 class="text-xl font-medium text-slate-800 dark:text-navy-50 lg:text-2xl" >
             Question List
         </h2>
+
+        <!-- ▀▄▀▄ breadcumb -->
         <div class="hidden h-full py-1 sm:flex"><div class="h-full w-px bg-slate-300 dark:bg-navy-600"></div></div>
-        <div class="pb-4 flex-wrap border-b border-slate-200 dark:border-navy-500">
+        <div class="pb-4 flex-wrap border-b border-slate-200 dark:border-navy-500"> 
             <ul class="hidden flex-wrap items-center space-x-2 sm:flex">
+
+                <!-- ▀▄▀▄ home -->
                 <li class="flex items-center space-x-2">
                     <a class="text-grey transition-colors hover:text-primary-focus dark:text-accent-light dark:hover:text-accent"
                     href="{% dashboard_url user %}" ><svg xmlns="http://www.w3.org/2000/svg" class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" > <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10.5L12 3l9 7.5V21a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1v-10.5z" /> </svg></a>
                     <svg x-ignore xmlns="http://www.w3.org/2000/svg" class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                     </svg>
-                </li> 
+                </li>
+
+                <!-- ▀▄▀▄ pretest -->
+                <li class="flex items-center space-x-2">
+                    <a class="text-grey transition-colors hover:text-primary-focus dark:text-accent-light dark:hover:text-accent"
+                    href="{% pretest_url user %}" >Question Set</a>
+                    <svg x-ignore xmlns="http://www.w3.org/2000/svg" class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </li>  
+                
+                <!-- ▀▄▀▄ pretest -->
+                <li class="flex items-center space-x-2">
+                    <a class="text-grey transition-colors hover:text-primary-focus dark:text-accent-light dark:hover:text-accent"
+                    href="#" >{{ questions.0.question_set.name }}</a>
+                    <svg x-ignore xmlns="http://www.w3.org/2000/svg" class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </li>  
+
                 <li class="text-primary"><strong>Question List</strong></li>
             </ul>
         </div>
     </div> 
 {% endblock content_title %}
 
-{% block content %}
- 
-<div class="items-center space-x-4 py-5 lg:py-6">
-
-    <h2 class="text-xl font-medium text-slate-800 dark:text-navy-50 lg:text-2xl">
-        Daftar Pertanyaan (Question)
-    </h2>
-
-    <div class="hidden h-full py-1 sm:flex">
-        <div class="h-full w-px bg-slate-300 dark:bg-navy-600"></div>
-    </div>
-
-    <div class="pb-4 flex-wrap border-b border-slate-200 dark:border-navy-500">
-
-        <ul class="hidden flex-wrap items-center space-x-2 sm:flex">
-
-            <li class="flex items-center space-x-2">
-
-                <a
-                    class="text-grey transition-colors hover:text-primary-focus dark:text-accent-light dark:hover:text-accent"
-                    href="{% dashboard_url user %}">
-
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                        class="size-4"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor">
-
-                        <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M3 10.5L12 3l9 7.5V21a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1v-10.5z"/>
-
-                    </svg>
-
-                </a>
-
-                <svg xmlns="http://www.w3.org/2000/svg"
-                    class="size-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor">
-
-                    <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M9 5l7 7-7 7"/>
-
-                </svg>
-
-            </li>
-
-            <li>
-
-                <a href="{% question_set_url user %}"
-                    class="hover:text-primary">
-
-                    Bank Soal
-
-                </a>
-
-            </li>
-
-            <li>
-
-                <svg xmlns="http://www.w3.org/2000/svg"
-                    class="size-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor">
-
-                    <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M9 5l7 7-7 7"/>
-
-                </svg>
-
-            </li>
-
-            <li class="text-primary">
-
-                <strong>Daftar Pertanyaan</strong>
-
-            </li>
-
-        </ul>
-
-    </div>
-
-</div>
+{% block content %} 
 
     <!-- ▀▄▀▄ message -->
     {% if messages %}
