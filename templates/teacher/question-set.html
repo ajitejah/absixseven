@@ -182,7 +182,7 @@
 
                                             <!-- update -->
                                             <a href="{% question_set_update_url user question_set %}"
-                                                x-tooltip="'Perbaharui Question Set'"
+                                                x-tooltip="'Update Question Set'"
                                                 class="btn size-9 rounded-full bg-primary/10 p-0 text-primary hover:bg-primary/20">
 
                                                 <svg xmlns="http://www.w3.org/2000/svg"
@@ -204,9 +204,9 @@
                                                 </svg>  
                                             </a>
 
-                                            <!-- soal-soal/question -->
+                                            <!-- manage questions -->
                                             <a href="{% question_url user question_set %}"
-                                                x-tooltip="'Kelola Soal-Soal'"
+                                                x-tooltip="'Manage Questions'"
                                                 class="btn size-9 rounded-full bg-info/10 p-0 text-info hover:bg-info/20">
 
                                                 <svg xmlns="http://www.w3.org/2000/svg"
@@ -244,7 +244,7 @@
 
                                             <!-- delete -->
                                             <button
-                                                x-tooltip="'Hapus Question Set'"
+                                                x-tooltip="'Delete Question Set'"
                                                 @click="openModal(
                                                     {{ question_set.id }},
                                                     '{{ question_set.name|escapejs }}',
