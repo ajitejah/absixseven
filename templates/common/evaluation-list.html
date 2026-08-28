@@ -350,11 +350,36 @@
 
                         {% empty %}
                         <tr>
-                            <td colspan="7"
-                                class="text-center py-5 text-slate-500">
+                            <td colspan="8" class="py-10 text-center">
+                                <div class="flex flex-col items-center justify-center">
 
-                                Tidak ada data evaluasi
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        class="size-12 text-slate-300"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor">
 
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="1.5"
+                                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a3 3 0 016 0M9 5h6"
+                                        />
+
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="1.5"
+                                            d="M9 14l2 2 4-4"
+                                        />
+                                    </svg>
+
+                                    <p class="mt-3 font-medium text-slate-500">
+                                        No Evaluations Available.
+                                    </p>
+
+                                </div>
                             </td>
                         </tr>
                         {% endfor %}
