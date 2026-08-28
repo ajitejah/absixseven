@@ -7,6 +7,29 @@
 {% include "panel-sidebar/pretest.html" %}
 {% endblock sidebar_panel %}
 
+<!-- ▀▄▀▄ content title % -->
+{% block content_title %} 
+    <div class=" items-center space-x-4 py-5 lg:py-6">
+        <h2 class="text-xl font-medium text-slate-800 dark:text-navy-50 lg:text-2xl" >
+            {% if question %}Update Question {% else %} Create New Question{% endif %}
+        </h2>
+        <div class="hidden h-full py-1 sm:flex"><div class="h-full w-px bg-slate-300 dark:bg-navy-600"></div></div>
+        <div class="pb-4 flex-wrap border-b border-slate-200 dark:border-navy-500">
+            <ul class="hidden flex-wrap items-center space-x-2 sm:flex">
+                <li class="flex items-center space-x-2">
+                    <a class="text-grey transition-colors hover:text-primary-focus dark:text-accent-light dark:hover:text-accent"
+                    href="{% dashboard_url user %}" ><svg xmlns="http://www.w3.org/2000/svg" class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" > <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10.5L12 3l9 7.5V21a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1v-10.5z" /> </svg></a>
+                    <svg x-ignore xmlns="http://www.w3.org/2000/svg" class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </li> 
+                <li class="text-primary"><strong>{% if question %}Update Question {% else %} Create New Question {% endif %}</strong></li>
+            </ul>
+        </div>
+    </div> 
+{% endblock content_title %}
+
+<!-- ▀▄▀▄ content -->
 {% block content %} 
 <form method="POST" enctype="multipart/form-data">
 {% csrf_token %}
@@ -15,24 +38,16 @@
 
         <!-- ▀▄▀▄ bagian kiri -->
         <div class="col-span-12 lg:col-span-8">
-
             <div class="card p-4 sm:p-5">
-
                 <p class="text-base font-medium text-slate-700 dark:text-navy-100">
-
-                    {% if question %}
-                        Perbarui Soal
-                    {% else %}
-                        Tambah Soal Baru
-                    {% endif %}
-
+                    {% if question %}Update Question {% else %} Create New Question{% endif %}
                 </p>
 
                 <div class="mt-5 space-y-5">
 
                     <!-- ▀▄▀▄ question type / jenis pertanyaan --> 
                     <label class="block">
-                        <span>Jenis Soal</span>
+                        <span>Type</span>
                         <span class="relative mt-1.5 flex">
                             {{ form.question_type }}
                             <span class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400">
@@ -43,13 +58,13 @@
 
                     <!-- ▀▄▀▄ question --> 
                     <label class="block">
-                        <span>Pertanyaan</span>
+                        <span>Question</span>
                         {{ form.question }}
                     </label>
 
                     <!-- ▀▄▀▄ attachment --> 
                     <label class="block">
-                        <span>Lampiran</span>
+                        <span>Attachment</span>
                         {{ form.attachment }}
                     </label>
 
@@ -65,7 +80,7 @@
                             </span>
                         </label>
                         <label class="block">
-                            <span>Urutan</span>
+                            <span>Order</span>
                             <span class="relative mt-1.5 flex">
                                 {{ form.order }}
                                 <span class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400">
@@ -78,31 +93,29 @@
                     <!-- ▀▄▀▄ required --> 
                     <label class="flex items-center gap-2"> 
                         {{ form.required }} 
-                        <span>Wajib Dijawab</span> 
+                        <span>Required</span> 
                     </label>
  
                     <!-- ▀▄▀▄ multiple choice --> 
                     <div id="mcq-area" class="hidden">
                         <div class="flex items-center justify-between">
                             <h3 class="text-base font-semibold">
-                                Pilihan Jawaban
+                                Multiple Choice
                             </h3>
                             <button type="button"
                                 onclick="addChoice()"
                                 class="btn bg-primary text-white">
                                 <i class="fa fa-plus mr-1"></i>
-                                Tambah Pilihan
+                                Add New Choice
                             </button>
                         </div>
                         {{ choice_formset.management_form }}
+
                         <div id="choice-container">
 
                             {% for form in choice_formset %}
-
                             <div class="choice-form mt-4 rounded-lg border border-slate-400/70 bg-slate-100 p-4">
-
                                 {{ form.id }}
-
                                 <div style="display:grid; grid-template-columns:minmax(0,1fr) 180px 120px; gap:16px; align-items:end;">
 
                                     <!-- PILIHAN -->
@@ -115,31 +128,22 @@
 
                                     <!-- JAWABAN BENAR -->
                                     <label style="display:flex; align-items:center; gap:8px; padding-bottom:10px;white-space:nowrap;">
-
                                         {{ form.is_correct }}
-
                                         <span>
-                                            Jawaban Benar
+                                            Correct Answer
                                         </span>
-
                                     </label>
-
 
                                     <!-- URUTAN -->
                                     <label style="display:block;">
-
                                         <span class="block mb-1">
-                                            Urutan
+                                            Order
                                         </span>
-
                                         <input type="number" name="{{ form.order.html_name }}" value="{{ forloop.counter }}"
                                             class="form-input w-full rounded-lg border border-slate-300 px-3 py-2 pl-4"
                                             readonly >
-
                                     </label>
-
                                 </div>
-
                             </div>
 
                             {% endfor %}
@@ -151,9 +155,8 @@
                     <div id="matching-area" class="hidden">
 
                         <div class="flex items-center justify-between">
-
                             <h3 class="text-base font-semibold">
-                                Pasangan Jawaban
+                                Matching Pair
                             </h3>
 
                             <button
@@ -162,29 +165,23 @@
                                 class="btn bg-primary text-white">
 
                                 <i class="fa fa-plus mr-1"></i>
-                                Tambah Pasangan
+                                Add New Matching Pair
 
                             </button>
-
                         </div>
 
                         {{ matching_formset.management_form }}
-
                         <div id="matching-container">
-
                             {% for form in matching_formset %}
-
                             <div class="matching-form mt-4 rounded-lg border p-4">
-
                                 {{ form.id }}
-
                                 <div class="grid grid-cols-2 gap-4">
                                     <div>
-                                        <span>Kiri</span>
+                                        <span>Left</span>
                                         {{ form.left_text }}
                                     </div>
                                     <div>
-                                        <span>Kanan</span>
+                                        <span>Right</span>
                                         {{ form.right_text }}
                                     </div>
                                 </div>
@@ -200,13 +197,13 @@
                     <div class="flex justify-end space-x-2">
                         <a href="{% url 'teacher_pretest:question' question_set.id %}"
                         class="btn bg-slate-150 font-medium text-slate-800 hover:bg-slate-200 dark:bg-navy-500 dark:text-white">
-                            Batal
+                            Cancel
                         </a>
                         <button type="submit" class="btn bg-primary font-medium text-white">
                             {% if question %}
-                                Perbarui Soal
+                                Update
                             {% else %}
-                                Simpan Soal
+                                Create
                             {% endif %}
                         </button>
                     </div>
@@ -216,109 +213,61 @@
 
         <!-- ▀▄▀▄ bagian kanan --> 
         <div class="hidden lg:col-span-4 lg:block">
-
             <div class="sticky top-24">
-
                 <div class="card p-5">
-
                     <h3 class="font-semibold text-slate-700 dark:text-navy-100">
-
-                        Informasi
-
+                        Information
                     </h3>
 
                     <div class="mt-4 space-y-3 text-sm">
-
                         <div>
-
-                            <strong>Bank Soal</strong>
-
+                            <strong>Question Set Name</strong>
                             <br>
-
                             {{ question_set.name }}
-
                         </div>
-
                         <div>
-
-                            <strong>Mata Pelajaran</strong>
-
+                            <strong>Lesson</strong>
                             <br>
-
                             {{ question_set.lesson.name }}
-
                         </div>
-
                         <div>
-
-                            <strong>Pemilik</strong>
-
+                            <strong>Owner</strong>
                             <br>
-
                             {{ question_set.owner }}
-
                         </div>
-
                     </div>
-
                 </div>
-
             </div>
-
         </div>
-
     </div>
-
 </form>
 
 <script>
 
 document.addEventListener("DOMContentLoaded", function () {
-
     toggleQuestionType();
-
-    document
-        .getElementById("id_question_type")
-        .addEventListener("change", toggleQuestionType);
-
+    document.getElementById("id_question_type").addEventListener("change", toggleQuestionType);
 });
 
 function toggleQuestionType(){
-
     const type = document.getElementById("id_question_type").value;
+    document.getElementById("mcq-area").classList.add("hidden");
 
-    document
-        .getElementById("mcq-area")
-        .classList.add("hidden");
-
-    document
-        .getElementById("matching-area")
-        .classList.add("hidden");
+    document.getElementById("matching-area").classList.add("hidden");
 
     if(type==="MCQ"){
-
-        document
-            .getElementById("mcq-area")
-            .classList.remove("hidden");
-
+        document.getElementById("mcq-area").classList.remove("hidden");
     }
 
     if(type==="MATCHING"){
-
-        document
-            .getElementById("matching-area")
-            .classList.remove("hidden");
-
+        document.getElementById("matching-area").classList.remove("hidden");
     }
-
 }
 
 function addChoice() {
 
     const total = document.getElementById("id_choice-TOTAL_FORMS");
-
     const index = parseInt(total.value);
-
     const order = index + 1;
 
     const html = `
@@ -393,12 +342,8 @@ function addChoice() {
         </div>
     `;
 
-    document
-        .getElementById("choice-container")
-        .insertAdjacentHTML("beforeend", html);
-
+    document.getElementById("choice-container").insertAdjacentHTML("beforeend", html);
     total.value = index + 1;
-
 }
 
 function addPair(){
@@ -434,10 +379,7 @@ function addPair(){
         </div>
     `;
 
-    document
-        .getElementById("matching-container")
-        .insertAdjacentHTML("beforeend", html);
-
+    document.getElementById("matching-container").insertAdjacentHTML("beforeend", html);
     total.value = index + 1;
 
 }

@@ -7,11 +7,30 @@
 {% include "panel-sidebar/pretest.html" %}
 {% endblock sidebar_panel %}
 
+<!-- ▀▄▀▄ content title % -->
+{% block content_title %} 
+    <div class=" items-center space-x-4 py-5 lg:py-6">
+        <h2 class="text-xl font-medium text-slate-800 dark:text-navy-50 lg:text-2xl" >
+            Question List
+        </h2>
+        <div class="hidden h-full py-1 sm:flex"><div class="h-full w-px bg-slate-300 dark:bg-navy-600"></div></div>
+        <div class="pb-4 flex-wrap border-b border-slate-200 dark:border-navy-500">
+            <ul class="hidden flex-wrap items-center space-x-2 sm:flex">
+                <li class="flex items-center space-x-2">
+                    <a class="text-grey transition-colors hover:text-primary-focus dark:text-accent-light dark:hover:text-accent"
+                    href="{% dashboard_url user %}" ><svg xmlns="http://www.w3.org/2000/svg" class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" > <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10.5L12 3l9 7.5V21a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1v-10.5z" /> </svg></a>
+                    <svg x-ignore xmlns="http://www.w3.org/2000/svg" class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </li> 
+                <li class="text-primary"><strong>Question List</strong></li>
+            </ul>
+        </div>
+    </div> 
+{% endblock content_title %}
 
 {% block content %}
-
-<!-- ===================== TITLE ===================== -->
-
+ 
 <div class="items-center space-x-4 py-5 lg:py-6">
 
     <h2 class="text-xl font-medium text-slate-800 dark:text-navy-50 lg:text-2xl">
@@ -105,8 +124,7 @@
 
 </div>
 
-    <!-- ===================== CONTENT ===================== -->
-
+    <!-- ▀▄▀▄ message -->
     {% if messages %}
 
         <div class="space-y-3 pb-5">
@@ -150,9 +168,10 @@
         </div>
 
     {% endif %}
+    
     <div class="grid grid-cols-1 gap-4">  
         
-        <!-- ▀▄▀▄ QUESTION SET INFORMATION -->
+        <!-- ▀▄▀▄ question information -->
         <div class="card">
             <div class="p-5">
 
@@ -181,7 +200,7 @@
 
                             <div class="min-w-0">
                                 <p class="text-xs text-slate-500">
-                                    Mata Pelajaran
+                                    Lesson
                                 </p>
 
                                 <p class="mt-1 truncate text-base font-semibold text-slate-700 dark:text-navy-100">
@@ -267,11 +286,11 @@
             </div>
         </div>
 
-
+        <!-- ▀▄▀▄ table -->
         <div>
             <div class="flex items-center justify-between">
                 <h2 class="text-base font-medium tracking-wide text-slate-700 dark:text-navy-100">
-                    Tabel Daftar Pertanyaan (Question)
+                    Question List Table
                 </h2>
                 <div class="flex gap-2">
                     {% if user.teacher %}
@@ -298,12 +317,12 @@
                         <thead>
                             <tr>
                                 <th class="px-4 py-3">#</th> 
-                                <th class="px-4 py-3">Jenis</th>
-                                <th class="px-4 py-3">Pertanyaan</th>
-                                <th class="px-4 py-3">Lampiran</th>
+                                <th class="px-4 py-3">Type</th>
+                                <th class="px-4 py-3">Question</th>
+                                <th class="px-4 py-3">Attachment</th>
                                 <th class="px-4 py-3">Point</th>
-                                <th class="px-4 py-3">Wajib</th>
-                                <th class="px-4 py-3">Aksi</th>
+                                <th class="px-4 py-3">Requirred</th>
+                                <th class="px-4 py-3">Action</th>
                             </tr>
                         </thead>
 
@@ -368,7 +387,7 @@
                             <tr>
                                 <td colspan="8"
                                     class="py-8 text-center text-slate-500">
-                                    Belum ada pertanyaan pada Bank Soal ini.
+                                    No Questions Available.
                                 </td>
                             </tr>
                             {% endfor %}
@@ -377,5 +396,6 @@
                 </div>
             </div>
         </div>
+        
     </div>
 {% endblock %}
