@@ -181,7 +181,7 @@ def roadmap_create(request):
     else:
         form = RoadmapForm()
 
-    return render(request, 'common/roadmap-create.html', {
+    return render(request, 'common/roadmap-create-update.html', {
         'form': form,
         'title': 'Create Roadmap'
     })
@@ -201,7 +201,7 @@ def roadmap_update(request, id):
     else:
         form = RoadmapForm(instance=roadmap)
 
-    return render(request, "common/roadmap-update.html", {
+    return render(request, "common/roadmap-create-update.html", {
         "title": "Update Roadmap",
         "form": form,
         "roadmap": roadmap,
