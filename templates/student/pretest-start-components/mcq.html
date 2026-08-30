@@ -1,11 +1,13 @@
 <div class="mt-8">
-
     <div class="space-y-3">
 
         {% for choice in question.random_choices %}
 
             <label
-                class="flex cursor-pointer items-center rounded-xl border border-slate-200 p-4 transition hover:border-primary hover:bg-primary/5"
+                class="flex cursor-pointer items-center rounded-xl border border-slate-200 p-4 transition hover:border-primary hover:bg-primary/5
+                {% if question.saved_answer and question.saved_answer.selected_option_id == choice.id %}
+                    border-primary bg-primary/5
+                {% endif %}"
             >
 
                 <input
@@ -20,11 +22,9 @@
                 >
 
                 <div class="ml-4 flex-1 min-w-0">
-
                     <div class="font-medium break-words whitespace-normal">
                         {{ choice.option }}
                     </div>
-
                 </div>
 
             </label>
@@ -32,5 +32,4 @@
         {% endfor %}
 
     </div>
-
 </div>

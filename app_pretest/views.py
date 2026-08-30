@@ -375,15 +375,15 @@ def pretest_student_result(request, pretest_id, attempt_id):
         context,
     )
 
-# ▀▄▀▄ preent start  
+# ▀▄▀▄ preent start
 @login_required
 def pretest_start(request, pretest_id):
 
-    student = request.user.student
+    user = request.user
 
-    # =========================================================
+    # ==========================================================
     # AMBIL PRETEST
-    # =========================================================
+    # ==========================================================
 
     pretest = get_object_or_404(
         Pretest.objects.select_related(
@@ -394,12 +394,12 @@ def pretest_start(request, pretest_id):
         is_active=True,
     )
 
-    # =========================================================
+    # ==========================================================
     # AMBIL / BUAT ATTEMPT
-    # =========================================================
+    # ==========================================================
 
     attempt, created = Attempt.objects.get_or_create(
-        student=student,
+        student=user.student,
         pretest=pretest,
         defaults={
             "status": Attempt.Status.DRAFT,
@@ -407,9 +407,9 @@ def pretest_start(request, pretest_id):
         },
     )
 
-    # =========================================================
+    # ==========================================================
     # JIKA SUDAH SUBMITTED
-    # =========================================================
+    # ==========================================================
 
     if attempt.status == Attempt.Status.SUBMITTED:
         return redirect(
@@ -417,13 +417,12 @@ def pretest_start(request, pretest_id):
             attempt.pk,
         )
 
-    # =========================================================
+    # ==========================================================
     # AMBIL SEMUA QUESTION
-    # =========================================================
+    # ==========================================================
 
-    questions_queryset = (
-        Question.objects
-        .filter(
+    all_questions = list(
+        Question.objects.filter(
             question_set=pretest.question_set
         )
         .prefetch_related(
@@ -436,447 +435,448 @@ def pretest_start(request, pretest_id):
         )
     )
 
-    all_questions = list(
-        questions_queryset
-    )
+    # ==========================================================
+    # PERTAMA KALI:
+    # TENTUKAN URUTAN SOAL + PILIHAN
+    # ==========================================================
 
-    # =========================================================
-    # ATTEMPT BARU
-    # GENERATE RANDOM + SIMPAN ORDER
-    # =========================================================
+    if created or not attempt.question_order:
 
-    if created:
+        # ------------------------------------------------------
+        # URUTAN QUESTION
+        # ------------------------------------------------------
 
-        # -----------------------------------------------------
-        # RANDOM QUESTION
-        # -----------------------------------------------------
+        questions = all_questions[:]
 
         if pretest.random_question:
-            random.shuffle(all_questions)
-
+            random.shuffle(questions)
         else:
-            all_questions.sort(
-                key=lambda q: (
-                    q.order,
-                    q.id,
-                )
+            questions.sort(
+                key=lambda q: (q.order, q.id)
             )
 
-        # -----------------------------------------------------
+        # ------------------------------------------------------
         # BATASI JUMLAH SOAL
-        # -----------------------------------------------------
+        # ------------------------------------------------------
 
-        selected_questions = all_questions[
-            :pretest.question_count
-        ]
+        questions = questions[:pretest.question_count]
 
-        # -----------------------------------------------------
-        # SIMPAN QUESTION ORDER
-        # -----------------------------------------------------
+        # ------------------------------------------------------
+        # SIMPAN URUTAN QUESTION + OPTION KE ATTEMPT
+        # ------------------------------------------------------
 
-        attempt.question_order = [
-            question.id
-            for question in selected_questions
-        ]
+        question_order = []
 
-        # -----------------------------------------------------
-        # SIAPKAN ORDER PILIHAN
-        # -----------------------------------------------------
+        for question in questions:
 
-        choice_order = {}
-        matching_order = {}
-
-        for question in selected_questions:
-
-            # =================================================
+            # ==================================================
             # MULTIPLE CHOICE
-            # =================================================
-
-            if (
-                question.question_type
-                == Question.Type.MULTIPLE_CHOICE
-            ):
-
-                choices = list(
-                    question.choices.all()
-                )
-
-                if pretest.random_option:
-                    random.shuffle(choices)
-
-                else:
-                    choices.sort(
-                        key=lambda choice: (
-                            choice.order,
-                            choice.id,
-                        )
-                    )
-
-                choice_order[
-                    str(question.id)
-                ] = [
-                    choice.id
-                    for choice in choices
-                ]
-
-            # =================================================
-            # MATCHING
-            # =================================================
-
-            elif (
-                question.question_type
-                == Question.Type.MATCHING
-            ):
-
-                pairs = list(
-                    question.pairs.all()
-                )
-
-                if pretest.random_option:
-                    random.shuffle(pairs)
-
-                else:
-                    pairs.sort(
-                        key=lambda pair: (
-                            pair.order,
-                            pair.id,
-                        )
-                    )
-
-                matching_order[
-                    str(question.id)
-                ] = [
-                    pair.id
-                    for pair in pairs
-                ]
-
-        # -----------------------------------------------------
-        # SIMPAN KE ATTEMPT
-        # -----------------------------------------------------
-
-        attempt.choice_order = choice_order
-        attempt.matching_order = matching_order
-        attempt.total_question = len(
-            selected_questions
-        )
-
-        attempt.save(
-            update_fields=[
-                "question_order",
-                "choice_order",
-                "matching_order",
-                "total_question",
-            ]
-        )
-
-    # =========================================================
-    # ATTEMPT LAMA
-    # CONTINUE PRETEST
-    # =========================================================
-
-    else:
-
-        question_ids = (
-            attempt.question_order or []
-        )
-
-        # -----------------------------------------------------
-        # SAFETY FALLBACK
-        # Untuk Attempt lama yang belum mempunyai
-        # question_order
-        # -----------------------------------------------------
-
-        if not question_ids:
-
-            if pretest.random_question:
-                random.shuffle(all_questions)
-
-            selected_questions = all_questions[
-                :pretest.question_count
-            ]
-
-            attempt.question_order = [
-                question.id
-                for question in selected_questions
-            ]
-
-            attempt.total_question = len(
-                selected_questions
-            )
-
-            attempt.save(
-                update_fields=[
-                    "question_order",
-                    "total_question",
-                ]
-            )
-
-        else:
-
-            # -------------------------------------------------
-            # BUAT MAP QUESTION
-            # -------------------------------------------------
-
-            question_map = {
-                question.id: question
-                for question in questions_queryset
-            }
-
-            selected_questions = []
-
-            # -------------------------------------------------
-            # SUSUN SESUAI ORDER ATTEMPT
-            # -------------------------------------------------
-
-            for question_id in question_ids:
-
-                question = question_map.get(
-                    question_id
-                )
-
-                if question:
-                    selected_questions.append(
-                        question
-                    )
-
-    # =========================================================
-    # LOAD ORDER PILIHAN
-    # =========================================================
-
-    choice_order = (
-        attempt.choice_order or {}
-    )
-
-    matching_order = (
-        attempt.matching_order or {}
-    )
-
-    # =========================================================
-    # LOAD ANSWER YANG SUDAH DISIMPAN
-    # =========================================================
-
-    answers = (
-        attempt.answers
-        .select_related(
-            "selected_option"
-        )
-        .filter(
-            question__in=selected_questions
-        )
-    )
-
-    answer_map = {
-        answer.question_id: answer
-        for answer in answers
-    }
-
-    # =========================================================
-    # SIAPKAN DATA QUESTION
-    # =========================================================
-
-    for question in selected_questions:
-
-        # =====================================================
-        # LOAD ANSWER
-        # =====================================================
-
-        question.answer = answer_map.get(
-            question.id
-        )
-
-        # =====================================================
-        # MULTIPLE CHOICE
-        # =====================================================
-
-        if (
-            question.question_type
-            == Question.Type.MULTIPLE_CHOICE
-        ):
+            # ==================================================
 
             choices = list(
                 question.choices.all()
             )
 
-            saved_order = choice_order.get(
-                str(question.id),
-                []
-            )
-
-            # -------------------------------------------------
-            # GUNAKAN ORDER YANG TERSIMPAN
-            # -------------------------------------------------
-
-            if saved_order:
-
-                choice_map = {
-                    choice.id: choice
-                    for choice in choices
-                }
-
-                ordered_choices = []
-
-                for choice_id in saved_order:
-
-                    choice = choice_map.get(
-                        choice_id
-                    )
-
-                    if choice:
-                        ordered_choices.append(
-                            choice
-                        )
-
-                # -------------------------------------------------
-                # JIKA ADA CHOICE BARU
-                # TAMBAHKAN DI BELAKANG
-                # -------------------------------------------------
-
-                existing_ids = {
-                    choice.id
-                    for choice in ordered_choices
-                }
-
-                for choice in choices:
-
-                    if choice.id not in existing_ids:
-                        ordered_choices.append(
-                            choice
-                        )
-
-                choices = ordered_choices
-
+            if pretest.random_option:
+                random.shuffle(choices)
             else:
-
                 choices.sort(
-                    key=lambda choice: (
-                        choice.order,
-                        choice.id,
-                    )
+                    key=lambda c: c.order
                 )
 
-            question.random_choices = choices
-
-        # =====================================================
-        # ESSAY
-        # =====================================================
-
-        elif (
-            question.question_type
-            == Question.Type.ESSAY
-        ):
-
-            # Jawaban sudah tersedia melalui:
-            #
-            # question.answer.essay_answer
-            #
-            # Tidak perlu proses tambahan.
-
-            pass
-
-        # =====================================================
-        # MATCHING
-        # =====================================================
-
-        elif (
-            question.question_type
-            == Question.Type.MATCHING
-        ):
+            # ==================================================
+            # MATCHING
+            # ==================================================
 
             pairs = list(
                 question.pairs.all()
             )
 
-            saved_order = matching_order.get(
-                str(question.id),
-                []
+            if pretest.random_option:
+                random.shuffle(pairs)
+            else:
+                pairs.sort(
+                    key=lambda p: p.order
+                )
+
+            # --------------------------------------------------
+            # SIMPAN URUTAN KE JSON
+            # --------------------------------------------------
+
+            question_order.append({
+                "id": question.id,
+                "choices": [
+                    choice.id
+                    for choice in choices
+                ],
+                "pairs": [
+                    pair.id
+                    for pair in pairs
+                ],
+            })
+
+        # ------------------------------------------------------
+        # SIMPAN KE ATTEMPT
+        # ------------------------------------------------------
+
+        attempt.question_order = question_order
+        attempt.save(
+            update_fields=["question_order"]
+        )
+
+    # ==========================================================
+    # LANJUTKAN DRAFT:
+    # GUNAKAN URUTAN YANG SUDAH DISIMPAN
+    # ==========================================================
+
+    else:
+
+        # ------------------------------------------------------
+        # BUAT MAP QUESTION
+        # ------------------------------------------------------
+
+        question_map = {
+            question.id: question
+            for question in all_questions
+        }
+
+        questions = []
+
+        for item in attempt.question_order:
+
+            question_id = item.get("id")
+
+            question = question_map.get(
+                question_id
             )
 
-            # -------------------------------------------------
-            # GUNAKAN ORDER YANG TERSIMPAN
-            # -------------------------------------------------
+            if question:
+                questions.append(question)
 
-            if saved_order:
+    # ==========================================================
+    # LOAD URUTAN CHOICES / PAIRS
+    # ==========================================================
 
-                pair_map = {
-                    pair.id: pair
-                    for pair in pairs
-                }
+    question_order_map = {
+        item.get("id"): item
+        for item in attempt.question_order
+    }
 
-                ordered_pairs = []
+    for question in questions:
 
-                for pair_id in saved_order:
+        saved_order = question_order_map.get(
+            question.id,
+            {}
+        )
 
-                    pair = pair_map.get(
-                        pair_id
-                    )
+        # ======================================================
+        # MULTIPLE CHOICE
+        # ======================================================
 
-                    if pair:
-                        ordered_pairs.append(
-                            pair
-                        )
+        choices = list(
+            question.choices.all()
+        )
 
-                # -------------------------------------------------
-                # JIKA ADA PAIR BARU
-                # TAMBAHKAN DI BELAKANG
-                # -------------------------------------------------
+        saved_choice_ids = saved_order.get(
+            "choices",
+            []
+        )
 
-                existing_ids = {
-                    pair.id
-                    for pair in ordered_pairs
-                }
+        if saved_choice_ids:
 
-                for pair in pairs:
+            choice_map = {
+                choice.id: choice
+                for choice in choices
+            }
 
-                    if pair.id not in existing_ids:
-                        ordered_pairs.append(
-                            pair
-                        )
+            ordered_choices = []
 
-                pairs = ordered_pairs
+            for choice_id in saved_choice_ids:
 
-            else:
-
-                pairs.sort(
-                    key=lambda pair: (
-                        pair.order,
-                        pair.id,
-                    )
+                choice = choice_map.get(
+                    choice_id
                 )
 
-            # -------------------------------------------------
-            # LEFT SIDE
-            # -------------------------------------------------
+                if choice:
+                    ordered_choices.append(
+                        choice
+                    )
 
-            question.random_pairs = pairs
+            # --------------------------------------------------
+            # Jika ada pilihan baru yang belum masuk JSON
+            # --------------------------------------------------
 
-            # -------------------------------------------------
-            # DRAG & DROP OPTIONS
-            # -------------------------------------------------
+            existing_ids = {
+                choice.id
+                for choice in ordered_choices
+            }
 
-            question.random_options = pairs
+            for choice in choices:
 
-            # -------------------------------------------------
-            # LOAD MATCHING ANSWER
-            # -------------------------------------------------
+                if choice.id not in existing_ids:
+                    ordered_choices.append(
+                        choice
+                    )
 
-            if question.answer:
+            choices = ordered_choices
 
-                question.saved_matching_answer = (
-                    question.answer.matching_answer
-                    or {}
+        else:
+
+            choices.sort(
+                key=lambda c: c.order
+            )
+
+        question.random_choices = choices
+
+        # ======================================================
+        # MATCHING PAIRS
+        # ======================================================
+
+        pairs = list(
+            question.pairs.all()
+        )
+
+        saved_pair_ids = saved_order.get(
+            "pairs",
+            []
+        )
+
+        if saved_pair_ids:
+
+            pair_map = {
+                pair.id: pair
+                for pair in pairs
+            }
+
+            ordered_pairs = []
+
+            for pair_id in saved_pair_ids:
+
+                pair = pair_map.get(
+                    pair_id
                 )
 
-            else:
+                if pair:
+                    ordered_pairs.append(
+                        pair
+                    )
 
-                question.saved_matching_answer = {}
+            # --------------------------------------------------
+            # Jika ada pair baru yang belum masuk JSON
+            # --------------------------------------------------
 
-    # =========================================================
+            existing_ids = {
+                pair.id
+                for pair in ordered_pairs
+            }
+
+            for pair in pairs:
+
+                if pair.id not in existing_ids:
+                    ordered_pairs.append(
+                        pair
+                    )
+
+            pairs = ordered_pairs
+
+        else:
+
+            pairs.sort(
+                key=lambda p: p.order
+            )
+
+        # ------------------------------------------------------
+        # UNTUK SISI KIRI MATCHING
+        # ------------------------------------------------------
+
+        question.random_pairs = pairs
+
+        # ------------------------------------------------------
+        # UNTUK DRAG & DROP OPTIONS
+        # Urutannya sama dengan pairs
+        # ------------------------------------------------------
+
+        question.random_options = pairs
+
+    # ==========================================================
+    # LOAD JAWABAN YANG SUDAH TERSIMPAN
+    # ==========================================================
+
+    answers = {
+        answer.question_id: answer
+        for answer in attempt.answers.all()
+    }
+
+    for question in questions:
+
+        # ------------------------------------------------------
+        # Answer object
+        # ------------------------------------------------------
+
+        question.saved_answer = answers.get(
+            question.id
+        )
+
+        if question.saved_answer:
+            question.saved_matching = (
+                question.saved_answer.matching_answer or {}
+            )
+        else:
+            question.saved_matching = {}
+
+    # ==========================================================
+    # SUBMIT PRETEST
+    # ==========================================================
+
+    if request.method == "POST":
+
+        student = request.user.student
+
+        with transaction.atomic():
+
+            attempt, created = Attempt.objects.get_or_create(
+                pretest=pretest,
+                student=student,
+            )
+
+            # --------------------------------------------------
+            # HAPUS JAWABAN LAMA
+            # --------------------------------------------------
+
+            attempt.answers.all().delete()
+
+            total_question = 0
+            blank_answer = 0
+
+            # --------------------------------------------------
+            # GUNAKAN QUESTION YANG ADA DI ATTEMPT
+            # --------------------------------------------------
+
+            submit_questions = Question.objects.filter(
+                id__in=[
+                    item.get("id")
+                    for item in attempt.question_order
+                ],
+                question_set=pretest.question_set,
+            ).prefetch_related(
+                "pairs"
+            )
+
+            # --------------------------------------------------
+            # SIMPAN JAWABAN
+            # --------------------------------------------------
+
+            for question in submit_questions:
+
+                total_question += 1
+
+                # ==================================================
+                # MULTIPLE CHOICE
+                # ==================================================
+
+                if (
+                    question.question_type
+                    == Question.Type.MULTIPLE_CHOICE
+                ):
+
+                    option_id = request.POST.get(
+                        f"question_{question.id}"
+                    )
+
+                    Answer.objects.create(
+                        attempt=attempt,
+                        question=question,
+                        selected_option_id=(
+                            option_id
+                            if option_id
+                            else None
+                        ),
+                    )
+
+                    if not option_id:
+                        blank_answer += 1
+
+                # ==================================================
+                # ESSAY
+                # ==================================================
+
+                elif (
+                    question.question_type
+                    == Question.Type.ESSAY
+                ):
+
+                    essay = request.POST.get(
+                        f"question_{question.id}",
+                        "",
+                    ).strip()
+
+                    Answer.objects.create(
+                        attempt=attempt,
+                        question=question,
+                        essay_answer=essay,
+                    )
+
+                    if essay == "":
+                        blank_answer += 1
+
+                # ==================================================
+                # MATCHING
+                # ==================================================
+
+                elif (
+                    question.question_type
+                    == Question.Type.MATCHING
+                ):
+
+                    matching = {}
+
+                    for pair in question.pairs.all():
+
+                        value = request.POST.get(
+                            f"question_{question.id}_pair_{pair.id}"
+                        )
+
+                        if value:
+                            matching[
+                                str(pair.id)
+                            ] = value
+
+                    Answer.objects.create(
+                        attempt=attempt,
+                        question=question,
+                        matching_answer=matching,
+                    )
+
+                    if len(matching) == 0:
+                        blank_answer += 1
+
+            # --------------------------------------------------
+            # UPDATE ATTEMPT
+            # --------------------------------------------------
+
+            attempt.total_question = total_question
+            attempt.blank_answer = blank_answer
+            attempt.status = Attempt.Status.SUBMITTED
+            attempt.submitted_at = timezone.now()
+
+            attempt.save()
+
+        # ======================================================
+        # REDIRECT RESULT
+        # ======================================================
+
+        return redirect(
+            "student_pretest:pretest_result",
+            attempt.pk,
+        )
+
+    # ==========================================================
     # CONTEXT
-    # =========================================================
+    # ==========================================================
 
     context = {
         "pretest": pretest,
-        "questions": selected_questions,
+        "questions": questions,
         "attempt": attempt,
     }
 
