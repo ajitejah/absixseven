@@ -23,8 +23,15 @@
                     <div id="question-container">
 
                         {% for question in questions %}
-                            <div class="question-slide {% if not forloop.first %}hidden{% endif %}" data-index="{{ forloop.counter0 }}" data-question-id="{{ question.id }}">
-                                {% include "student/pretest-start-components/question.html" %}
+                            <div
+                                class="question-slide {% if not forloop.first %}hidden{% endif %}"
+                                data-index="{{ forloop.counter0 }}"
+                                data-question-id="{{ question.id }}"
+                                {% if question.saved_answer and question.saved_answer.matching_answer %}
+                                    data-saved-matching="{{ question.saved_answer.matching_answer|escapejs }}"
+                                {% endif %}
+                            >    
+                            {% include "student/pretest-start-components/question.html" %}
                             </div>
                         {% endfor %}
 
@@ -299,10 +306,8 @@
                 saveRequests.delete(requestKey);
             }
         }
-
-        // ==========================================================
-        // RESTORE MATCHING ANSWER
-        // ==========================================================
+ 
+        // ▀▄▀▄ RESTORE MATCHING ANSWER  
         function restoreMatchingAnswers() {
 
             document.querySelectorAll(".question-slide").forEach(slide => {
@@ -314,23 +319,27 @@
                     return;
                 }
 
-                // Ambil data jawaban yang disimpan dari HTML
-                const savedData = slide.dataset.savedMatching;
+                const savedData =
+                    slide.dataset.savedMatching;
 
                 if (!savedData) {
                     return;
                 }
 
-                let matchingAnswer;
+                let matchingAnswer = {};
 
                 try {
+
                     matchingAnswer = JSON.parse(savedData);
+
                 }
                 catch (error) {
+
                     console.error(
-                        "Matching answer tidak valid:",
+                        "Gagal membaca matching answer:",
                         error
                     );
+
                     return;
                 }
 
@@ -341,35 +350,55 @@
                     return;
                 }
 
+
                 // ==================================================
-                // Restore setiap pasangan
+                // RESTORE
                 // ==================================================
                 Object.entries(matchingAnswer).forEach(
                     ([pairId, optionId]) => {
 
-                        if (!optionId) {
+                        if (!pairId || !optionId) {
                             return;
                         }
 
+
+                        // ------------------------------------------
+                        // DROP ZONE
+                        // ------------------------------------------
                         const dropZone = slide.querySelector(
                             `.drop-zone[data-left="${pairId}"]`
                         );
 
                         if (!dropZone) {
+                            console.warn(
+                                "Drop zone tidak ditemukan:",
+                                pairId
+                            );
+
                             return;
                         }
 
+
+                        // ------------------------------------------
+                        // DRAG ITEM
+                        // ------------------------------------------
                         const dragItem = slide.querySelector(
                             `.drag-item[data-id="${optionId}"]`
                         );
 
                         if (!dragItem) {
+                            console.warn(
+                                "Drag item tidak ditemukan:",
+                                optionId
+                            );
+
                             return;
                         }
 
-                        // ==========================================
-                        // Isi hidden input
-                        // ==========================================
+
+                        // ------------------------------------------
+                        // HIDDEN INPUT
+                        // ------------------------------------------
                         const input = slide.querySelector(
                             `.matching-input[data-pair-id="${pairId}"]`
                         );
@@ -378,9 +407,10 @@
                             input.value = optionId;
                         }
 
-                        // ==========================================
-                        // Sembunyikan placeholder
-                        // ==========================================
+
+                        // ------------------------------------------
+                        // PLACEHOLDER
+                        // ------------------------------------------
                         const placeholder =
                             dropZone.querySelector(".placeholder");
 
@@ -388,13 +418,17 @@
                             placeholder.style.display = "none";
                         }
 
-                        // ==========================================
-                        // Pindahkan answer ke drop zone
-                        // ==========================================
+
+                        // ------------------------------------------
+                        // PINDAHKAN OPTION
+                        // ------------------------------------------
                         dropZone.appendChild(dragItem);
+
                     }
                 );
+
             });
+
         }
  
         // ▀▄▀▄ tampilkan question  
