@@ -85,22 +85,36 @@ class LevelForm(forms.ModelForm, StyledFormMixin):
 
 # ▀▄▀▄ form create user
 class UserCreateForm(UserCreationForm, StyledFormMixin):
+
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'email', 'gender', 'photo', 'password1', 'password2']
+        fields = [
+            'first_name',
+            'last_name',
+            'email',
+            'gender',
+            'photo',
+            'password1',
+            'password2',
+        ]
+
         widgets = {
             'first_name': forms.TextInput(attrs={
                 'placeholder': 'First Name'
             }),
+
             'last_name': forms.TextInput(attrs={
                 'placeholder': 'Last Name'
             }),
+
             'email': forms.EmailInput(attrs={
                 'placeholder': 'Enter Email'
             }),
+
             'password1': forms.PasswordInput(attrs={
                 'placeholder': 'Enter Password'
             }),
+
             'password2': forms.PasswordInput(attrs={
                 'placeholder': 'Confirm Password'
             }),
@@ -108,15 +122,22 @@ class UserCreateForm(UserCreationForm, StyledFormMixin):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        # ▀▄▀▄ PHOTO OPTIONAL
+        self.fields['photo'].required = False
+
         self.apply_style()
 
     def save(self, commit=True):
         user = super().save(commit=False)
+
         user.username = self.cleaned_data['email']
         user.first_name = self.cleaned_data['first_name']
         user.last_name = self.cleaned_data['last_name']
+
         if commit:
             user.save()
+
         return user
 
 # ▀▄▀▄ Form Update User
