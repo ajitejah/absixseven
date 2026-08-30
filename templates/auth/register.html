@@ -4,6 +4,40 @@
 <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
 
+    <!-- ================= NOTIFICATION ================= -->
+    {% if messages %}
+        <div class="mt-4 space-y-2">
+            {% for message in messages %}
+
+                {% if message.tags == 'success' %}
+                    <div class="flex items-center gap-3 rounded-lg bg-success/10 px-4 py-3 text-sm font-medium text-success">
+                        <i class="fa-solid fa-circle-check text-base"></i>
+                        <span>{{ message }}</span>
+                    </div>
+
+                {% elif message.tags == 'error' %}
+                    <div class="flex items-center gap-3 rounded-lg bg-error/10 px-4 py-3 text-sm font-medium text-error">
+                        <i class="fa-solid fa-circle-exclamation text-base"></i>
+                        <span>{{ message }}</span>
+                    </div>
+
+                {% elif message.tags == 'warning' %}
+                    <div class="flex items-center gap-3 rounded-lg bg-warning/10 px-4 py-3 text-sm font-medium text-warning">
+                        <i class="fa-solid fa-triangle-exclamation text-base"></i>
+                        <span>{{ message }}</span>
+                    </div>
+
+                {% else %}
+                    <div class="flex items-center gap-3 rounded-lg bg-info/10 px-4 py-3 text-sm font-medium text-info">
+                        <i class="fa-solid fa-circle-info text-base"></i>
+                        <span>{{ message }}</span>
+                    </div>
+                {% endif %}
+
+            {% endfor %}
+        </div>
+    {% endif %}
+
     <div class="card mt-5 rounded-lg p-5 lg:p-7">
 
         <!-- ROLE -->
@@ -61,6 +95,10 @@
         <label class="mt-4 block">
             <span>Password:</span>
             {{ form.password1 }}
+
+            <span class="mt-1 block text-xs text-slate-400">
+                Use at least 8 characters with a combination of letters and numbers. Eg: Ab67!Study.
+            </span>
         </label>
 
         <label class="mt-4 block">
@@ -108,14 +146,7 @@
         <!-- BUTTON -->
         <button class="btn mt-5 w-full bg-primary font-medium text-white">
             Register
-        </button>
-
-        <!-- ERROR -->
-        {% if form.errors %}
-            <div class="text-red-500 mt-3 text-sm">
-                {{ form.errors }}
-            </div>
-        {% endif %}
+        </button> 
 
         <!-- LOGIN LINK -->
         <div class="mt-4 text-center text-xs-plus">
