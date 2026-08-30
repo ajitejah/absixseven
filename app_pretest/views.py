@@ -376,6 +376,207 @@ def pretest_student_result(request, pretest_id, attempt_id):
     )
 
 # ▀▄▀▄ preent start
+'''
+@login_required
+def pretest_start(request, pretest_id): 
+
+    user = request.user
+
+    pretest = get_object_or_404(
+        Pretest.objects.select_related(
+            "question_set",
+            "question_set__lesson",
+        ),
+        pk=pretest_id,
+        is_active=True,
+    )
+
+    attempt, created = Attempt.objects.get_or_create(
+        student=user.student,
+        pretest=pretest,
+        defaults={
+            "status": Attempt.Status.DRAFT,
+            "started_at": timezone.now(),
+        },
+    )
+
+    if attempt.status == Attempt.Status.SUBMITTED:
+        return redirect(
+            "student_pretest:pretest_result",
+            attempt.pk,
+        )
+
+    # ▀▄ ambil soal
+    questions = list(
+        Question.objects.filter(
+            question_set=pretest.question_set
+        ).prefetch_related(
+            "choices",
+            "pairs",
+        ).order_by(
+            "order",
+            "id",
+        )
+    )
+
+    # ▀▄ RANDOM SOAL 
+    if pretest.random_question: 
+        random.shuffle(questions)
+    else:
+        questions.sort(key=lambda q: (q.order, q.id))
+
+    # ▀▄ BATASI JUMLAH SOAL 
+    questions = questions[:pretest.question_count]
+
+    # ▀▄ RANDOM PILIHAN   
+    for question in questions:
+
+        # ▀▄ ---------- MCQ ---------- 
+        choices = list(
+            question.choices.all()
+        )
+
+        if pretest.random_option:
+            random.shuffle(choices)
+        else:
+            choices.sort(key=lambda c: c.order)
+
+        question.random_choices = choices
+
+        # ▀▄ ---------- MATCHING ---------- 
+        pairs = list(
+            question.pairs.all()
+        )
+
+        # ▀▄ pasangan untuk sisi kiri
+        if pretest.random_option:
+            random.shuffle(pairs)
+        else:
+            pairs.sort(key=lambda p: p.order)
+
+        question.random_pairs = pairs
+
+        # ▀▄ OPTIONS DRAG DROP  
+        options = list(
+            question.pairs.all()
+        )
+
+        if pretest.random_option:
+            random.shuffle(options)
+        else:
+            options.sort(key=lambda p: p.order)
+
+        question.random_options = options
+
+    # ▀▄ SUBMIT PRETEST 
+    if request.method == "POST":
+
+        student = request.user.student
+
+        with transaction.atomic():
+
+            attempt, created = Attempt.objects.get_or_create(
+                pretest=pretest,
+                student=student,
+            )
+
+            # ▀▄ jika submit ulang
+            attempt.answers.all().delete()
+
+            total_question = 0
+            blank_answer = 0
+
+            questions = Question.objects.filter(
+                question_set=pretest.question_set
+            ).prefetch_related(
+                "pairs"
+            )
+
+            for question in questions:
+
+                total_question += 1
+
+                # ▀▄ MULTIPLE CHOICE 
+                if question.question_type == Question.Type.MULTIPLE_CHOICE:
+
+                    option_id = request.POST.get(
+                        f"question_{question.id}"
+                    )
+
+                    Answer.objects.create(
+                        attempt=attempt,
+                        question=question,
+                        selected_option_id=option_id if option_id else None,
+                    )
+
+                    if not option_id:
+                        blank_answer += 1
+
+                # ▀▄ ESSAY 
+                elif question.question_type == Question.Type.ESSAY:
+
+                    essay = request.POST.get(
+                        f"question_{question.id}",
+                        ""
+                    ).strip()
+
+                    Answer.objects.create(
+                        attempt=attempt,
+                        question=question,
+                        essay_answer=essay,
+                    )
+
+                    if essay == "":
+                        blank_answer += 1
+
+                # ▀▄ MATCHING 
+                elif question.question_type == Question.Type.MATCHING:
+
+                    matching = {}
+
+                    for pair in question.pairs.all():
+                        value = request.POST.get(
+                            f"question_{question.id}_pair_{pair.id}"
+                        )
+
+                        if value:
+                            matching[str(pair.id)] = value
+
+                    Answer.objects.create(
+                        attempt=attempt,
+                        question=question,
+                        matching_answer=matching,
+                    )
+
+                    if len(matching) == 0:
+                        blank_answer += 1
+
+            attempt.total_question = total_question
+            attempt.blank_answer = blank_answer
+            attempt.status = Attempt.Status.SUBMITTED
+            attempt.submitted_at = timezone.now()
+
+            attempt.save()
+
+        # ▀▄ redirect ke halaman pretest result
+        return redirect(
+            "student_pretest:pretest_result",
+            attempt.pk,
+        )
+
+    context = {
+        "pretest": pretest,
+        "questions": questions,
+        "attempt": attempt,
+    }
+
+    return render(
+        request,
+        "student/pretest-start.html",
+        context,
+    )
+'''
+
 @login_required
 def pretest_start(request, pretest_id):
 
@@ -436,17 +637,54 @@ def pretest_start(request, pretest_id):
     )
 
     # ==========================================================
-    # PERTAMA KALI:
-    # TENTUKAN URUTAN SOAL + PILIHAN
+    # TENTUKAN APAKAH ATTEMPT SUDAH MEMILIKI URUTAN
     # ==========================================================
 
-    if created or not attempt.question_order:
+    saved_question_order = attempt.question_order
+
+    # ----------------------------------------------------------
+    # Validasi format question_order
+    #
+    # Format baru:
+    #
+    # [
+    #     {
+    #         "id": 5,
+    #         "choices": [1, 2, 3],
+    #         "pairs": [4, 5, 6]
+    #     }
+    # ]
+    #
+    # Format lama:
+    #
+    # [5, 2, 8, 1]
+    # ----------------------------------------------------------
+
+    valid_saved_order = (
+        isinstance(saved_question_order, list)
+        and len(saved_question_order) > 0
+        and all(
+            isinstance(item, dict)
+            and "id" in item
+            for item in saved_question_order
+        )
+    )
+
+    # ==========================================================
+    # PERTAMA KALI / FORMAT LAMA
+    # ==========================================================
+
+    if created or not valid_saved_order:
 
         # ------------------------------------------------------
-        # URUTAN QUESTION
+        # AMBIL COPY QUESTION
         # ------------------------------------------------------
 
         questions = all_questions[:]
+
+        # ------------------------------------------------------
+        # RANDOM QUESTION
+        # ------------------------------------------------------
 
         if pretest.random_question:
             random.shuffle(questions)
@@ -462,7 +700,7 @@ def pretest_start(request, pretest_id):
         questions = questions[:pretest.question_count]
 
         # ------------------------------------------------------
-        # SIMPAN URUTAN QUESTION + OPTION KE ATTEMPT
+        # BUAT QUESTION ORDER
         # ------------------------------------------------------
 
         question_order = []
@@ -470,7 +708,7 @@ def pretest_start(request, pretest_id):
         for question in questions:
 
             # ==================================================
-            # MULTIPLE CHOICE
+            # MCQ
             # ==================================================
 
             choices = list(
@@ -499,9 +737,9 @@ def pretest_start(request, pretest_id):
                     key=lambda p: p.order
                 )
 
-            # --------------------------------------------------
-            # SIMPAN URUTAN KE JSON
-            # --------------------------------------------------
+            # ==================================================
+            # SIMPAN URUTAN
+            # ==================================================
 
             question_order.append({
                 "id": question.id,
@@ -520,19 +758,19 @@ def pretest_start(request, pretest_id):
         # ------------------------------------------------------
 
         attempt.question_order = question_order
+
         attempt.save(
             update_fields=["question_order"]
         )
 
     # ==========================================================
-    # LANJUTKAN DRAFT:
-    # GUNAKAN URUTAN YANG SUDAH DISIMPAN
+    # LANJUTKAN ATTEMPT YANG SUDAH ADA
     # ==========================================================
 
     else:
 
         # ------------------------------------------------------
-        # BUAT MAP QUESTION
+        # MAP SEMUA QUESTION
         # ------------------------------------------------------
 
         question_map = {
@@ -542,7 +780,11 @@ def pretest_start(request, pretest_id):
 
         questions = []
 
-        for item in attempt.question_order:
+        # ------------------------------------------------------
+        # GUNAKAN URUTAN YANG SUDAH DISIMPAN
+        # ------------------------------------------------------
+
+        for item in saved_question_order:
 
             question_id = item.get("id")
 
@@ -554,13 +796,18 @@ def pretest_start(request, pretest_id):
                 questions.append(question)
 
     # ==========================================================
-    # LOAD URUTAN CHOICES / PAIRS
+    # AMBIL QUESTION ORDER TERBARU
     # ==========================================================
 
     question_order_map = {
         item.get("id"): item
         for item in attempt.question_order
+        if isinstance(item, dict)
     }
+
+    # ==========================================================
+    # SIAPKAN CHOICES / PAIRS
+    # ==========================================================
 
     for question in questions:
 
@@ -603,7 +850,7 @@ def pretest_start(request, pretest_id):
                     )
 
             # --------------------------------------------------
-            # Jika ada pilihan baru yang belum masuk JSON
+            # Tambahkan choice baru jika ada
             # --------------------------------------------------
 
             existing_ids = {
@@ -629,7 +876,7 @@ def pretest_start(request, pretest_id):
         question.random_choices = choices
 
         # ======================================================
-        # MATCHING PAIRS
+        # MATCHING
         # ======================================================
 
         pairs = list(
@@ -662,7 +909,7 @@ def pretest_start(request, pretest_id):
                     )
 
             # --------------------------------------------------
-            # Jika ada pair baru yang belum masuk JSON
+            # Tambahkan pair baru jika ada
             # --------------------------------------------------
 
             existing_ids = {
@@ -686,20 +933,19 @@ def pretest_start(request, pretest_id):
             )
 
         # ------------------------------------------------------
-        # UNTUK SISI KIRI MATCHING
+        # MATCHING LEFT
         # ------------------------------------------------------
 
         question.random_pairs = pairs
 
         # ------------------------------------------------------
-        # UNTUK DRAG & DROP OPTIONS
-        # Urutannya sama dengan pairs
+        # MATCHING DRAG & DROP OPTIONS
         # ------------------------------------------------------
 
         question.random_options = pairs
 
     # ==========================================================
-    # LOAD JAWABAN YANG SUDAH TERSIMPAN
+    # LOAD JAWABAN YANG SUDAH ADA
     # ==========================================================
 
     answers = {
@@ -709,20 +955,9 @@ def pretest_start(request, pretest_id):
 
     for question in questions:
 
-        # ------------------------------------------------------
-        # Answer object
-        # ------------------------------------------------------
-
         question.saved_answer = answers.get(
             question.id
         )
-
-        if question.saved_answer:
-            question.saved_matching = (
-                question.saved_answer.matching_answer or {}
-            )
-        else:
-            question.saved_matching = {}
 
     # ==========================================================
     # SUBMIT PRETEST
@@ -749,17 +984,22 @@ def pretest_start(request, pretest_id):
             blank_answer = 0
 
             # --------------------------------------------------
-            # GUNAKAN QUESTION YANG ADA DI ATTEMPT
+            # AMBIL ID SOAL DARI QUESTION ORDER
             # --------------------------------------------------
 
-            submit_questions = Question.objects.filter(
-                id__in=[
-                    item.get("id")
-                    for item in attempt.question_order
-                ],
-                question_set=pretest.question_set,
-            ).prefetch_related(
-                "pairs"
+            question_ids = [
+                item.get("id")
+                for item in attempt.question_order
+                if isinstance(item, dict)
+            ]
+
+            submit_questions = (
+                Question.objects.filter(
+                    id__in=question_ids,
+                    question_set=pretest.question_set,
+                )
+                .prefetch_related("pairs")
+                .order_by("order", "id")
             )
 
             # --------------------------------------------------
@@ -861,9 +1101,9 @@ def pretest_start(request, pretest_id):
 
             attempt.save()
 
-        # ======================================================
+        # ------------------------------------------------------
         # REDIRECT RESULT
-        # ======================================================
+        # ------------------------------------------------------
 
         return redirect(
             "student_pretest:pretest_result",
