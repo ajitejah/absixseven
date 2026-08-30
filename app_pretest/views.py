@@ -375,7 +375,7 @@ def pretest_student_result(request, pretest_id, attempt_id):
         context,
     )
 
-# ▀▄▀▄ preent start 
+# ▀▄▀▄ preent start  
 @login_required
 def pretest_start(request, pretest_id):
 
@@ -436,10 +436,13 @@ def pretest_start(request, pretest_id):
         )
     )
 
-    all_questions = list(questions_queryset)
+    all_questions = list(
+        questions_queryset
+    )
 
     # =========================================================
-    # GENERATE ORDER HANYA UNTUK ATTEMPT BARU
+    # ATTEMPT BARU
+    # GENERATE RANDOM + SIMPAN ORDER
     # =========================================================
 
     if created:
@@ -453,7 +456,10 @@ def pretest_start(request, pretest_id):
 
         else:
             all_questions.sort(
-                key=lambda q: (q.order, q.id)
+                key=lambda q: (
+                    q.order,
+                    q.id,
+                )
             )
 
         # -----------------------------------------------------
@@ -474,7 +480,7 @@ def pretest_start(request, pretest_id):
         ]
 
         # -----------------------------------------------------
-        # RANDOM / SIMPAN CHOICE ORDER
+        # SIAPKAN ORDER PILIHAN
         # -----------------------------------------------------
 
         choice_order = {}
@@ -486,7 +492,10 @@ def pretest_start(request, pretest_id):
             # MULTIPLE CHOICE
             # =================================================
 
-            if question.question_type == Question.Type.MULTIPLE_CHOICE:
+            if (
+                question.question_type
+                == Question.Type.MULTIPLE_CHOICE
+            ):
 
                 choices = list(
                     question.choices.all()
@@ -494,6 +503,7 @@ def pretest_start(request, pretest_id):
 
                 if pretest.random_option:
                     random.shuffle(choices)
+
                 else:
                     choices.sort(
                         key=lambda choice: (
@@ -502,7 +512,9 @@ def pretest_start(request, pretest_id):
                         )
                     )
 
-                choice_order[str(question.id)] = [
+                choice_order[
+                    str(question.id)
+                ] = [
                     choice.id
                     for choice in choices
                 ]
@@ -511,7 +523,10 @@ def pretest_start(request, pretest_id):
             # MATCHING
             # =================================================
 
-            elif question.question_type == Question.Type.MATCHING:
+            elif (
+                question.question_type
+                == Question.Type.MATCHING
+            ):
 
                 pairs = list(
                     question.pairs.all()
@@ -519,6 +534,7 @@ def pretest_start(request, pretest_id):
 
                 if pretest.random_option:
                     random.shuffle(pairs)
+
                 else:
                     pairs.sort(
                         key=lambda pair: (
@@ -527,7 +543,9 @@ def pretest_start(request, pretest_id):
                         )
                     )
 
-                matching_order[str(question.id)] = [
+                matching_order[
+                    str(question.id)
+                ] = [
                     pair.id
                     for pair in pairs
                 ]
@@ -538,7 +556,6 @@ def pretest_start(request, pretest_id):
 
         attempt.choice_order = choice_order
         attempt.matching_order = matching_order
-
         attempt.total_question = len(
             selected_questions
         )
@@ -553,25 +570,23 @@ def pretest_start(request, pretest_id):
         )
 
     # =========================================================
-    # ATTEMPT LAMA / CONTINUE
+    # ATTEMPT LAMA
+    # CONTINUE PRETEST
     # =========================================================
 
     else:
 
-        # -----------------------------------------------------
-        # AMBIL QUESTION BERDASARKAN ORDER YANG TERSIMPAN
-        # -----------------------------------------------------
+        question_ids = (
+            attempt.question_order or []
+        )
 
-        question_ids = attempt.question_order or []
+        # -----------------------------------------------------
+        # SAFETY FALLBACK
+        # Untuk Attempt lama yang belum mempunyai
+        # question_order
+        # -----------------------------------------------------
 
         if not question_ids:
-
-            # Safety fallback jika Attempt lama
-            # belum memiliki question_order.
-
-            all_questions = list(
-                questions_queryset
-            )
 
             if pretest.random_question:
                 random.shuffle(all_questions)
@@ -599,7 +614,7 @@ def pretest_start(request, pretest_id):
         else:
 
             # -------------------------------------------------
-            # FETCH QUESTIONS
+            # BUAT MAP QUESTION
             # -------------------------------------------------
 
             question_map = {
@@ -608,6 +623,10 @@ def pretest_start(request, pretest_id):
             }
 
             selected_questions = []
+
+            # -------------------------------------------------
+            # SUSUN SESUAI ORDER ATTEMPT
+            # -------------------------------------------------
 
             for question_id in question_ids:
 
@@ -621,20 +640,58 @@ def pretest_start(request, pretest_id):
                     )
 
     # =========================================================
-    # PASANG ORDER KE OBJECT QUESTION
-    # UNTUK DIGUNAKAN TEMPLATE
+    # LOAD ORDER PILIHAN
     # =========================================================
 
-    choice_order = attempt.choice_order or {}
-    matching_order = attempt.matching_order or {}
+    choice_order = (
+        attempt.choice_order or {}
+    )
+
+    matching_order = (
+        attempt.matching_order or {}
+    )
+
+    # =========================================================
+    # LOAD ANSWER YANG SUDAH DISIMPAN
+    # =========================================================
+
+    answers = (
+        attempt.answers
+        .select_related(
+            "selected_option"
+        )
+        .filter(
+            question__in=selected_questions
+        )
+    )
+
+    answer_map = {
+        answer.question_id: answer
+        for answer in answers
+    }
+
+    # =========================================================
+    # SIAPKAN DATA QUESTION
+    # =========================================================
 
     for question in selected_questions:
+
+        # =====================================================
+        # LOAD ANSWER
+        # =====================================================
+
+        question.answer = answer_map.get(
+            question.id
+        )
 
         # =====================================================
         # MULTIPLE CHOICE
         # =====================================================
 
-        if question.question_type == Question.Type.MULTIPLE_CHOICE:
+        if (
+            question.question_type
+            == Question.Type.MULTIPLE_CHOICE
+        ):
 
             choices = list(
                 question.choices.all()
@@ -644,6 +701,10 @@ def pretest_start(request, pretest_id):
                 str(question.id),
                 []
             )
+
+            # -------------------------------------------------
+            # GUNAKAN ORDER YANG TERSIMPAN
+            # -------------------------------------------------
 
             if saved_order:
 
@@ -665,8 +726,11 @@ def pretest_start(request, pretest_id):
                             choice
                         )
 
-                # Safety: jika ada choice baru
-                # yang belum ada di order lama
+                # -------------------------------------------------
+                # JIKA ADA CHOICE BARU
+                # TAMBAHKAN DI BELAKANG
+                # -------------------------------------------------
+
                 existing_ids = {
                     choice.id
                     for choice in ordered_choices
@@ -693,10 +757,30 @@ def pretest_start(request, pretest_id):
             question.random_choices = choices
 
         # =====================================================
+        # ESSAY
+        # =====================================================
+
+        elif (
+            question.question_type
+            == Question.Type.ESSAY
+        ):
+
+            # Jawaban sudah tersedia melalui:
+            #
+            # question.answer.essay_answer
+            #
+            # Tidak perlu proses tambahan.
+
+            pass
+
+        # =====================================================
         # MATCHING
         # =====================================================
 
-        elif question.question_type == Question.Type.MATCHING:
+        elif (
+            question.question_type
+            == Question.Type.MATCHING
+        ):
 
             pairs = list(
                 question.pairs.all()
@@ -706,6 +790,10 @@ def pretest_start(request, pretest_id):
                 str(question.id),
                 []
             )
+
+            # -------------------------------------------------
+            # GUNAKAN ORDER YANG TERSIMPAN
+            # -------------------------------------------------
 
             if saved_order:
 
@@ -727,7 +815,11 @@ def pretest_start(request, pretest_id):
                             pair
                         )
 
-                # Safety jika ada pair baru
+                # -------------------------------------------------
+                # JIKA ADA PAIR BARU
+                # TAMBAHKAN DI BELAKANG
+                # -------------------------------------------------
+
                 existing_ids = {
                     pair.id
                     for pair in ordered_pairs
@@ -761,15 +853,22 @@ def pretest_start(request, pretest_id):
             # DRAG & DROP OPTIONS
             # -------------------------------------------------
 
-            options = list(
-                pairs
-            )
+            question.random_options = pairs
 
-            # Untuk matching, pilihan kanan
-            # mengikuti urutan random yang sama
-            # dengan matching_order.
+            # -------------------------------------------------
+            # LOAD MATCHING ANSWER
+            # -------------------------------------------------
 
-            question.random_options = options
+            if question.answer:
+
+                question.saved_matching_answer = (
+                    question.answer.matching_answer
+                    or {}
+                )
+
+            else:
+
+                question.saved_matching_answer = {}
 
     # =========================================================
     # CONTEXT

@@ -1,4 +1,5 @@
 <div class="mt-8">
+
     <div class="space-y-5">
 
         {% for pair in question.random_pairs %}
@@ -7,23 +8,58 @@
 
             <!-- LEFT -->
             <div class="min-w-0 sm:col-span-5">
+
                 <div class="min-w-0 overflow-hidden rounded-xl border border-slate-300 bg-slate-100 p-4 font-medium break-words whitespace-normal">
                     {{ pair.left_text }}
                 </div>
+
             </div>
+
 
             <!-- ARROW -->
             <div class="flex items-center justify-center text-slate-400 sm:col-span-2">
+
                 <span class="text-xl sm:text-lg">➜</span>
+
             </div>
+
 
             <!-- DROP -->
             <div class="min-w-0 sm:col-span-5">
-                <div class="drop-zone flex min-h-[60px] min-w-0 w-full items-center overflow-hidden rounded-xl border-2 border-dashed border-slate-300 bg-white p-3 transition"
-                    data-left="{{ pair.id }}">
-                    <span class="placeholder block min-w-0 max-w-full break-words whitespace-normal text-slate-400">
-                        Drag the answer here
-                    </span>
+
+                {% with saved_option_id=question.saved_answer|get_item:pair.id %}
+
+                <div
+                    class="drop-zone flex min-h-[60px] min-w-0 w-full items-center overflow-hidden rounded-xl border-2 border-dashed border-slate-300 bg-white p-3 transition"
+                    data-left="{{ pair.id }}"
+                >
+
+                    {% if saved_option_id %}
+
+                        {% for option in question.random_options %}
+
+                            {% if option.id|stringformat:"s" == saved_option_id|stringformat:"s" %}
+
+                                <div
+                                    draggable="true"
+                                    class="drag-item selected-answer min-w-0 max-w-full cursor-move overflow-hidden rounded-xl border border-primary bg-primary/10 px-4 py-3 break-words whitespace-normal transition hover:scale-105"
+                                    data-id="{{ option.id }}"
+                                >
+                                    {{ option.right_text }}
+                                </div>
+
+                            {% endif %}
+
+                        {% endfor %}
+
+                    {% else %}
+
+                        <span class="placeholder block min-w-0 max-w-full break-words whitespace-normal text-slate-400">
+                            Drag the answer here
+                        </span>
+
+                    {% endif %}
+
                 </div>
 
                 <input
@@ -31,36 +67,45 @@
                     class="matching-input"
                     name="question_{{ question.id }}_pair_{{ pair.id }}"
                     data-pair-id="{{ pair.id }}"
-                    value=""
+                    value="{{ saved_option_id|default:'' }}"
                 >
+
+                {% endwith %}
+
             </div>
+
         </div>
 
         {% endfor %}
 
     </div>
 
+
     <hr class="my-8 mt-4">
+
 
     <h4 class="mb-4 font-semibold">
         Answer Choices
     </h4>
 
+
     <div
         id="matching-options"
         class="flex flex-wrap gap-3"
     >
+
         {% for option in question.random_options %}
 
-        <div
-            draggable="true"
-            class="drag-item min-w-0 max-w-full cursor-move overflow-hidden rounded-xl border border-primary bg-primary/10 px-4 py-3 break-words whitespace-normal transition hover:scale-105"
-            data-id="{{ option.id }}"
-        >
-            {{ option.right_text }}
-        </div>
+            <div
+                draggable="true"
+                class="drag-item min-w-0 max-w-full cursor-move overflow-hidden rounded-xl border border-primary bg-primary/10 px-4 py-3 break-words whitespace-normal transition hover:scale-105"
+                data-id="{{ option.id }}"
+            >
+                {{ option.right_text }}
+            </div>
 
         {% endfor %}
+
     </div>
 
 </div>

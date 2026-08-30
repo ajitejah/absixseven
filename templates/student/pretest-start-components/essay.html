@@ -4,6 +4,7 @@
         name="question_{{ question.id }}"
         rows="8"
         class="form-textarea w-full rounded-xl border border-slate-300"
-        placeholder="Tuliskan jawaban Anda di sini..."></textarea>
+        placeholder="Write your answer here..."
+    >{% if question.saved_answer %}{{ question.saved_answer.essay_answer }}{% endif %}</textarea>
 
 </div>

@@ -1,20 +1,36 @@
-<div class="mt-8"> 
-    <div class="space-y-3"> 
-        {% for choice in question.random_choices %} 
-            <label class="flex cursor-pointer items-center rounded-xl border border-slate-200 p-4 transition hover:border-primary hover:bg-primary/5">
+<div class="mt-8">
+
+    <div class="space-y-3">
+
+        {% for choice in question.random_choices %}
+
+            <label
+                class="flex cursor-pointer items-center rounded-xl border border-slate-200 p-4 transition hover:border-primary hover:bg-primary/5"
+            >
 
                 <input
                     type="radio"
                     name="question_{{ question.id }}"
                     value="{{ choice.id }}"
-                    class="form-checkbox is-outline size-5 rounded-full border-slate-400/70 before:bg-primary checked:border-primary hover:border-primary focus:border-primary dark:border-navy-400 dark:before:bg-accent dark:checked:border-accent dark:hover:border-accent dark:focus:border-accent">
+                    class="form-checkbox is-outline size-5 rounded-full border-slate-400/70 before:bg-primary checked:border-primary hover:border-primary focus:border-primary dark:border-navy-400 dark:before:bg-accent dark:checked:border-accent dark:hover:border-accent dark:focus:border-accent"
 
-                <div class="ml-4 flex-1"> 
-                    <div class="font-medium"> 
+                    {% if question.saved_answer and question.saved_answer.selected_option_id == choice.id %}
+                        checked
+                    {% endif %}
+                >
+
+                <div class="ml-4 flex-1 min-w-0">
+
+                    <div class="font-medium break-words whitespace-normal">
                         {{ choice.option }}
                     </div>
+
                 </div>
+
             </label>
+
         {% endfor %}
+
     </div>
+
 </div>
