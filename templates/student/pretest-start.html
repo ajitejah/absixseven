@@ -23,16 +23,18 @@
                     <div id="question-container">
 
                         {% for question in questions %}
-                            <div
-                                class="question-slide {% if not forloop.first %}hidden{% endif %}"
+
+                            <div class="question-slide {% if not forloop.first %}hidden{% endif %}"
                                 data-index="{{ forloop.counter0 }}"
                                 data-question-id="{{ question.id }}"
                                 {% if question.saved_answer and question.saved_answer.matching_answer %}
-                                    data-saved-matching="{{ question.saved_answer.matching_answer|escapejs }}"
-                                {% endif %}
-                            >    
-                            {% include "student/pretest-start-components/question.html" %}
+                                    data-saved-matching='{{ question.saved_answer.matching_answer|escapejs }}'
+                                {% endif %} >
+
+                                {% include "student/pretest-start-components/question.html" %}
+
                             </div>
+
                         {% endfor %}
 
                     </div>
@@ -307,7 +309,7 @@
             }
         }
  
-        // ▀▄▀▄ RESTORE MATCHING ANSWER  
+        // ▀▄▀▄ RESTORE MATCHING ANSWER   
         function restoreMatchingAnswers() {
 
             document.querySelectorAll(".question-slide").forEach(slide => {
@@ -315,6 +317,7 @@
                 const matchingInputs =
                     slide.querySelectorAll(".matching-input");
 
+                // Bukan soal matching
                 if (!matchingInputs.length) {
                     return;
                 }
@@ -322,6 +325,7 @@
                 const savedData =
                     slide.dataset.savedMatching;
 
+                // Tidak ada jawaban tersimpan
                 if (!savedData) {
                     return;
                 }
@@ -329,17 +333,14 @@
                 let matchingAnswer = {};
 
                 try {
-
                     matchingAnswer = JSON.parse(savedData);
-
                 }
                 catch (error) {
-
                     console.error(
                         "Gagal membaca matching answer:",
-                        error
+                        error,
+                        savedData
                     );
-
                     return;
                 }
 
@@ -350,9 +351,8 @@
                     return;
                 }
 
-
                 // ==================================================
-                // RESTORE
+                // RESTORE SETIAP PASANGAN
                 // ==================================================
                 Object.entries(matchingAnswer).forEach(
                     ([pairId, optionId]) => {
@@ -360,7 +360,6 @@
                         if (!pairId || !optionId) {
                             return;
                         }
-
 
                         // ------------------------------------------
                         // DROP ZONE
@@ -374,10 +373,8 @@
                                 "Drop zone tidak ditemukan:",
                                 pairId
                             );
-
                             return;
                         }
-
 
                         // ------------------------------------------
                         // DRAG ITEM
@@ -391,10 +388,8 @@
                                 "Drag item tidak ditemukan:",
                                 optionId
                             );
-
                             return;
                         }
-
 
                         // ------------------------------------------
                         // HIDDEN INPUT
@@ -404,9 +399,8 @@
                         );
 
                         if (input) {
-                            input.value = optionId;
+                            input.value = String(optionId);
                         }
-
 
                         // ------------------------------------------
                         // PLACEHOLDER
@@ -418,18 +412,21 @@
                             placeholder.style.display = "none";
                         }
 
-
                         // ------------------------------------------
-                        // PINDAHKAN OPTION
+                        // PINDAHKAN OPTION KE DROP ZONE
                         // ------------------------------------------
                         dropZone.appendChild(dragItem);
-
                     }
                 );
-
             });
 
-        }
+            // ==========================================================
+            // SETELAH SEMUA JAWABAN DI-RESTORE
+            // UPDATE NAVIGATOR & PROGRESS
+            // ==========================================================
+            updateProgress();
+            updateAnsweredStatus();
+        }  
  
         // ▀▄▀▄ tampilkan question  
         function showQuestion(index){
