@@ -68,105 +68,80 @@
 
         });
 
-        // ▀▄▀▄ drop zone
-        document.querySelectorAll(".drop-zone").forEach(zone=>{
+        // ▀▄▀▄ drop zone 
+        document.querySelectorAll(".drop-zone").forEach(zone => {
 
-            zone.addEventListener("dragover",function(e){
-
+            zone.addEventListener("dragover", function (e) {
                 e.preventDefault();
-
                 this.classList.add("border-primary");
-
             });
 
-            zone.addEventListener("dragleave",function(){
-
+            zone.addEventListener("dragleave", function () {
                 this.classList.remove("border-primary");
-
             });
 
-            zone.addEventListener("drop",function(e){
+            zone.addEventListener("drop", function (e) {
 
                 e.preventDefault();
 
                 this.classList.remove("border-primary");
 
-                if(!dragged)
+                if (!dragged) {
                     return;
-
-                // ----------------------------------
-                // jika dropzone sudah ada jawaban
-                // ----------------------------------
-
-                const old=this.querySelector(".drag-item");
-
-                if(old){
-
-                    document
-                    .getElementById("matching-options")
-                    .appendChild(old);
-
                 }
 
-                // ----------------------------------
-                // jika jawaban dipakai di tempat lain
-                // ----------------------------------
+                // Jika dropzone sudah ada jawaban
+                const old = this.querySelector(".drag-item");
 
-                document.querySelectorAll(".drop-zone").forEach(z=>{
+                if (old) {
+                    document
+                        .getElementById("matching-options")
+                        .appendChild(old);
+                }
 
-                    if(z!==this){
+                // Jika jawaban dipakai di tempat lain
+                document.querySelectorAll(".drop-zone").forEach(z => {
 
-                        const exist=z.querySelector(
+                    if (z !== this) {
+
+                        const exist = z.querySelector(
                             `[data-id="${dragged.dataset.id}"]`
                         );
 
-                        if(exist){
+                        if (exist) {
 
                             document
-                            .getElementById("matching-options")
-                            .appendChild(exist);
+                                .getElementById("matching-options")
+                                .appendChild(exist);
 
-                            z.querySelector(".matching-input").value="";
+                            z.querySelector(".matching-input").value = "";
 
-                            const ph=z.querySelector(".placeholder");
+                            const ph = z.querySelector(".placeholder");
 
-                            if(ph)
-                                ph.style.display="block";
-
+                            if (ph) {
+                                ph.style.display = "block";
+                            }
                         }
-
                     }
-
                 });
 
-                // ----------------------------------
-                // pindahkan
-                // ----------------------------------
+                // Pindahkan jawaban
+                const placeholder = this.querySelector(".placeholder");
 
-                const placeholder=this.querySelector(".placeholder");
-
-                if(placeholder){
-
-                    placeholder.style.display="none";
-
+                if (placeholder) {
+                    placeholder.style.display = "none";
                 }
 
                 this.appendChild(dragged);
 
-                // ----------------------------------
-                // simpan hidden input
-                // ----------------------------------
-
+                // Simpan ke hidden input
                 this.parentElement
                     .querySelector(".matching-input")
-                    .value=dragged.dataset.id;
+                    .value = dragged.dataset.id;
 
-                // ----------------------------------
-                // update progress
-                // ----------------------------------
-
+                // Update progress
                 updateProgress();
-                updateAnsweredStatus(); 
+                updateAnsweredStatus();
 
                 // AJAX SAVE
                 saveAnswer(
@@ -174,9 +149,7 @@
                 );
 
                 dragged = null;
-
             });
-
         });
         
         // ▀▄▀▄ get element
