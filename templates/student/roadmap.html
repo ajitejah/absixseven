@@ -29,7 +29,7 @@
 <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3 lg:gap-6">  
     
     {% for roadmap in roadmaps %} 
-    <div class="card">
+        <div class="card">
             <div class="p-2.5">
               <img src="{{ roadmap.cover.url }}" class="h-48 w-full rounded-lg object-cover object-center" alt="image"/>
             </div>
@@ -42,8 +42,7 @@
                   >{{roadmap.name}}</a> 
               </div>
               <div class="my-2 flex items-center space-x-3 text-xs">
-                <div class="h-px flex-1 bg-slate-200 dark:bg-navy-500"></div>
-                
+                <div class="h-px flex-1 bg-slate-200 dark:bg-navy-500"></div> 
                 <div class="flex flex-col gap-1">
                     <span class="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-medium">
                         <span><strong>Release</strong></span>
@@ -142,7 +141,47 @@
               </div>
             </div>
           </div>
- 
+
+    {% empty %}
+
+        <!-- ▀▄▀▄ no roadmaps -->
+        <div class="col-span-full">
+            <div class="card p-10 text-center">
+
+                <div class="flex flex-col items-center justify-center">
+
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="size-12 text-slate-300"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="1.5"
+                            d="M4 5a2 2 0 012-2h12a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V5z"
+                        />
+
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="1.5"
+                            d="M8 7h8M8 11h8M8 15h5"
+                        />
+
+                    </svg>
+
+                    <p class="mt-3 font-medium text-slate-500 dark:text-navy-300">
+                        No Roadmaps Available.
+                    </p>
+
+                </div>
+
+            </div>
+        </div>
+            
     {% endfor %}
 
 </div>
