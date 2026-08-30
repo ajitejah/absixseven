@@ -23,10 +23,10 @@
 
 <div class="card p-5"> 
     <h3 class="font-semibold text-slate-700 dark:text-navy-100">
-        Navigasi Soal
+        Question Navigator
     </h3>
 
-    <!-- Nomor Soal -->
+    <!-- ▀▄▀▄ question number -->
     <div class="mt-4 flex flex-wrap justify-center gap-2"> 
         {% for question in questions %} 
         <button
@@ -43,20 +43,20 @@
 
     <hr class="my-5">
 
-    <!-- Legend -->
+    <!-- ▀▄▀▄ legend -->
     <div class="space-y-3 text-sm"> 
         <div class="flex items-center">
             <span class="legend-color legend-unanswered"></span>
-            <span>Belum Dijawab</span>
+            <span>Unanswered</span>
         </div> 
         <div class="flex items-center">
             <span class="legend-color legend-answered"></span>
-            <span>Sudah Dijawab</span>
+            <span>Answered</span>
         </div> 
         <div class="flex items-center">
             <span class="legend-color legend-active"></span>
-            <span>Soal Aktif</span>
-        </div> 
-    </div>
+            <span>Active Question</span>
+        </div>
 
+    </div>
 </div>

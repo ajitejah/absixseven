@@ -3,60 +3,40 @@
 
 {% block content %}
 
-<form id="pretest-form" method="POST">
+    <form id="pretest-form" method="POST">
+        {% csrf_token %}
 
-{% csrf_token %}
+        <div class="grid grid-cols-12 gap-5"> 
 
-<div class="grid grid-cols-12 gap-5">
+            <!-- ▀▄▀▄ sidebar -->
+            <div class="col-span-12 lg:col-span-3">
 
-    <!-- ========================= -->
-    <!-- SIDEBAR -->
-    <!-- ========================= -->
+                {% include "student/pretest-start-components/header.html" %}
+                {% include "student/pretest-start-components/progress.html" %}
+                {% include "student/pretest-start-components/sidebar.html" %}
 
-    <div class="col-span-12 lg:col-span-3">
+            </div>
+        
+            <!-- ▀▄▀▄ question -->
+            <div class="col-span-12 lg:col-span-9">
+                <div class="card p-6">
+                    <div id="question-container">
 
-        {% include "student/pretest-start-components/header.html" %}
-
-        {% include "student/pretest-start-components/progress.html" %}
-
-        {% include "student/pretest-start-components/sidebar.html" %}
-
-    </div>
-
-
-    <!-- ========================= -->
-    <!-- QUESTION -->
-    <!-- ========================= -->
-
-    <div class="col-span-12 lg:col-span-9">
-
-        <div class="card p-6">
-
-            <div id="question-container">
-
-                {% for question in questions %}
-
-                    <div class="question-slide {% if not forloop.first %}hidden{% endif %}"
-                        data-index="{{ forloop.counter0 }}"
-                        data-question-id="{{ question.id }}">
-
-                        {% include "student/pretest-start-components/question.html" %}
+                        {% for question in questions %}
+                            <div class="question-slide {% if not forloop.first %}hidden{% endif %}" data-index="{{ forloop.counter0 }}" data-question-id="{{ question.id }}">
+                                {% include "student/pretest-start-components/question.html" %}
+                            </div>
+                        {% endfor %}
 
                     </div>
 
-                {% endfor %}
+                    {% include "student/pretest-start-components/navigation.html" %}
 
+                </div>
             </div>
-
-            {% include "student/pretest-start-components/navigation.html" %}
-
         </div>
 
-    </div>
-
-</div>
-
-</form>
+    </form>
 
 
 <script>
