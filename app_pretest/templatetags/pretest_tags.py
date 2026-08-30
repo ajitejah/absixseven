@@ -124,18 +124,6 @@ def pretest_delete_url(user, pretest):
 
     return "#"
 
-# ▀▄▀▄ shift url menampilkan LIST pretest
-@register.simple_tag
-def pretest_url(user):
-
-    if hasattr(user, "admin"):
-        return "/admin/pretest/"
-
-    elif hasattr(user, "teacher"):
-        return "/teacher/pretest/"
-
-    return "#"
-
 # ▀▄▀▄ shift url menampilkan LIST question set
 @register.simple_tag
 def question_set_url(user):
