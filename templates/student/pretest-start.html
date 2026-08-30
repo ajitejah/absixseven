@@ -45,27 +45,19 @@
         const ANSWER_SAVE_URL = "{% url 'student_pretest:answer_save' attempt.id %}";
         let dragged=null;
 
-        // ▀▄▀▄ start drag
-        document.querySelectorAll(".drag-item").forEach(item=>{
+        // ▀▄▀▄ start drag 
+        document.querySelectorAll(".drag-item").forEach(item => {
+            item.addEventListener("dragstart", function () {
+                dragged = this;
 
-            item.addEventListener("dragstart",function(){
-
-                dragged=this;
-
-                setTimeout(()=>{
-
-                    this.style.opacity=".3";
-
-                },0);
-
+                setTimeout(() => {
+                    this.style.opacity = ".3";
+                }, 0);
             });
 
-            item.addEventListener("dragend",function(){
-
-                this.style.opacity="1";
-
+            item.addEventListener("dragend", function () {
+                this.style.opacity = "1";
             });
-
         });
 
         // ▀▄▀▄ drop zone 
@@ -306,6 +298,103 @@
 
                 saveRequests.delete(requestKey);
             }
+        }
+
+        // ==========================================================
+        // RESTORE MATCHING ANSWER
+        // ==========================================================
+        function restoreMatchingAnswers() {
+
+            document.querySelectorAll(".question-slide").forEach(slide => {
+
+                const matchingInputs =
+                    slide.querySelectorAll(".matching-input");
+
+                if (!matchingInputs.length) {
+                    return;
+                }
+
+                // Ambil data jawaban yang disimpan dari HTML
+                const savedData = slide.dataset.savedMatching;
+
+                if (!savedData) {
+                    return;
+                }
+
+                let matchingAnswer;
+
+                try {
+                    matchingAnswer = JSON.parse(savedData);
+                }
+                catch (error) {
+                    console.error(
+                        "Matching answer tidak valid:",
+                        error
+                    );
+                    return;
+                }
+
+                if (
+                    !matchingAnswer ||
+                    typeof matchingAnswer !== "object"
+                ) {
+                    return;
+                }
+
+                // ==================================================
+                // Restore setiap pasangan
+                // ==================================================
+                Object.entries(matchingAnswer).forEach(
+                    ([pairId, optionId]) => {
+
+                        if (!optionId) {
+                            return;
+                        }
+
+                        const dropZone = slide.querySelector(
+                            `.drop-zone[data-left="${pairId}"]`
+                        );
+
+                        if (!dropZone) {
+                            return;
+                        }
+
+                        const dragItem = slide.querySelector(
+                            `.drag-item[data-id="${optionId}"]`
+                        );
+
+                        if (!dragItem) {
+                            return;
+                        }
+
+                        // ==========================================
+                        // Isi hidden input
+                        // ==========================================
+                        const input = slide.querySelector(
+                            `.matching-input[data-pair-id="${pairId}"]`
+                        );
+
+                        if (input) {
+                            input.value = optionId;
+                        }
+
+                        // ==========================================
+                        // Sembunyikan placeholder
+                        // ==========================================
+                        const placeholder =
+                            dropZone.querySelector(".placeholder");
+
+                        if (placeholder) {
+                            placeholder.style.display = "none";
+                        }
+
+                        // ==========================================
+                        // Pindahkan answer ke drop zone
+                        // ==========================================
+                        dropZone.appendChild(dragItem);
+                    }
+                );
+            });
         }
  
         // ▀▄▀▄ tampilkan question  
@@ -706,6 +795,7 @@
         }
 
         // ▀▄▀▄ init
+        restoreMatchingAnswers();
         showQuestion(0);
         updateProgress();
         updateAnsweredStatus();
