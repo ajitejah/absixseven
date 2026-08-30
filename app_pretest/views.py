@@ -158,7 +158,6 @@ def pretest(request):
         )
 
 # ▀▄▀▄ student yang mengikuti pretest
-
 @login_required
 def pretest_student_list(request, pretest_id):
 
