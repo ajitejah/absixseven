@@ -82,25 +82,43 @@
             });
 
             zone.addEventListener("drop", function (e) {
-
                 e.preventDefault();
-
                 this.classList.remove("border-primary");
 
                 if (!dragged) {
                     return;
                 }
 
-                // Jika dropzone sudah ada jawaban
+                // ==================================================
+                // CONTAINER OPTIONS MILIK QUESTION INI
+                // ==================================================
+                const slide = this.closest(".question-slide");
+
+                if (!slide) {
+                    console.error("Question slide tidak ditemukan.");
+                    return;
+                }
+
+                const optionsContainer =
+                    slide.querySelector(".matching-options");
+
+                if (!optionsContainer) {
+                    console.error("Matching options tidak ditemukan.");
+                    return;
+                }
+
+                // ==================================================
+                // JIKA DROPZONE SUDAH ADA JAWABAN
+                // ==================================================
                 const old = this.querySelector(".drag-item");
 
                 if (old) {
-                    document
-                        .getElementById("matching-options")
-                        .appendChild(old);
+                    optionsContainer.appendChild(old);
                 }
 
-                // Jika jawaban dipakai di tempat lain
+                // ==================================================
+                // JIKA JAWABAN DIPAKAI DI TEMPAT LAIN
+                // ==================================================
                 document.querySelectorAll(".drop-zone").forEach(z => {
 
                     if (z !== this) {
@@ -111,13 +129,17 @@
 
                         if (exist) {
 
-                            document
-                                .getElementById("matching-options")
-                                .appendChild(exist);
+                            optionsContainer.appendChild(exist);
 
-                            z.querySelector(".matching-input").value = "";
+                            const oldInput =
+                                z.querySelector(".matching-input");
 
-                            const ph = z.querySelector(".placeholder");
+                            if (oldInput) {
+                                oldInput.value = "";
+                            }
+
+                            const ph =
+                                z.querySelector(".placeholder");
 
                             if (ph) {
                                 ph.style.display = "block";
@@ -126,8 +148,11 @@
                     }
                 });
 
-                // Pindahkan jawaban
-                const placeholder = this.querySelector(".placeholder");
+                // ==================================================
+                // PINDAHKAN JAWABAN KE DROPZONE
+                // ==================================================
+                const placeholder =
+                    this.querySelector(".placeholder");
 
                 if (placeholder) {
                     placeholder.style.display = "none";
@@ -135,22 +160,30 @@
 
                 this.appendChild(dragged);
 
-                // Simpan ke hidden input
-                this.parentElement
-                    .querySelector(".matching-input")
-                    .value = dragged.dataset.id;
+                // ==================================================
+                // SIMPAN KE HIDDEN INPUT
+                // ==================================================
+                const input =
+                    this.parentElement.querySelector(".matching-input");
 
-                // Update progress
+                if (input) {
+                    input.value = dragged.dataset.id;
+                }
+
+                // ==================================================
+                // UPDATE PROGRESS
+                // ==================================================
                 updateProgress();
                 updateAnsweredStatus();
 
+                // ==================================================
                 // AJAX SAVE
-                saveAnswer(
-                    this.closest(".question-slide")
-                );
+                // ==================================================
+                saveAnswer(slide);
 
                 dragged = null;
             });
+
         });
         
         // ▀▄▀▄ get element
@@ -827,9 +860,9 @@
 
         // ▀▄▀▄ init
         restoreMatchingAnswers();
-        showQuestion(0);
         updateProgress();
         updateAnsweredStatus();
+        showQuestion(0);
         startTimer();
 
     });
