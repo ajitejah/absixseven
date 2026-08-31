@@ -959,6 +959,13 @@ def pretest_start(request, pretest_id):
             question.id
         )
 
+        if question.saved_answer and question.saved_answer.matching_answer:
+            question.saved_matching_json = json.dumps(
+                question.saved_answer.matching_answer
+            )
+        else:
+            question.saved_matching_json = ""
+
     # ==========================================================
     # SUBMIT PRETEST
     # ==========================================================
