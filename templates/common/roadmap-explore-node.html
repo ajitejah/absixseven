@@ -939,9 +939,9 @@
                         }
                     </p> 
 
-                    <div style="display:flex; flex-direction:column; align-items:center; margin-top:6px;">
+                    <div style="display:flex; align-items:center; justify-content:center; gap:8px; margin-top:6px;">
 
-                        <span class="badge rounded-full ${
+                        <span class="badge whitespace-nowrap rounded-full ${
                             n.locked
                                 ? 'bg-error/10 text-error'
                                 : 'bg-success/10 text-success'
@@ -955,10 +955,10 @@
                             ${n.locked ? 'Locked' : 'Unlocked'}
                         </span>
 
-                        <p style="margin:5px 0 0; font-size:12px; color:#888; text-align:center;">
+                        <span style="font-size:12px; color:#888; white-space:nowrap;">
                             <i class="fa-solid fa-clock"></i>
                             ${n.duration ? n.duration + ' minutes' : '-'}
-                        </p>
+                        </span>
 
                     </div>
 
