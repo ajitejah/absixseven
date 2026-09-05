@@ -171,7 +171,10 @@ def roadmap_create(request):
         form = RoadmapForm(request.POST, request.FILES)
 
         if form.is_valid():
-            roadmap = form.save()
+            roadmap = form.save(commit=False)
+            roadmap.owner = request.user
+            roadmap.save()
+            
             messages.success(request, f'Roadmap "{roadmap.name}" has been created successfully.')
             return redirect('teacher_roadmap:roadmap_list')
 
