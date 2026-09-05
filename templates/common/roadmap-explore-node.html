@@ -937,12 +937,17 @@
                                 : n.desc)
                             : ''
                         }
+                    </p> 
+
+                    <p style="margin:4px 0 0; font-size:12px; color:#888;">
+                        <i class="fa-solid fa-clock"></i>
+                        ${n.duration ? n.duration + ' minutes' : '-'}
                     </p>
 
-                    <!-- ACTIONS -->
+                    <!-- ▀▄▀▄ action -->
                     <div style="display:flex; justify-content:center; gap:8px; margin-top:10px;">
 
-                        <!-- UPDATE BUTTON -->
+                        <!-- ▀▄▀▄ update button -->
                         <button 
                             @click="openUpdateNode(${i})"
                             class="btn size-9 rounded-full bg-info/10 p-0 text-info hover:bg-info/20 focus:bg-info/20 active:bg-info/25"
@@ -961,9 +966,8 @@
                             </svg>
                         </button>
 
-                        <!-- ASSIGNMENT BUTTON -->
-                        <a 
-                            href="${n.id || '#'}" 
+                        <!-- ▀▄▀▄ assignment button -->
+                        <a  href="${n.id || '#'}" 
                             class="btn size-9 rounded-full bg-warning/10 p-0 text-warning hover:bg-warning/20 focus:bg-warning/20 active:bg-warning/25"
                             title="Assignment">
 
@@ -980,25 +984,28 @@
                             </svg>
                         </a>
 
-                        <!-- ASSIGNMENT REMEDIAL BUTTON -->
-                        <a 
-                            href="${n.id || '#'}/remedial/" 
-                            class="btn size-9 rounded-full bg-warning/10 p-0 text-warning hover:bg-warning/20 focus:bg-warning/20 active:bg-warning/25"
-                            title="Assignment Remedial">
+                        <!-- ▀▄▀▄ assignment remedial button -->
+                        ${
+                            n.remedial
+                            ? `
+                                <a href="${n.id}/remedial/"
+                                    class="btn size-9 rounded-full bg-warning/10 p-0 text-warning hover:bg-warning/20 focus:bg-warning/20 active:bg-warning/25"
+                                    title="Assignment Remedial">
 
-                            <!-- ICON LINK / TASK -->
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                class="size-4.5"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor">
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                        class="size-4.5"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor">
 
-                                <!-- Refresh / Repeat -->
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 4v6h6"/>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 20v-6h-6"/>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 10A8 8 0 006.34 5.34L4 10m16 4l-2.34 4.66A8 8 0 014 14"/>
-                            </svg>
-                        </a>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 4v6h6"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 20v-6h-6"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 10A8 8 0 006.34 5.34L4 10m16 4l-2.34 4.66A8 8 0 014 14"/>
+                                    </svg>
+                                </a>
+                            `
+                            : ''
+                        }
 
                     </div>
 

@@ -255,6 +255,10 @@ def node_create(request):
                         'desc': node.description,
                         'duration': node.duration,
                         'locked': node.is_locked,
+                        'remedial': Assignment.objects.filter(
+                            node=node,
+                            referred_fouls__isnull=False
+                        ).exists(),
                     }
                 })
 
