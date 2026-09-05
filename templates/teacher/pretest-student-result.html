@@ -136,12 +136,25 @@
                                 <!-- ▀▄▀▄ SCORE CIRCLE -->
                                 <div class="flex h-36 w-36 items-center justify-center rounded-full border-8 border-primary/20">
                                     <div class="text-center">
-                                        <div class="text-4xl font-bold text-primary">
-                                            {{ attempt.score|floatformat:2 }}
-                                        </div>
+
+                                        {% if attempt.score == 7 %}
+                                            <div class="text-4xl font-bold text-primary">
+                                                A
+                                            </div>
+                                        {% elif attempt.score == 6 %}
+                                            <div class="text-4xl font-bold text-primary">
+                                                B
+                                            </div>
+                                        {% else %}
+                                            <div class="text-4xl font-bold text-primary">
+                                                {{ attempt.score|floatformat:0 }}
+                                            </div>
+                                        {% endif %}
+
                                         <div class="mt-1 text-xs font-medium uppercase tracking-wide text-slate-500">
                                             Nilai
                                         </div>
+
                                     </div>
                                 </div>
 
