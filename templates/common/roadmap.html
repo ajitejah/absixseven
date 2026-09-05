@@ -264,20 +264,35 @@
                                     </td>
 
                                     <!-- STATUS -->
-                                    <td class="px-4 py-3">
+                                    <td class="px-4 py-3 font-medium text-slate-700 dark:text-navy-100">
                                         {% if roadmap.is_active %}
-                                        <span class="badge bg-success text-white">Active</span>
+                                            <span class="badge rounded-full bg-success/10 text-success">
+                                                Active
+                                            </span>
                                         {% else %}
-                                        <span class="badge bg-error text-white">Inactive</span>
+                                            <span class="badge rounded-full bg-error/10 text-error">
+                                                Inactive
+                                            </span>
                                         {% endif %}
                                     </td>
 
                                     <!-- INFO -->
-                                    <td class="px-4 py-3 text-xs text-slate-500">
-                                        <div>Release: {{ roadmap.release|date:"d M Y"|default:"-" }}</div>
-                                        <div>Expired: {{ roadmap.expired|date:"d M Y"|default:"-" }}</div>
-                                    </td>
+                                    <td class="px-4 py-3 text-xs">
+                                        <div class="mb-1">
+                                            <span class="badge rounded-full bg-primary/10 text-primary">
+                                                <i class="fa fa-calendar mr-1"></i>
+                                                Release: {{ roadmap.release|date:"d M Y"|default:"-" }}
+                                            </span>
+                                        </div>
 
+                                        <div>
+                                            <span class="badge rounded-full bg-error/10 text-error">
+                                                <i class="fa fa-calendar-times mr-1"></i>
+                                                Expired: {{ roadmap.expired|date:"d M Y"|default:"-" }}
+                                            </span>
+                                        </div>
+                                    </td>
+                                    
                                     <!-- AKSI -->
                                     <td class="px-4 py-3">
                                         <div class="flex space-x-2">
