@@ -41,6 +41,17 @@ class RoadmapForm(forms.ModelForm):
             })
         }
 
+    def save(self, commit=True):
+        roadmap = super().save(commit=False)
+
+        if not roadmap.cover:
+            roadmap.cover = 'user/photos/default.jpg'
+
+        if commit:
+            roadmap.save()
+
+        return roadmap
+
 # ▀▄▀▄ node form
 class NodeForm(forms.ModelForm):
     class Meta:
