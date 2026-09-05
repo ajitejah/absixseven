@@ -159,40 +159,69 @@
                                 </div>
 
                                 <!-- SCORE MESSAGE -->
-                                {% if attempt.score >= 90 %}
+                                {% if attempt.score == 7 %}
                                     <div class="mt-5 text-center">
                                         <h3 class="text-lg font-semibold text-success">
-                                            Sangat Baik!
+                                            Excellent!
                                         </h3>
                                         <p class="mt-1 text-sm text-slate-500 dark:text-navy-300">
-                                            Hasil pengerjaan siswa sangat baik.
+                                            The student's performance was excellent.
                                         </p>
+
+                                        <!-- ASSIGNMENT BUTTON -->
+                                        <div class="mt-4">
+                                            <a href="URL_ASSIGNMENT_A"
+                                            class="btn bg-primary text-white hover:bg-primary-focus">
+                                                Start Assignment
+                                            </a>
+                                        </div>
                                     </div>
-                                {% elif attempt.score >= 80 %}
+
+                                {% elif attempt.score == 6 %}
                                     <div class="mt-5 text-center">
                                         <h3 class="text-lg font-semibold text-success">
-                                            Baik Sekali!
+                                            Very Good!
                                         </h3>
                                         <p class="mt-1 text-sm text-slate-500 dark:text-navy-300">
-                                            Hasil pengerjaan siswa sudah sangat baik.
+                                            The student's performance was very good.
                                         </p>
+
+                                        <!-- ASSIGNMENT BUTTON -->
+                                        <div class="mt-4">
+                                            <a href="URL_ASSIGNMENT_B"
+                                            class="btn bg-primary text-white hover:bg-primary-focus">
+                                                Start Assignment
+                                            </a>
+                                        </div>
                                     </div>
-                                {% elif attempt.score >= 70 %}
+
+                                {% elif attempt.score == 5 %}
                                     <div class="mt-5 text-center">
                                         <h3 class="text-lg font-semibold text-warning">
-                                            Cukup Baik
+                                            Good
                                         </h3>
                                         <p class="mt-1 text-sm text-slate-500 dark:text-navy-300">
-                                            Hasil masih dapat ditingkatkan.
+                                            The student's performance is good but can still be improved.
                                         </p>
                                     </div>
+
+                                {% elif attempt.score >= 3 %}
+                                    <div class="mt-5 text-center">
+                                        <h3 class="text-lg font-semibold text-warning">
+                                            Needs Improvement
+                                        </h3>
+                                        <p class="mt-1 text-sm text-slate-500 dark:text-navy-300">
+                                            The student's performance still needs improvement.
+                                        </p>
+                                    </div>
+
                                 {% else %}
                                     <div class="mt-5 text-center">
                                         <h3 class="text-lg font-semibold text-error">
-                                            Perlu Ditingkatkan
+                                            Needs Significant Improvement
                                         </h3>
                                         <p class="mt-1 text-sm text-slate-500 dark:text-navy-300">
-                                            Hasil belajar siswa masih perlu ditingkatkan.
+                                            The student's learning outcomes need significant improvement.
                                         </p>
                                     </div>
                                 {% endif %}
