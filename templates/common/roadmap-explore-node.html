@@ -704,7 +704,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="size-4" fill="currentColor" viewBox="0 0 20 20">
                     <circle cx="10" cy="10" r="6"></circle>
                     </svg>
-                    Aktif
+                    Active
                 </span>
                 {% else %}
                 <!-- TIDAK AKTIF -->
@@ -712,7 +712,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="size-4" fill="currentColor" viewBox="0 0 20 20">
                     <circle cx="10" cy="10" r="6"></circle>
                     </svg>
-                    Tidak Aktif
+                    Inactive
                 </span>
                 {% endif %}
 
@@ -736,23 +736,23 @@
       <!-- tanggal -->
       <div class="flex flex-col justify-center space-y-2 rounded-2xl border border-slate-150 p-4 dark:border-navy-600">
 
-        <!-- RELEASE -->
-        <div class="flex items-center justify-between">
-          <span class="text-sm text-slate-500">Rilis</span>
-          <span class="text-sm font-medium text-slate-700 dark:text-navy-100">
-            {{ roadmap.release_date|date:"d M Y"|default:"-" }}
-          </span>
-        </div>
+            <!-- RELEASE -->
+            <div class="flex items-center justify-between">
+                <span class="text-sm text-slate-500">Release</span>
+                <span class="text-sm font-medium text-slate-700 dark:text-navy-100">
+                    {{ roadmap.release|date:"d M Y"|default:"-" }}
+                </span>
+            </div>
 
-        <!-- expire -->
-        <div class="flex items-center justify-between">
-          <span class="text-sm text-slate-500">Expired</span>
-          <span class="text-sm font-medium text-slate-700 dark:text-navy-100">
-            {{ roadmap.expired_date|date:"d M Y"|default:"-" }}
-          </span>
-        </div>
+            <!-- EXPIRED -->
+            <div class="flex items-center justify-between">
+                <span class="text-sm text-slate-500">Expired</span>
+                <span class="text-sm font-medium text-slate-700 dark:text-navy-100">
+                    {{ roadmap.expired|date:"d M Y"|default:"-" }}
+                </span>
+            </div>
 
-      </div>
+        </div>
 
     </div>
 </div>
