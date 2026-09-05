@@ -252,8 +252,9 @@ def node_create(request):
                     'node': {
                         'id': node.id,
                         'name': node.name,
-                        'description': node.description,
-                        'is_locked': node.is_locked,
+                        'desc': node.description,
+                        'duration': node.duration,
+                        'locked': node.is_locked,
                     }
                 })
 
