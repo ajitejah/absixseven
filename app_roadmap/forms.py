@@ -2,15 +2,11 @@ from django import forms
 from .models import Roadmap, Node, Assignment, Submission
 
 
-# ======================
-# BASE STYLE (optional)
-# ======================
-BASE_INPUT_CLASS = "form-input w-full rounded-lg border border-slate-300 px-3 py-2 pl-4"
+# ▀▄▀▄ base style
+BASE_INPUT_CLASS    = "form-input w-full rounded-lg border border-slate-300 px-3 py-2 pl-4"
+CHECKBOX_CLASS      = "form-checkbox is-outline size-5 rounded-full  bg-white border-slate-400/70 before:bg-primary checked:border-primary hover:border-primary focus:border-primary dark:border-navy-400 dark:before:bg-accent dark:checked:border-accent dark:hover:border-accent dark:focus:border-accent"
 
-
-# ======================
-# ROADMAP FORM
-# ======================
+# ▀▄▀▄ roadmap form
 class RoadmapForm(forms.ModelForm):
     class Meta:
         model = Roadmap
@@ -41,14 +37,11 @@ class RoadmapForm(forms.ModelForm):
                 'class': BASE_INPUT_CLASS
             }),
             'is_active': forms.CheckboxInput(attrs={
-                'class': 'form-checkbox'
+                'class': CHECKBOX_CLASS
             })
         }
 
-
-# ======================
-# NODE FORM
-# ======================
+# ▀▄▀▄ node form
 class NodeForm(forms.ModelForm):
     class Meta:
         model = Node
@@ -77,10 +70,7 @@ class NodeForm(forms.ModelForm):
             })
         }
 
-
-# ======================
-# ASSIGNMENT FORM
-# ======================
+# ▀▄▀▄ assignment form
 class AssignmentForm(forms.ModelForm):
     class Meta:
         model = Assignment
@@ -114,10 +104,7 @@ class AssignmentForm(forms.ModelForm):
             })
         }
 
-
-# ======================
-# SUBMISSION FORM (STUDENT)
-# ======================
+# ▀▄▀▄ submission form
 class SubmissionForm(forms.ModelForm):
     class Meta:
         model = Submission
@@ -128,10 +115,7 @@ class SubmissionForm(forms.ModelForm):
             })
         }
 
-
-# ======================
-# SCORING FORM (TEACHER)
-# ======================
+# ▀▄▀▄ scoring form
 class SubmissionScoreForm(forms.ModelForm):
     class Meta:
         model = Submission

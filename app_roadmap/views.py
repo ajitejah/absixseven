@@ -172,11 +172,11 @@ def roadmap_create(request):
 
         if form.is_valid():
             roadmap = form.save()
-
-            messages.success(request, 'Roadmap berhasil dibuat') 
+            messages.success(request, f'Roadmap "{roadmap.name}" has been created successfully.')
+            return redirect('roadmap_list')
 
         else:
-            messages.error(request, 'Form tidak valid')
+            messages.error(request, 'The form is invalid. Please check the entered data.')
 
     else:
         form = RoadmapForm()
@@ -196,7 +196,7 @@ def roadmap_update(request, id):
 
         if form.is_valid():
             form.save()
-            messages.success(request, "Roadmap berhasil diperbarui.") 
+            messages.success(request, "Roadmap has been updated successfully.") 
             return redirect("teacher_roadmap:roadmap_list")
     else:
         form = RoadmapForm(instance=roadmap)
