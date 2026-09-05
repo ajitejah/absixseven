@@ -279,20 +279,20 @@
                                     <!-- INFO -->
                                     <td class="px-4 py-3 text-xs">
                                         <div class="mb-1">
-                                            <span class="badge rounded-full bg-primary/10 text-primary">
+                                            <span class="badge rounded-full bg-primary/10 text-primary whitespace-nowrap">
                                                 <i class="fa fa-calendar mr-1"></i>
                                                 Release: {{ roadmap.release|date:"d M Y"|default:"-" }}
                                             </span>
                                         </div>
 
                                         <div>
-                                            <span class="badge rounded-full bg-error/10 text-error">
+                                            <span class="badge rounded-full bg-error/10 text-error whitespace-nowrap">
                                                 <i class="fa fa-calendar-times mr-1"></i>
                                                 Expired: {{ roadmap.expired|date:"d M Y"|default:"-" }}
                                             </span>
                                         </div>
                                     </td>
-                                    
+
                                     <!-- AKSI -->
                                     <td class="px-4 py-3">
                                         <div class="flex space-x-2">
