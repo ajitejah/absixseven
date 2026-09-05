@@ -552,7 +552,7 @@
                             <div class="flex items-center justify-between">
 
                                 <label class="text-sm font-medium text-slate-700">
-                                    Aktifkan agar dapat diakses
+                                    Lock This Node?
                                 </label>
 
                                 <label class="inline-flex items-center">
@@ -573,12 +573,12 @@
                             @click="closeModal()"
                             class="btn min-w-[7rem] rounded-full border border-slate-300 font-medium text-slate-800"
                         >
-                            Batal
+                            Cancel
                         </button>
  
                         <button type="submit"
                             class="btn min-w-[7rem] rounded-full bg-primary font-medium text-white">
-                            <span x-text="mode === 'create' ? 'Simpan' : 'Update'"></span>
+                            <span x-text="mode === 'create' ? 'Create' : 'Update'"></span>
                         </button>
 
                     </div>
