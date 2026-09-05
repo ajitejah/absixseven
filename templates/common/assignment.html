@@ -71,9 +71,9 @@
     <div class=" items-center space-x-4 py-5 lg:py-6">
         <h2 class="text-xl font-medium text-slate-800 dark:text-navy-50 lg:text-2xl" > 
             {% if not remedial %}
-                Daftar Tugas (Assignment)
+                Assignment List
             {% else %}
-                Daftar Tugas Remedial (Assignment)
+                Remedial Assignment List
             {% endif %}
         </h2>
         <div class="hidden h-full py-1 sm:flex"><div class="h-full w-px bg-slate-300 dark:bg-navy-600"></div></div>
@@ -108,9 +108,9 @@
                     </svg>
                 </li>   
                 {% if not remedial %}
-                    <li class="text-primary"><strong>Daftar Tugas (Assignment)</strong></li>
+                    <li class="text-primary"><strong>Assigment List</strong></li>
                 {% else %}
-                    <li class="text-primary"><strong>Daftar Tugas Remedial (Assignment)</strong></li>
+                    <li class="text-primary"><strong>Remedial Assignment List</strong></li>
                 {% endif %}
             </ul>
         </div>
@@ -192,7 +192,7 @@
         <div x-data="{isFilterExpanded:false}">
             <div class="flex items-center justify-between">
                 <h2 class="text-base font-medium tracking-wide text-slate-700 line-clamp-1 dark:text-navy-100">
-                    Tabel Daftar Tugas (Assignment)
+                    Assigment List Table
                 </h2>
                 <div class="flex"> 
                     {% if user|has_attr:"teacher" %}    
@@ -240,12 +240,12 @@
                     <thead>
                         <tr>
                             <th class="px-4 py-3">#</th>
-                            <th class="px-4 py-3">Judul</th>
-                            <th class="px-4 py-3">Deskripsi</th>
-                            <th class="px-4 py-3">Durasi</th>
+                            <th class="px-4 py-3">Title</th>
+                            <th class="px-4 py-3">Description</th>
+                            <th class="px-4 py-3">Duration</th>
                             <th class="px-4 py-3">Status</th>
                             <th class="px-4 py-3">Info</th>
-                            <th class="px-4 py-3">Aksi</th>
+                            <th class="px-4 py-3">Action</th>
                         </tr>
                     </thead>
 
@@ -342,6 +342,7 @@
                             </tr>
 
                             {% empty %}
+
                             <tr>
                                 <td colspan="8" class="py-10 text-center">
                                     <div class="flex flex-col items-center justify-center">
@@ -368,7 +369,8 @@
                                     </div>
                                 </td>
                             </tr>
-                        {% endfor %}    
+                        
+                            {% endfor %}    
                     </tbody>
 
                     </table>

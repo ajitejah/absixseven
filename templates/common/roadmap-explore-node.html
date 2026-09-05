@@ -676,71 +676,70 @@
 <div class="card p-4 sm:p-5 mt-5">
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-6">
 
-      <!-- cover + nama -->
-      <div class="flex items-center space-x-4 rounded-2xl border border-slate-150 p-4 dark:border-navy-600">
+        <!-- cover + nama -->
+        <div class="flex items-center space-x-4 rounded-2xl border border-slate-150 p-4 dark:border-navy-600">
 
-        <!-- cover -->
-        <div class="size-16 overflow-hidden rounded-xl bg-slate-100">
-          {% if roadmap.cover %}
-            <img src="{{ roadmap.cover.url }}" class="w-full h-full object-cover">
-          {% else %}
-            <div class="flex items-center justify-center h-full text-slate-400 text-xs">
-              No Image
+            <!-- cover -->
+            <div class="size-16 overflow-hidden rounded-xl bg-slate-100">
+            {% if roadmap.cover %}
+                <img src="{{ roadmap.cover.url }}" class="w-full h-full object-cover">
+            {% else %}
+                <div class="flex items-center justify-center h-full text-slate-400 text-xs">
+                No Image
+                </div>
+            {% endif %}
             </div>
-          {% endif %}
+
+            <!-- NAMA -->
+            <div>
+                <p class="text-base font-semibold text-slate-700 dark:text-navy-100">
+                    {{ roadmap.name }}
+                </p>
+
+                <div class="flex items-center gap-2 mt-1 text-xs">
+
+                    {% if roadmap.is_active %}
+                    <!-- AKTIF -->
+                    <span class="flex items-center gap-1 text-success">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="size-4" fill="currentColor" viewBox="0 0 20 20">
+                        <circle cx="10" cy="10" r="6"></circle>
+                        </svg>
+                        Active
+                    </span>
+                    {% else %}
+                    <!-- TIDAK AKTIF -->
+                    <span class="flex items-center gap-1 text-error">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="size-4" fill="currentColor" viewBox="0 0 20 20">
+                        <circle cx="10" cy="10" r="6"></circle>
+                        </svg>
+                        Inactive
+                    </span>
+                    {% endif %}
+
+                </div>
+                </div>
+
         </div>
 
-        <!-- NAMA -->
-        <div>
-            <p class="text-base font-semibold text-slate-700 dark:text-navy-100">
-                {{ roadmap.name }}
+        <!-- deskripsi -->
+        <div class="flex items-center rounded-2xl border border-slate-150 p-4 dark:border-navy-600">
+            <div>
+            <p class="text-sm font-medium text-slate-600 dark:text-navy-200">
+                Deskripsi
             </p>
-
-            <div class="flex items-center gap-2 mt-1 text-xs">
-
-                {% if roadmap.is_active %}
-                <!-- AKTIF -->
-                <span class="flex items-center gap-1 text-success">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="size-4" fill="currentColor" viewBox="0 0 20 20">
-                    <circle cx="10" cy="10" r="6"></circle>
-                    </svg>
-                    Active
-                </span>
-                {% else %}
-                <!-- TIDAK AKTIF -->
-                <span class="flex items-center gap-1 text-error">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="size-4" fill="currentColor" viewBox="0 0 20 20">
-                    <circle cx="10" cy="10" r="6"></circle>
-                    </svg>
-                    Inactive
-                </span>
-                {% endif %}
-
+            <p class="text-sm text-slate-500 line-clamp-3">
+                {{ roadmap.description|default:"-" }}
+            </p>
             </div>
-            </div>
-
-      </div>
-
-      <!-- deskripsi -->
-      <div class="flex items-center rounded-2xl border border-slate-150 p-4 dark:border-navy-600">
-        <div>
-          <p class="text-sm font-medium text-slate-600 dark:text-navy-200">
-            Deskripsi
-          </p>
-          <p class="text-sm text-slate-500 line-clamp-3">
-            {{ roadmap.description|default:"-" }}
-          </p>
         </div>
-      </div>
 
-      <!-- tanggal -->
-      <div class="flex flex-col justify-center space-y-2 rounded-2xl border border-slate-150 p-4 dark:border-navy-600">
+        <div class="flex flex-col justify-center space-y-2 rounded-2xl border border-slate-150 p-4 dark:border-navy-600">
 
             <!-- RELEASE -->
             <div class="flex items-center justify-between">
                 <span class="text-sm text-slate-500">Release</span>
                 <span class="text-sm font-medium text-slate-700 dark:text-navy-100">
-                    {{ roadmap.release|date:"d M Y"|default:"-" }}
+                    {{ roadmap.release|date:"l, d M Y"|default:"-" }}
                 </span>
             </div>
 
@@ -748,7 +747,7 @@
             <div class="flex items-center justify-between">
                 <span class="text-sm text-slate-500">Expired</span>
                 <span class="text-sm font-medium text-slate-700 dark:text-navy-100">
-                    {{ roadmap.expired|date:"d M Y"|default:"-" }}
+                    {{ roadmap.expired|date:"l, d M Y"|default:"-" }}
                 </span>
             </div>
 
