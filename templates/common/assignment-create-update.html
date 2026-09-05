@@ -11,14 +11,14 @@
         <div class="col-span-12 sm:col-span-8">
             <div class="card p-4 sm:p-5">
                 <p class="text-base font-medium text-slate-700 dark:text-navy-100">
-                    Create Assignment
+                    {% if assignment %}Update Assignment{% else %}Create New Assignment{% endif %}
                 </p>
         
                 <div class="mt-4 space-y-4">
 
                     <!-- TITLE -->
                     <label class="block">
-                        <span>Judul Assignment</span>
+                        <span>Title</span>
                         <span class="relative mt-1.5 flex">
                             {{ form.title }}
                             <span class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400">
@@ -29,7 +29,7 @@
 
                     <!-- DESCRIPTION -->
                     <label class="block">
-                        <span>Deskripsi</span>
+                        <span>Description</span>
                         <textarea
                             name="description"
                             rows="4"
@@ -40,7 +40,7 @@
 
                     <!-- ATTACHMENT -->
                     <label class="block">
-                        <span>File / Lampiran</span>
+                        <span>Attachment</span>
                         <input
                             type="file"
                             name="attachment"
@@ -50,7 +50,7 @@
 
                     <!-- DURATION -->
                     <label class="block">
-                        <span>Durasi (menit)</span>
+                        <span>Duration</span>
                         <input
                             type="number"
                             name="duration"
@@ -106,7 +106,7 @@
                             {% if form.is_active.value %}checked{% endif %}
                             class="form-checkbox is-basic size-5 rounded-sm border-slate-400/70 checked:border-primary checked:bg-primary"
                         >
-                        <span>Aktif</span>
+                        <span>Active</span>
                     </div>
 
                     <!-- BUTTON -->
@@ -117,7 +117,7 @@
                             href="{% assignment_list_url user roadmap.id node.id %}"
                             class="btn space-x-2 bg-slate-150 font-medium text-slate-800 hover:bg-slate-200"
                         >
-                            <span>Batal</span>
+                            <span>Cancle</span>
                         </a>
 
                         <!-- SUBMIT -->
@@ -125,7 +125,7 @@
                             type="submit"
                             class="btn space-x-2 bg-primary font-medium text-white hover:bg-primary-focus"
                         >
-                            <span>Simpan</span>
+                            <span>{% if assignment %}Update{% else %}Create{% endif %}</span>
                         </button>
 
                     </div> 
@@ -144,7 +144,7 @@
                     1
                 </div>
                 <h3 class="ml-4 text-slate-700 dark:text-navy-100">
-                    Input Data
+                    Fill Assignment Data
                 </h3>
                 </li>
 
@@ -153,7 +153,7 @@
                     2
                 </div>
                 <h3 class="ml-4 text-slate-700 dark:text-navy-100">
-                    Save Assignment
+                    {% if roadmap %}Update Assignment{% else %}Create New Assignment{% endif %}
                 </h3>
                 </li>
 

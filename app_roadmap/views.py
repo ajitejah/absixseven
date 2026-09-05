@@ -424,7 +424,7 @@ def assignment_create(request, roadmap_id, node_id):
     else:
         form = AssignmentForm()
 
-    return render(request, 'common/assignment-create.html', {
+    return render(request, 'common/assignment-create-update.html', {
         'title': 'Tambah Assignment',
         'roadmap': roadmap,
         'node': node,
@@ -510,7 +510,7 @@ def assignment_remedial_create(request, roadmap_id, node_id, submission_id):
         )
 
     return render(
-        request, "common/assignment-create.html",
+        request, "common/assignment-create-update.html",
         {
             "title": "Create Remedial",
             "form": form,
@@ -542,7 +542,7 @@ def assignment_update(request, roadmap_id, node_id, assignment_id):
     else:
         form = AssignmentForm(instance=assignment)
 
-    return render(request, 'common/assignment-update.html', {
+    return render(request, 'common/assignment-create-update.html', {
         'title': 'Update Assignment',
         'roadmap': roadmap,
         'node': node,
