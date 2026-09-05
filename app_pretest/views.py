@@ -310,18 +310,37 @@ def pretest_student_result(request, pretest_id, attempt_id):
                     ):
                         blank_answer += 1
                     else:
-                        wrong_answer += 1
+                        wrong_answer += 1 
 
             # ==========================================
             # NILAI AKHIR
             # ==========================================
 
             if total_point > 0:
-                final_score = (
+                percentage = (
                     total_score / total_point
                 ) * 100
             else:
+                percentage = 0
+
+            # Konversi persentase menjadi nilai 0–7
+            if percentage < 30:
                 final_score = 0
+            elif percentage < 40:
+                final_score = 1
+            elif percentage < 50:
+                final_score = 2
+            elif percentage < 60:
+                final_score = 3
+            elif percentage < 70:
+                final_score = 4
+            elif percentage < 80:
+                final_score = 5
+            elif percentage <= 90:
+                final_score = 6
+            else:
+                final_score = 7
+                
 
             # Cek apakah masih ada essay yang belum dinilai
             ungraded_essay = all_answers.filter(
