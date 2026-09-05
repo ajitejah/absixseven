@@ -90,11 +90,11 @@
                                 <!-- ▀▄▀▄ status -->
                                 {% if attempt.status == "SCORED" %}
                                     <span class="badge rounded-full bg-success/10 text-success">
-                                        Selesai Dinilai
+                                        Score Completed
                                     </span>
                                 {% elif attempt.status == "SUBMITTED" %}
                                     <span class="badge rounded-full bg-warning/10 text-warning">
-                                        Menunggu Penilaian
+                                        Pending Scoring
                                     </span>
                                 {% else %}
                                     <span class="badge rounded-full bg-slate-100 text-slate-500">
@@ -117,7 +117,7 @@
                         <!-- ▀▄▀▄ STUDENT -->
                         <div class="text-left sm:text-right">
                             <p class="text-xs font-medium uppercase tracking-wide text-slate-400">
-                                Peserta
+                                Student
                             </p>
                             <p class="mt-1 font-medium text-slate-700 dark:text-navy-100">
                                 {{ attempt.student.user.first_name }}
@@ -152,7 +152,7 @@
                                         {% endif %}
 
                                         <div class="mt-1 text-xs font-medium uppercase tracking-wide text-slate-500">
-                                            Nilai
+                                            Score
                                         </div>
 
                                     </div>
