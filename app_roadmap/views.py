@@ -173,7 +173,7 @@ def roadmap_create(request):
         if form.is_valid():
             roadmap = form.save()
             messages.success(request, f'Roadmap "{roadmap.name}" has been created successfully.')
-            return redirect('roadmap_list')
+            return redirect('teacher_roadmap:roadmap_list')
 
         else:
             messages.error(request, 'The form is invalid. Please check the entered data.')
