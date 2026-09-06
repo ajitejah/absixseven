@@ -72,6 +72,8 @@ class PretestForm(forms.ModelForm):
             "expired",
             "random_question",
             "random_option",
+            "upper_roadmap",
+            "lower_roadmap",
             "is_active",
         ]
 
@@ -156,6 +158,20 @@ class PretestForm(forms.ModelForm):
             "random_option": forms.CheckboxInput(
                 attrs={
                     "class": CHECKBOX_CLASS,
+                }
+            ),
+
+            "upper_roadmap": forms.Select(
+                attrs={
+                    "class": BASE_INPUT_CLASS,
+                    "style": "padding-left:2.5rem;",
+                }
+            ),
+
+            "lower_roadmap": forms.Select(
+                attrs={
+                    "class": BASE_INPUT_CLASS,
+                    "style": "padding-left:2.5rem;",
                 }
             ),
 
