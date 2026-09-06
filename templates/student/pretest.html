@@ -262,7 +262,7 @@
                                 Ended
                             </button>
                         {% else %}   
-                            {% if attempt and attempt.status == "SUBMITTED" %}
+                            {% if attempt and attempt.status == "SUBMITTED" or attempt and attempt.status == "SCORED" %}
                                 <a href="{% url 'student_pretest:pretest_result' pretest.id %}"
                                     class="btn w-full rounded-lg bg-success font-medium text-white hover:bg-success-focus">
 
