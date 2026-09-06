@@ -43,21 +43,21 @@ def dashboard_url(user):
 
 # ▀▄▀▄ redirest url daftar roadmap
 @register.simple_tag
-def roadmap_list_url(user):
+def roadmap_list_url(user, roadmap_type='regular'):
 
     if hasattr(user, 'admin'):
-        return '/admin/roadmap/'
+        return f'/admin/roadmap/{roadmap_type}/'
 
     elif hasattr(user, 'teacher'):
-        return '/teacher/roadmap/'
+        return f'/teacher/roadmap/{roadmap_type}/'
 
     elif hasattr(user, 'student'):
-        return '/student/roadmap/' 
-    
-    elif hasattr(user, 'parent'):
-        return '/parent/roadmap/' 
+        return f'/student/roadmap/{roadmap_type}/'
 
-    return '/admin/roadmap/'
+    elif hasattr(user, 'parent'):
+        return f'/parent/roadmap/{roadmap_type}/'
+
+    return f'/admin/roadmap/{roadmap_type}/'
 
 # ▀▄▀▄ redirect daftar evaluasi
 @register.simple_tag

@@ -10,7 +10,7 @@
 {% block content_title %} 
     <div class=" items-center space-x-4 py-5 lg:py-6">
         <h2 class="text-xl font-medium text-slate-800 dark:text-navy-50 lg:text-2xl" >
-            Roadmap List
+            {% if roadmap_type=="regular" %}Regular Roadmap List{% else %}Pretest-Linked Roadmap List{% endif %}
         </h2>
         <div class="hidden h-full py-1 sm:flex"><div class="h-full w-px bg-slate-300 dark:bg-navy-600"></div></div>
         <div class="pb-4 flex-wrap border-b border-slate-200 dark:border-navy-500">
@@ -22,7 +22,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                     </svg>
                 </li> 
-                <li class="text-primary"><strong>Roadmap List</strong></li>
+                <li class="text-primary"><strong>{% if roadmap_type=="regular" %}Regular Roadmap List{% else %}Pretest-Linked Roadmap List{% endif %}</strong></li>
             </ul>
         </div>
     </div> 
@@ -88,7 +88,7 @@
         <div x-data="{isFilterExpanded:false}">
             <div class="flex items-center justify-between">
                 <h2 class="text-base font-medium tracking-wide text-slate-700 line-clamp-1 dark:text-navy-100">
-                    Roadmap List Table
+                    {% if roadmap_type=="regular" %}Regular Roadmap List{% else %}Pretest-Linked Roadmap List{% endif %} Table
                 </h2>
                 <div class="flex"> 
                     {% if user|has_attr:"teacher" %}  

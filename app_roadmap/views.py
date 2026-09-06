@@ -9,11 +9,11 @@ from app_guidance.models import ParentActivityLog
 from app_guidance.service import log_parent_activity
 from app_roadmap.forms import NodeForm, RoadmapForm
 from app_roadmap.models import Roadmap
-from django.http import JsonResponse
+from django.http import Http404, JsonResponse
 from django.views.decorators.http import require_POST 
 from app_tracking.models import Foul, Rule
 from app_tracking.service import get_correct_schedule
-
+from django.db.models import Q, Exists, OuterRef
 from app_scoring.models import Evaluation  
 from .models import Assignment, Roadmap, Node, Submission
 from .forms import AssignmentForm, NodeForm
@@ -88,81 +88,188 @@ def level_update(request, id):
     )
 
 # ▀▄▀▄ menampilkan daftar roadmap
-def roadmap_list(request):
-    user = request.user
+def roadmap_list(request, roadmap_type):
 
-    # 👨‍🎓 STUDENT → semua roadmap aktif
-    if hasattr(user, 'student'):
+    # ▀▄▀▄ VALIDASI ROADMAP TYPE 
+    if roadmap_type not in ["regular", "pretest-linked"]:
+        raise Http404("Invalid roadmap type")
+
+    # ▀▄▀▄ student 
+    if hasattr(request.user, "student"):
 
         roadmaps = Roadmap.objects.filter(
             is_active=True
-        ).order_by('-created_at')
+        )
+
+        if roadmap_type == "pretest-linked":
+            roadmaps = roadmaps.filter(
+                Q(upper_pretests__isnull=False) |
+                Q(lower_pretests__isnull=False)
+            )
+        else:
+            roadmaps = roadmaps.filter(
+                Q(upper_pretests__isnull=True) &
+                Q(lower_pretests__isnull=True)
+            )
+
+        roadmaps = (
+            roadmaps
+            .distinct()
+            .order_by("-created_at")
+        )
 
         for roadmap in roadmaps:
 
             evaluation = Evaluation.objects.filter(
                 roadmap=roadmap,
-                student=user.student
+                student=request.user.student
             ).first()
 
             roadmap.evaluation = evaluation
+            roadmap.roadmap_type = roadmap_type
 
-        return render(request, 'student/roadmap.html', {
-            'roadmaps': roadmaps
-        })
-     
-    # 👨‍👩‍👧 PARENT
-    if hasattr(user, "parent"):
+        return render(
+            request,
+            "student/roadmap.html",
+            {
+                "roadmaps": roadmaps,
+                "roadmap_type": roadmap_type,
+            }
+        )
+
+    # ▀▄▀▄ parent 
+    if hasattr(request.user, "parent"):
 
         roadmaps = (
             Roadmap.objects.filter(
                 is_active=True,
-                evaluations__student__parent=user.parent,
+                evaluations__student__parent=request.user.parent,
             )
+        )
+
+        if roadmap_type == "pretest-linked":
+            roadmaps = roadmaps.filter(
+                Q(upper_pretests__isnull=False) |
+                Q(lower_pretests__isnull=False)
+            )
+        else:
+            roadmaps = roadmaps.filter(
+                Q(upper_pretests__isnull=True) &
+                Q(lower_pretests__isnull=True)
+            )
+
+        roadmaps = (
+            roadmaps
             .distinct()
             .order_by("-created_at")
         )
 
-        # Ambil semua evaluation milik anak-anak parent ini
         evaluations = (
             Evaluation.objects.filter(
-                student__parent=user.parent
+                student__parent=request.user.parent
             )
-            .select_related("student__user", "roadmap")
+            .select_related(
+                "student__user",
+                "roadmap"
+            )
         )
 
-        # roadmap_id -> evaluation
         evaluation_map = {
-            e.roadmap_id: e
-            for e in evaluations
+            evaluation.roadmap_id: evaluation
+            for evaluation in evaluations
         }
 
-        # Tempelkan student & evaluation ke roadmap
         for roadmap in roadmaps:
-            roadmap.evaluation = evaluation_map.get(roadmap.id)
+
+            roadmap.evaluation = evaluation_map.get(
+                roadmap.id
+            )
+
             roadmap.student = (
                 roadmap.evaluation.student
                 if roadmap.evaluation
                 else None
             )
 
-        return render(request, "common/roadmap.html", {
+            roadmap.roadmap_type = roadmap_type
+
+        return render(
+            request,
+            "common/roadmap.html",
+            {
+                "roadmaps": roadmaps,
+                "roadmap_type": roadmap_type,
+            }
+        )
+
+    # ▀▄▀▄ admin 
+    if request.user.is_superuser or request.user.is_staff:
+
+        roadmaps = Roadmap.objects.all()
+
+        if roadmap_type == "pretest-linked":
+            roadmaps = roadmaps.filter(
+                Q(upper_pretests__isnull=False) |
+                Q(lower_pretests__isnull=False)
+            )
+        else:
+            roadmaps = roadmaps.filter(
+                Q(upper_pretests__isnull=True) &
+                Q(lower_pretests__isnull=True)
+            )
+
+        roadmaps = (
+            roadmaps
+            .distinct()
+            .order_by("-created_at")
+        )
+
+        for roadmap in roadmaps:
+            roadmap.roadmap_type = roadmap_type
+
+        return render(
+            request,
+            "common/roadmap.html",
+            {
+                "roadmaps": roadmaps,
+                "roadmap_type": roadmap_type,
+            }
+        )
+
+    # ▀▄▀▄ teacher 
+    roadmaps = Roadmap.objects.filter(
+        owner=request.user
+    )
+
+    if roadmap_type == "pretest-linked":
+        roadmaps = roadmaps.filter(
+            Q(upper_pretests__isnull=False) |
+            Q(lower_pretests__isnull=False)
+        )
+    else:
+        roadmaps = roadmaps.filter(
+            Q(upper_pretests__isnull=True) &
+            Q(lower_pretests__isnull=True)
+        )
+
+    roadmaps = (
+        roadmaps
+        .distinct()
+        .order_by("-created_at")
+    )
+
+    for roadmap in roadmaps:
+        roadmap.roadmap_type = roadmap_type
+
+    return render(
+        request,
+        "common/roadmap.html",
+        {
             "roadmaps": roadmaps,
-        })
-    
-    # 🛠️ ADMIN → semua roadmap
-    if user.is_superuser or user.is_staff:
-        roadmaps = Roadmap.objects.all().order_by('-created_at')
-        return render(request, 'common/roadmap.html', {
-            'roadmaps': roadmaps
-        })
+            "roadmap_type": roadmap_type,
+        }
+    )
 
-    # 👨‍🏫 TEACHER → hanya miliknya
-    roadmaps = Roadmap.objects.filter(owner=user).order_by('-created_at') 
-
-    return render(request, 'common/roadmap.html', {
-        'roadmaps': roadmaps, 
-    })
 
 # ▀▄▀▄ fungsi create ROADMAP
 @login_required

@@ -10,7 +10,7 @@ urlpatterns = [
     path('level/create/', views.level_create, name='level_create'), 
     path('level/<int:id>/update', views.level_update, name='level_update'), 
 
-    path('', views.roadmap_list, name='roadmap_list'), 
+    path('<str:roadmap_type>/', views.roadmap_list, name='roadmap_list'), 
     path('create/', views.roadmap_create, name='roadmap_create'), 
     path('update/<int:id>/', views.roadmap_update, name='roadmap_update'), 
     path('explore/<int:id>/', views.roadmap_explore, name='roadmap_explore'), 
