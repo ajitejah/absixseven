@@ -227,10 +227,10 @@ def evaluation_upper_create_url(user, pretest_id):
         return f"/admin/scoring/evaluation/create/upper/{pretest_id}/"
 
     elif hasattr(user, "teacher"):
-        return f"/admin/scoring/evaluation/create/upper/{pretest_id}/"
+        return f"/teacher/scoring/evaluation/create/upper/{pretest_id}/"
     
     elif hasattr(user, "student"):
-        return f"/admin/scoring/evaluation/create/upper/{pretest_id}/"
+        return f"/student/scoring/evaluation/create/upper/{pretest_id}/"
     
     return "#"
 
@@ -241,9 +241,9 @@ def evaluation_lower_create_url(user, pretest_id):
         return f"/admin/scoring/evaluation/create/lower/{pretest_id}/"
 
     elif hasattr(user, "teacher"):
-        return f"/admin/scoring/evaluation/create/lower/{pretest_id}/"
+        return f"/teacher/scoring/evaluation/create/lower/{pretest_id}/"
     
     elif hasattr(user, "student"):
-        return f"/admin/scoring/evaluation/create/lower/{pretest_id}/"
+        return f"/student/scoring/evaluation/create/lower/{pretest_id}/"
     
     return "#"
