@@ -324,7 +324,7 @@ def pretest_student_result(request, pretest_id, attempt_id):
                 percentage = 0
 
             # Konversi persentase menjadi nilai 0–7
-            if pretest.curriculum == "IGCSE":
+            if attempt.pretest.curriculum == "IGCSE":
 
                 if percentage >= 95:
                     final_score = 9
@@ -347,7 +347,7 @@ def pretest_student_result(request, pretest_id, attempt_id):
                 else:
                     final_score = 0
 
-            elif pretest.curriculum == "IBDP":
+            elif attempt.pretest.curriculum == "IBDP":
 
                 # Mapping IBDP 1–7
                 if percentage < 30:
