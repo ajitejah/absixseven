@@ -324,22 +324,46 @@ def pretest_student_result(request, pretest_id, attempt_id):
                 percentage = 0
 
             # Konversi persentase menjadi nilai 0–7
-            if percentage < 30:
-                final_score = 0
-            elif percentage < 40:
-                final_score = 1
-            elif percentage < 50:
-                final_score = 2
-            elif percentage < 60:
-                final_score = 3
-            elif percentage < 70:
-                final_score = 4
-            elif percentage < 80:
-                final_score = 5
-            elif percentage <= 90:
-                final_score = 6
-            else:
-                final_score = 7
+            if pretest.curriculum == "IGCSE":
+
+                if percentage >= 95:
+                    final_score = 9
+                elif percentage >= 90:
+                    final_score = 8
+                elif percentage >= 80:
+                    final_score = 7
+                elif percentage >= 70:
+                    final_score = 6
+                elif percentage >= 60:
+                    final_score = 5
+                elif percentage >= 50:
+                    final_score = 4
+                elif percentage >= 40:
+                    final_score = 3
+                elif percentage >= 30:
+                    final_score = 2
+                elif percentage >= 20:
+                    final_score = 1
+                else:
+                    final_score = 0
+
+            elif pretest.curriculum == "IBDP":
+
+                # Mapping IBDP 1–7
+                if percentage < 30:
+                    final_score = 1
+                elif percentage < 40:
+                    final_score = 2
+                elif percentage < 50:
+                    final_score = 3
+                elif percentage < 60:
+                    final_score = 4
+                elif percentage < 70:
+                    final_score = 5
+                elif percentage < 80:
+                    final_score = 6
+                else:
+                    final_score = 7
                 
 
             # Cek apakah masih ada essay yang belum dinilai
