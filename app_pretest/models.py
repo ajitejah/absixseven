@@ -35,8 +35,13 @@ class Pretest(models.Model):
         PRETEST = "PRETEST", "Pretest"
         POSTTEST = "POSTTEST", "Posttest"
 
+    class Curriculum(models.TextChoices):
+        IGCSE = "IGCSE", "IGCSE"
+        IBDP = "IBDP", "IBDP"
+
     title           = models.CharField(max_length=255) 
     description     = models.TextField(blank=True) 
+    curriculum      = models.CharField(max_length=10, choices=Curriculum.choices)
     pretest_type    = models.CharField(max_length=20, choices=Type.choices, default=Type.PRETEST)
     question_set    = models.ForeignKey(QuestionSet, on_delete=models.PROTECT, related_name="pretests" )
     question_count  = models.PositiveIntegerField(default=20, help_text="Jumlah soal yang diambil secara acak.")
