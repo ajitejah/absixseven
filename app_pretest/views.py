@@ -1157,7 +1157,7 @@ def pretest_start(request, pretest_id):
 
         return redirect(
             "student_pretest:pretest_result",
-            attempt.pk,
+            attempt.pretest.pk,
         )
 
     # ==========================================================
