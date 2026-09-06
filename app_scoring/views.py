@@ -256,7 +256,7 @@ def evaluation_upper_create(request, pretest_id):
     # Hanya student
     if not hasattr(request.user, 'student'):
         messages.error(request, 'Only students can access this roadmap.')
-        return redirect('student_pretest:pretest_list')
+        return redirect('student_pretest:pretest')
 
     pretest = get_object_or_404(
         Pretest,
@@ -329,7 +329,7 @@ def evaluation_lower_create(request, pretest_id):
             request,
             'Only students can access this roadmap.'
         )
-        return redirect('student_pretest:pretest_list')
+        return redirect('student_pretest:pretest')
 
     pretest = get_object_or_404(
         Pretest,
