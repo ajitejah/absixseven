@@ -18,19 +18,19 @@ class RoadmapForm(forms.ModelForm):
             'name': forms.TextInput(attrs={
                 'class': BASE_INPUT_CLASS,
                 'style': 'padding-left: 2.5rem;',
-                'placeholder': 'Nama roadmap'
+                'placeholder': 'Input name...'
             }),
             'description': forms.Textarea(attrs={
                 'class': BASE_INPUT_CLASS,
                 'rows': 3,
-                'placeholder': 'Deskripsi roadmap'
+                'placeholder': 'Input description...'
             }),
             'level': forms.Select(attrs={
-                'class': BASE_INPUT_CLASS
+                'class': BASE_INPUT_CLASS,
             }),
             'release': forms.DateTimeInput(attrs={
                 'type': 'datetime-local',
-                'class': BASE_INPUT_CLASS
+                'class': BASE_INPUT_CLASS, 
             }),
             'expired': forms.DateTimeInput(attrs={
                 'type': 'datetime-local',
@@ -94,12 +94,12 @@ class AssignmentForm(forms.ModelForm):
             'title': forms.TextInput(attrs={
                 'class': BASE_INPUT_CLASS,
                 'style': 'padding-left: 2.5rem;',
-                'placeholder': 'Judul tugas'
+                'placeholder': 'Input title...'
             }),
             'description': forms.Textarea(attrs={
                 'class': BASE_INPUT_CLASS,
-                'rows': 3
-                'placeholder': 'Description...'
+                'rows': 3,
+                'placeholder': 'Input description...'
             }),
             'duration': forms.NumberInput(attrs={
                 'class': BASE_INPUT_CLASS
@@ -141,6 +141,6 @@ class SubmissionScoreForm(forms.ModelForm):
             'feedback': forms.Textarea(attrs={
                 'class': BASE_INPUT_CLASS,
                 'rows': 3,
-                'placeholder': 'Feedback'
+                'placeholder': 'Input feedback...'
             })
         }
