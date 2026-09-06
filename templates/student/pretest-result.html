@@ -167,58 +167,211 @@
  
             <!-- ▀▄▀▄ score --> 
             <div class="p-5">
-                {% if attempt.status == "SCORED" %}
+                {% if attempt.status == "SCORED" %} 
                     <div class="rounded-2xl bg-primary/5 p-6 dark:bg-primary/10">
                         <div class="flex flex-col items-center justify-center">
-                            <!-- SCORE CIRCLE -->
+
+                            <!-- ▀▄▀▄ SCORE CIRCLE -->
                             <div class="flex h-36 w-36 items-center justify-center rounded-full border-8 border-primary/20">
                                 <div class="text-center">
-                                    <div class="text-4xl font-bold text-primary">
-                                        {{ attempt.score|floatformat:2 }}
-                                    </div>
-                                    <div class="mt-1 text-xs font-medium uppercase tracking-wide text-slate-500">
-                                        Nilai
-                                    </div>
+
+                                    {% if pretest.curriculum == "IGCSE" %}
+
+                                        {% if attempt.score == 9 %}
+                                            <div class="text-4xl font-bold text-primary">
+                                                A*
+                                            </div>
+                                        {% elif attempt.score >= 7 %}
+                                            <div class="text-4xl font-bold text-primary">
+                                                A
+                                            </div>
+                                        {% elif attempt.score >= 5 %}
+                                            <div class="text-4xl font-bold text-primary">
+                                                B
+                                            </div>
+                                        {% elif attempt.score == 4 %}
+                                            <div class="text-4xl font-bold text-primary">
+                                                C
+                                            </div>
+                                        {% elif attempt.score == 3 %}
+                                            <div class="text-4xl font-bold text-primary">
+                                                D
+                                            </div>
+                                        {% else %}
+                                            <div class="text-4xl font-bold text-primary">
+                                                F
+                                            </div>
+                                        {% endif %}
+
+                                        <div class="mt-1 text-xs font-medium uppercase tracking-wide text-slate-500">
+                                            Grade
+                                        </div>
+
+                                    {% elif pretest.curriculum == "IBDP" %}
+
+                                        <div class="text-4xl font-bold text-primary">
+                                            {{ attempt.score|floatformat:0 }}
+                                        </div>
+
+                                        <div class="mt-1 text-xs font-medium uppercase tracking-wide text-slate-500">
+                                            Score
+                                        </div>
+
+                                    {% endif %}
+
                                 </div>
                             </div>
 
-                            <!-- ▀▄▀▄  score --> 
-                            {% if attempt.score >= 90 %}
-                                <div class="mt-5 text-center">
-                                    <h3 class="text-lg font-semibold text-success">
-                                        Sangat Baik!
-                                    </h3>
-                                    <p class="mt-1 text-sm text-slate-500 dark:text-navy-300">
-                                        Pertahankan hasil belajar yang sangat baik.
-                                    </p>
-                                </div>
-                            {% elif attempt.score >= 80 %}
-                                <div class="mt-5 text-center">
-                                    <h3 class="text-lg font-semibold text-success">
-                                        Baik Sekali!
-                                    </h3>
-                                    <p class="mt-1 text-sm text-slate-500 dark:text-navy-300">
-                                        Hasil pengerjaan kamu sudah sangat baik.
-                                    </p>
-                                </div>
-                            {% elif attempt.score >= 70 %}
-                                <div class="mt-5 text-center">
-                                    <h3 class="text-lg font-semibold text-warning">
-                                        Cukup Baik
-                                    </h3>
-                                    <p class="mt-1 text-sm text-slate-500 dark:text-navy-300">
-                                        Tetap belajar dan tingkatkan hasil berikutnya.
-                                    </p>
-                                </div>
-                            {% else %}
-                                <div class="mt-5 text-center">
-                                    <h3 class="text-lg font-semibold text-error">
-                                        Perlu Ditingkatkan
-                                    </h3>
-                                    <p class="mt-1 text-sm text-slate-500 dark:text-navy-300">
-                                        Jangan menyerah. Pelajari kembali materi dan coba lagi.
-                                    </p>
-                                </div>
+                            <!-- SCORE MESSAGE -->
+                            {% if pretest.curriculum == "IBDP" %}
+
+                                {% if attempt.score == 7 %}
+                                    <div class="mt-5 text-center">
+                                        <h3 class="text-lg font-semibold text-success">
+                                            Excellent!
+                                        </h3>
+                                        <p class="mt-1 text-sm text-slate-500 dark:text-navy-300">
+                                            The student's performance was excellent.
+                                        </p>
+
+                                        <!-- ASSIGNMENT BUTTON -->
+                                        <div class="mt-4">
+                                            <a href="URL_ASSIGNMENT_A"
+                                            class="btn bg-primary text-white hover:bg-primary-focus">
+                                                Start Assignment
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                {% elif attempt.score == 6 %}
+                                    <div class="mt-5 text-center">
+                                        <h3 class="text-lg font-semibold text-success">
+                                            Very Good!
+                                        </h3>
+                                        <p class="mt-1 text-sm text-slate-500 dark:text-navy-300">
+                                            The student's performance was very good.
+                                        </p>
+
+                                        <!-- ASSIGNMENT BUTTON -->
+                                        <div class="mt-4">
+                                            <a href="URL_ASSIGNMENT_B"
+                                            class="btn bg-primary text-white hover:bg-primary-focus">
+                                                Start Assignment
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                {% elif attempt.score == 5 %}
+                                    <div class="mt-5 text-center">
+                                        <h3 class="text-lg font-semibold text-warning">
+                                            Good
+                                        </h3>
+                                        <p class="mt-1 text-sm text-slate-500 dark:text-navy-300">
+                                            The student's performance is good but can still be improved.
+                                        </p>
+                                    </div>
+
+                                {% elif attempt.score >= 3 %}
+                                    <div class="mt-5 text-center">
+                                        <h3 class="text-lg font-semibold text-warning">
+                                            Needs Improvement
+                                        </h3>
+                                        <p class="mt-1 text-sm text-slate-500 dark:text-navy-300">
+                                            The student's performance still needs improvement.
+                                        </p>
+                                    </div>
+
+                                {% else %}
+                                    <div class="mt-5 text-center">
+                                        <h3 class="text-lg font-semibold text-error">
+                                            Needs Significant Improvement
+                                        </h3>
+                                        <p class="mt-1 text-sm text-slate-500 dark:text-navy-300">
+                                            The student's learning outcomes need significant improvement.
+                                        </p>
+                                    </div>
+                                {% endif %}
+
+
+                            {% elif pretest.curriculum == "IGCSE" %}
+
+                                {% if attempt.score == 9 %}
+                                    <div class="mt-5 text-center">
+                                        <h3 class="text-lg font-semibold text-success">
+                                            Excellent!
+                                        </h3>
+                                        <p class="mt-1 text-sm text-slate-500 dark:text-navy-300">
+                                            The student's performance was excellent.
+                                        </p>
+
+                                        <!-- ASSIGNMENT BUTTON -->
+                                        <div class="mt-4">
+                                            <a href="URL_ASSIGNMENT_A"
+                                            class="btn bg-primary text-white hover:bg-primary-focus">
+                                                Start Assignment
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                {% elif attempt.score == 8 %}
+                                    <div class="mt-5 text-center">
+                                        <h3 class="text-lg font-semibold text-success">
+                                            Very Good!
+                                        </h3>
+                                        <p class="mt-1 text-sm text-slate-500 dark:text-navy-300">
+                                            The student's performance was very good.
+                                        </p>
+
+                                        <!-- ASSIGNMENT BUTTON -->
+                                        <div class="mt-4">
+                                            <a href="URL_ASSIGNMENT_B"
+                                            class="btn bg-primary text-white hover:bg-primary-focus">
+                                                Start Assignment
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                {% elif attempt.score == 7 %}
+                                    <div class="mt-5 text-center">
+                                        <h3 class="text-lg font-semibold text-success">
+                                            Very Good
+                                        </h3>
+                                        <p class="mt-1 text-sm text-slate-500 dark:text-navy-300">
+                                            The student's performance was very good.
+                                        </p>
+                                    </div>
+
+                                {% elif attempt.score >= 5 %}
+                                    <div class="mt-5 text-center">
+                                        <h3 class="text-lg font-semibold text-warning">
+                                            Good
+                                        </h3>
+                                        <p class="mt-1 text-sm text-slate-500 dark:text-navy-300">
+                                            The student's performance is good but can still be improved.
+                                        </p>
+                                    </div>
+
+                                {% elif attempt.score >= 3 %}
+                                    <div class="mt-5 text-center">
+                                        <h3 class="text-lg font-semibold text-warning">
+                                            Needs Improvement
+                                        </h3>
+                                        <p class="mt-1 text-sm text-slate-500 dark:text-navy-300">
+                                            The student's performance still needs improvement.
+                                        </p>
+                                    </div>
+
+                                {% else %}
+                                    <div class="mt-5 text-center">
+                                        <h3 class="text-lg font-semibold text-error">
+                                            Needs Significant Improvement
+                                        </h3>
+                                        <p class="mt-1 text-sm text-slate-500 dark:text-navy-300">
+                                            The student's learning outcomes need significant improvement.
+                                        </p>
+                                    </div>
+                                {% endif %}
+
                             {% endif %}
                         </div>
                     </div>
