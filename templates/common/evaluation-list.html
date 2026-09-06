@@ -5,7 +5,7 @@
 {% block content_title %}  
     <div class=" items-center space-x-4 py-5 lg:py-6">
         <h2 class="text-xl font-medium text-slate-800 dark:text-navy-50 lg:text-2xl" >
-            Daftar Evaluasi (Evaluation of Own Roadmap)
+            Evaluation List of Your Own Roadmap
         </h2>
         <div class="hidden h-full py-1 sm:flex"><div class="h-full w-px bg-slate-300 dark:bg-navy-600"></div></div>
         <div class="pb-4 flex-wrap border-b border-slate-200 dark:border-navy-500">
@@ -17,7 +17,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                     </svg>
                 </li>    
-                <li class="text-primary"><strong>Daftar Evaluasi (Evaluation of Own Roadmap)</strong></li>
+                <li class="text-primary"><strong>Evaluation List of Your Own Roadmap</strong></li>
             </ul>
         </div>
     </div> 
@@ -154,9 +154,9 @@
                             {% if user.teacher %}<th class="px-4 py-3">Siswa</th> {% endif %}
                             <th class="px-4 py-3">Roadmap</th>
                             <th class="px-4 py-3">Progress</th>
-                            <th class="px-4 py-3">Nilai Rata-Rata</th>
+                            <th class="px-4 py-3">Average Score</th>
                             <th class="px-4 py-3">Predict</th> 
-                            <th class="px-4 py-3">Aksi</th>
+                            <th class="px-4 py-3">Action</th>
                         </tr>
                     </thead>
 
@@ -410,13 +410,10 @@
                     <!-- HEADER -->
                     <div class="flex items-center justify-between rounded-t-lg bg-slate-200 px-4 py-3 dark:bg-navy-800">
                         <h3 class="text-base font-medium">
-                            Konfirmasi Permintaan Roadmap
+                            Confirm Roadmap Join Request
                         </h3>
 
-                        <button
-                            @click="showAskRoadmapModal = false"
-                            class="btn size-7 rounded-full p-0"
-                        >
+                        <button @click="showAskRoadmapModal = false" class="btn size-7 rounded-full p-0" >
                             ✕
                         </button>
                     </div>
@@ -428,9 +425,8 @@
                         <div class="px-4 py-5">
                             
                             <p class="text-sm text-slate-600 dark:text-navy-100"> 
-                                Anda akan mengkonfirmasi evaluasi roadmap dari 
+                                You are about to confirm the roadmap join request to create an evaluation for …
                             </p>
-
                             <input
                                 type="hidden"
                                 x-model="selectedEvaluationId">
@@ -454,11 +450,11 @@
                                 @click="showAskRoadmapModal = false"
                                 class="btn border rounded-full"
                             >
-                                Batal
+                                Cancel
                             </button>
 
                             <button type="submit" class="btn bg-primary text-white rounded-full" > 
-                                Konfirmasi 
+                                Confirm 
                             </button>
 
                         </div>
