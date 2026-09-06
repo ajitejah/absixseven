@@ -1,5 +1,11 @@
 {% extends 'dashboard_base.html' %}
 {% load custom_tags %}
+
+<!-- ▀▄▀▄ panel sidebar -->
+{% block sidebar_panel %}
+{% include "panel-sidebar/roadmap.html" %}
+{% endblock sidebar_panel %}
+
 {% block content %}
 
 <form method="POST" enctype="multipart/form-data">

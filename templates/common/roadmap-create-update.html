@@ -1,6 +1,11 @@
 {% extends 'dashboard_base.html' %}
 {% load custom_tags %}
 
+<!-- ▀▄▀▄ panel sidebar -->
+{% block sidebar_panel %}
+{% include "panel-sidebar/roadmap.html" %}
+{% endblock sidebar_panel %}
+
 <!-- ▀▄▀▄ content title & breadcumb -->
 {% block content_title %} 
     <div class=" items-center space-x-4 py-5 lg:py-6">
