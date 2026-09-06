@@ -317,7 +317,7 @@ def evaluation_upper_create(request, pretest_id):
 
     return redirect(
         'student_roadmap:roadmap_explore',
-        roadmap_id=roadmap.id
+        id=roadmap.id
     )
 
 @login_required
@@ -390,5 +390,5 @@ def evaluation_lower_create(request, pretest_id):
 
     return redirect(
         'student_roadmap:roadmap_explore',
-        roadmap_id=roadmap.id
+        id=roadmap.id
     )
