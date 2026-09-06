@@ -63,6 +63,7 @@ class PretestForm(forms.ModelForm):
         fields = [
             "title",
             "description",
+            "curriculum",
             "pretest_type",
             "question_set",
             "question_count",
@@ -92,6 +93,13 @@ class PretestForm(forms.ModelForm):
                     "rows": 4,
                 }
             ),
+
+            "curriculum": forms.Select(
+                            attrs={
+                                "class": BASE_INPUT_CLASS,
+                                "style": "padding-left:2.5rem;",
+                            }
+                        ),
 
             "pretest_type": forms.Select(
                 attrs={
