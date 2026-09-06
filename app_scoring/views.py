@@ -22,37 +22,45 @@ def evaluation_list(request):
 
     # 🧑‍🎓 STUDENT → hanya lihat evaluasi dirinya
     if hasattr(user, 'student'):
+
         evaluations = Evaluation.objects.filter(
             student=user.student
-        ).select_related('roadmap', 'student')
+        ).select_related(
+            'roadmap',
+            'student',
+        )
 
     # 🛠️ ADMIN → lihat semua evaluasi
     elif user.is_superuser or user.is_staff:
+
         evaluations = Evaluation.objects.all().select_related(
-            'roadmap', 'student'
+            'roadmap',
+            'student',
         )
 
-    # 👨‍🏫 TEACHER → lihat evaluasi berdasarkan roadmap miliknya (opsional)
+    # 👨‍🏫 TEACHER → hanya evaluasi dari roadmap miliknya
     else:
-        evaluations = (
-            Evaluation.objects.filter(
-                student__parent__user=request.user
-            )
-            .select_related(
-                "roadmap",
-                "student",
-                "student__user",
-                "student__parent",
-                "student__parent__user",
-            )
+
+        evaluations = Evaluation.objects.filter(
+            roadmap__owner=user
+        ).select_related(
+            'roadmap',
+            'student',
+            'student__user',
         )
-    
-    evaluations = evaluations.order_by('confirmed', '-id')
 
-    return render(request, 'common/evaluation-list.html', {
-        'evaluations': evaluations
-    })  
+    evaluations = evaluations.order_by(
+        'confirmed',
+        '-id'
+    )
 
+    return render(
+        request,
+        'common/evaluation-list.html',
+        {
+            'evaluations': evaluations
+        }
+    )
 # ▀▄▀▄ json "confirm" permintaan roadmap/evaluasi
 @require_POST
 def evaluation_confirm(request):
