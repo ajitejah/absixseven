@@ -1,5 +1,6 @@
 from django.db import models
 from app_auth.models import Student, User
+from app_roadmap.models import Roadmap
 
 # ▀▄▀▄ model lesson/mata pelajaran
 class Lesson(models.Model): 
@@ -50,6 +51,8 @@ class Pretest(models.Model):
     expired         = models.DateTimeField(null=True, blank=True)
     random_question = models.BooleanField(default=True)
     random_option   = models.BooleanField(default=True)
+    upper_roadmap   = models.ForeignKey(Roadmap, on_delete=models.SET_NULL, null=True, blank=True) 
+    lower_roadmap   = models.ForeignKey(Roadmap, on_delete=models.SET_NULL, null=True, blank=True)
     is_active       = models.BooleanField(default=True)
     created_at      = models.DateTimeField(auto_now_add=True)
 
