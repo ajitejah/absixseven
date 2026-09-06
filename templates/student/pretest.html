@@ -119,11 +119,47 @@
                                             Nilai
                                         </span>
 
-                                        {% if attempt.status == "SUBMITTED" %}
+                                        {% if attempt.status == "SCORED" %}
 
-                                            <span class="text-lg font-bold text-success">
-                                                {{ attempt.score|default:"0" }}
-                                            </span>
+                                            {% if pretest.curriculum == "IGCSE" %}
+
+                                                {% if attempt.score == 9 %}
+                                                    <span class="text-lg font-bold text-success">
+                                                        A*
+                                                    </span>
+                                                {% elif attempt.score >= 7 %}
+                                                    <span class="text-lg font-bold text-success">
+                                                        A
+                                                    </span>
+                                                {% elif attempt.score >= 5 %}
+                                                    <span class="text-lg font-bold text-success">
+                                                        B
+                                                    </span>
+                                                {% elif attempt.score == 4 %}
+                                                    <span class="text-lg font-bold text-success">
+                                                        C
+                                                    </span>
+                                                {% elif attempt.score == 3 %}
+                                                    <span class="text-lg font-bold text-warning">
+                                                        D
+                                                    </span>
+                                                {% elif attempt.score == 2 %}
+                                                    <span class="text-lg font-bold text-warning">
+                                                        F
+                                                    </span>
+                                                {% else %}
+                                                    <span class="text-lg font-bold text-error">
+                                                        G
+                                                    </span>
+                                                {% endif %}
+
+                                            {% elif pretest.curriculum == "IBDP" %}
+
+                                                <span class="text-lg font-bold text-success">
+                                                    {{ attempt.score|floatformat:0 }}
+                                                </span>
+
+                                            {% endif %}
 
                                         {% else %}
 
