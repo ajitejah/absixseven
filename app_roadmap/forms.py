@@ -93,11 +93,13 @@ class AssignmentForm(forms.ModelForm):
         widgets = { 
             'title': forms.TextInput(attrs={
                 'class': BASE_INPUT_CLASS,
+                'style': 'padding-left: 2.5rem;',
                 'placeholder': 'Judul tugas'
             }),
             'description': forms.Textarea(attrs={
                 'class': BASE_INPUT_CLASS,
                 'rows': 3
+                'placeholder': 'Description...'
             }),
             'duration': forms.NumberInput(attrs={
                 'class': BASE_INPUT_CLASS

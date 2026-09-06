@@ -116,11 +116,10 @@
                                     <div class="flex items-center justify-between">
 
                                         <Score class="text-slate-500">
-                                            Nilai
+                                            Score
                                         </span>
 
                                         {% if attempt.status == "SCORED" %}
-
                                             {% if pretest.curriculum == "IGCSE" %}
 
                                                 {% if attempt.score == 9 %}
@@ -154,19 +153,14 @@
                                                 {% endif %}
 
                                             {% elif pretest.curriculum == "IBDP" %}
-
                                                 <span class="text-lg font-bold text-success">
                                                     {{ attempt.score|floatformat:0 }}
                                                 </span>
-
                                             {% endif %}
-
                                         {% else %}
-
                                             <span class="text-sm font-medium text-warning">
                                                 Not Scored Yet
                                             </span>
-
                                         {% endif %}
 
                                     </div>
