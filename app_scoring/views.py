@@ -1,19 +1,20 @@
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from app_scoring.models import Evaluation
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST 
 from app_roadmap.models import Roadmap
 from django.db.models import Avg
 import json
+ 
+from django.contrib.auth.decorators import login_required 
 
-from django.contrib import messages
-from django.shortcuts import get_object_or_404, redirect
+from app_pretest.models import Pretest, Attempt 
+
+from django.contrib import messages 
 
 from app_scoring.models import Evaluation, Score
 from app_roadmap.models import Submission
-
-from .models import Evaluation
-from app_roadmap.models import Submission
+  
 
 
 # ▀▄▀▄ menampilkan daftar evaluasi
@@ -247,4 +248,147 @@ def evaluation_create(request, roadmap_id):
     return JsonResponse({
         'success': True,
         'created': created
-    })
+    }) 
+
+@login_required
+def evaluation_upper_create(request, pretest_id):
+
+    # Hanya student
+    if not hasattr(request.user, 'student'):
+        messages.error(request, 'Only students can access this roadmap.')
+        return redirect('student_pretest:pretest_list')
+
+    pretest = get_object_or_404(
+        Pretest,
+        id=pretest_id
+    )
+
+    # Pastikan student memang sudah mengerjakan Pretest
+    attempt = get_object_or_404(
+        Attempt,
+        pretest=pretest,
+        student=request.user.student,
+        status=Attempt.Status.SCORED,
+    )
+
+    # Validasi score untuk Upper Roadmap
+    if (
+        pretest.curriculum == "IGCSE"
+        and attempt.score != 9
+    ) or (
+        pretest.curriculum == "IBDP"
+        and attempt.score != 7
+    ):
+        messages.error(
+            request,
+            'You are not eligible for this roadmap.'
+        )
+        return redirect(
+            'student_pretest:pretest_result',
+            pretest_id=pretest.id
+        )
+
+    # Pastikan Upper Roadmap tersedia
+    if not pretest.upper_roadmap:
+        messages.error(
+            request,
+            'Upper roadmap is not available.'
+        )
+        return redirect(
+            'student_pretest:pretest_result',
+            pretest_id=pretest.id
+        )
+
+    roadmap = pretest.upper_roadmap
+
+    # Buat Evaluation atau gunakan yang sudah ada
+    evaluation, created = Evaluation.objects.get_or_create(
+        roadmap=roadmap,
+        student=request.user.student,
+        defaults={
+            'confirmed': True,
+        }
+    )
+
+    # Jika Evaluation sudah ada tetapi belum dikonfirmasi
+    if not evaluation.confirmed:
+        evaluation.confirmed = True
+        evaluation.save(update_fields=['confirmed'])
+
+    return redirect(
+        'student_roadmap:roadmap_explore',
+        roadmap_id=roadmap.id
+    )
+
+@login_required
+def evaluation_lower_create(request, pretest_id):
+
+    # Hanya student
+    if not hasattr(request.user, 'student'):
+        messages.error(
+            request,
+            'Only students can access this roadmap.'
+        )
+        return redirect('student_pretest:pretest_list')
+
+    pretest = get_object_or_404(
+        Pretest,
+        id=pretest_id
+    )
+
+    # Pastikan student memang sudah mengerjakan Pretest
+    attempt = get_object_or_404(
+        Attempt,
+        pretest=pretest,
+        student=request.user.student,
+        status=Attempt.Status.SCORED,
+    )
+
+    # Validasi score untuk Lower Roadmap
+    if (
+        pretest.curriculum == "IGCSE"
+        and attempt.score != 8
+    ) or (
+        pretest.curriculum == "IBDP"
+        and attempt.score != 6
+    ):
+        messages.error(
+            request,
+            'You are not eligible for this roadmap.'
+        )
+        return redirect(
+            'student_pretest:pretest_result',
+            pretest_id=pretest.id
+        )
+
+    # Pastikan Lower Roadmap tersedia
+    if not pretest.lower_roadmap:
+        messages.error(
+            request,
+            'Lower roadmap is not available.'
+        )
+        return redirect(
+            'student_pretest:pretest_result',
+            pretest_id=pretest.id
+        )
+
+    roadmap = pretest.lower_roadmap
+
+    # Buat Evaluation atau gunakan yang sudah ada
+    evaluation, created = Evaluation.objects.get_or_create(
+        roadmap=roadmap,
+        student=request.user.student,
+        defaults={
+            'confirmed': True,
+        }
+    )
+
+    # Jika Evaluation sudah ada tetapi belum dikonfirmasi
+    if not evaluation.confirmed:
+        evaluation.confirmed = True
+        evaluation.save(update_fields=['confirmed'])
+
+    return redirect(
+        'student_roadmap:roadmap_explore',
+        roadmap_id=roadmap.id
+    )

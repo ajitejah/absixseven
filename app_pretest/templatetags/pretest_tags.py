@@ -219,3 +219,31 @@ def question_set_info_url(user, question_set_id=0):
         return f"/teacher/pretest/question-set/{question_set_id}/info"
 
     return "#"
+
+@register.simple_tag
+def evaluation_upper_create_url(user, pretest_id):
+
+    if hasattr(user, "admin"):
+        return f"/admin/scoring/evaluation/create/upper/{pretest_id}/"
+
+    elif hasattr(user, "teacher"):
+        return f"/admin/scoring/evaluation/create/upper/{pretest_id}/"
+    
+    elif hasattr(user, "student"):
+        return f"/admin/scoring/evaluation/create/upper/{pretest_id}/"
+    
+    return "#"
+
+@register.simple_tag
+def evaluation_lower_create_url(user, pretest_id):
+
+    if hasattr(user, "admin"):
+        return f"/admin/scoring/evaluation/create/lower/{pretest_id}/"
+
+    elif hasattr(user, "teacher"):
+        return f"/admin/scoring/evaluation/create/lower/{pretest_id}/"
+    
+    elif hasattr(user, "student"):
+        return f"/admin/scoring/evaluation/create/lower/{pretest_id}/"
+    
+    return "#"

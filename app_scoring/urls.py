@@ -11,7 +11,9 @@ urlpatterns = [
     path('evaluation/<int:evaluation_id>/chart/',views.evaluation_chart,name='evaluation_chart'),
     path('evaluation/create/<int:roadmap_id>/',views.evaluation_create,name='evaluation_create'),
     path('evaluation/summary', views.evaluation_list, name='evaluation_summary'), 
- 
+
+    path('evaluation/create/upper/<int:pretest_id>/', views.evaluation_upper_create, name='evaluation_upper_create'),
+    path('evaluation/create/lower/<int:pretest_id>/', views.evaluation_lower_create, name='evaluation_lower_create'),
     #path('node/assesment/delete', views.register_view, name='register'), 
 
 ]   
